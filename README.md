@@ -1,9 +1,9 @@
-#Bright Events
+# Bright Events
 
-##Description
+## Description
 Bright events provides a platform for event organizers to create and manage different types of events while making them easily accessible to target markets.
 
-##Functionalities
+## Functionalities
 - Users can create account and log in
 - Users can create, view, update and delete an event
 - Users can RSVP to an event - Users can respond to events
