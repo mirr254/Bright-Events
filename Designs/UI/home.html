@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bright Events</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+  <script src="js/bootstrap.min.js"></script>
+  
+</head>
+<body>
+
+<div class="container">
+    <h2>Here are your events</h2>
+    <p>These the events you have created. You can edit or delete them as you wish or even share them</p>
+
+    <div class="col-sm-12">
+            <div class="well clearfix">
+                <div class="pull-left"><button type="button" class="btn btn-xs btn-primary" data-toggle="modal" data-target="#addEventModal" data-row-id="0">
+                <span class="glyphicon glyphicon-plus"></span> Event</button></div></div>
+
+                <table id="employee_grid" class="table table-condensed table-hover table-striped" width="60%" cellspacing="0" data-toggle="bootgrid">
+                        <thead>
+                            <tr>
+                                <th data-column-id="id" data-type="numeric" data-identifier="true">#</th>
+                                <th data-column-id="event_name">Event Name</th>
+                                <th data-column-id="event_caption">Caption</th>
+                                <th data-column-id="category">Category</th>
+                                <th data-column-id="location">Location</th>
+                                <th data-column-id="cost">Cost</th>
+                                <th data-column-id="description">Description</th>
+                                <th data-column-id="commands" data-formatter="commands" data-sortable="false">Action</th>
+                            </tr>
+                        </thead>
+                    </table>
+            
+    </div>
+
+    <!-- Modal -->
+    <div id="addEventModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+      
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Add new Event</h4>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                    
+                    <form role="form">
+                      <div class="form-group">
+                        <label for="caption">Caption</label>
+                          <input type="text" class="form-control"
+                          id="caption" placeholder="Choose image"/>
+                      </div>
+                      <div class="form-group">
+                        <label for="event_name">Event Name</label>
+                          <input type="text" class="form-control"
+                              id="event_name" placeholder="Event Name"/>
+                      </div>   
+                      <div class="form-group">
+                            <label for="event_location">Location</label>
+                              <input type="text" class="form-control"
+                                  id="event_location" placeholder="Event Location"/>
+                          </div>
+                        <div class="form-group">
+                                <label for="event_des">Description</label>
+                                  <input type="text" class="form-control"
+                                     id="event_des" placeholder="Describe your Event"/>
+                           </div>
+                      <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+                    
+                    
+                </div> <!---modal body -->
+            <!---modal body -->
+          </div>
+           <!-- Modal Footer -->
+           <div class="modal-footer">
+                <button type="button" class="btn btn-default"
+                        data-dismiss="modal">
+                            Close
+                </button>
+                
+            </div>
+      
+        </div>
+      </div>
+
+ </div> 
+
+</body>
+</html>
