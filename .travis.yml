@@ -1,6 +1,8 @@
 language: python
  - "3.6"
- 
+
+script:
+ - pytest
 #dependacies and libraries to install
 install: 
  - pip install -t lib -r requirements.txt
