@@ -8,8 +8,9 @@ before_install:
  - chmod +x tests/run_travis.sh
 
 #dependacies and libraries to install
-install: pip install -r requirements.txt
+install: 
+ - pip install -t lib -r requirements.txt
 
 after_success:
-  - coveralls
+ - coveralls
   
