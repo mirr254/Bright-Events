@@ -8,10 +8,15 @@ def createApp():
     app.secret_key = 'jhjghjsdvvhgggjhsdvvvvhgsd'
 
     users = []
+    events = []
 
     @app.errorhandler(404)
     def not_found(error):
         return make_response( jsonify({'error': 'Resource not found'}), 404)
+
+    @app.errorhandler(403)
+    def bad_request(error):
+        return make_response( jsonify({'error': 'Not allowed to leave that field blank'}))
 
     """ HANDLE USER ACTIVITIES"""
 
@@ -33,5 +38,34 @@ def createApp():
 
 
     """ HANDLE EVENTS ACTIVITIES """
+
+    #create a new event
+    @app.route('/api/v1/events', methods=['POST'])
+    def addevent():
+        if not request.json or not 'name' in request.json: #name must be included
+            abort(403)
+        if not request.json or not 'cost' in request.json: #cost must be included
+            abort(403)
+        event = {
+            "eventid": len(events) + 1,
+            "userid" : request.json['userid'],
+            "name" : request.json['name'],
+            "location" : request.json.get('location', ''),
+            "description" : request.json.get('description', ''),
+            "date": request.json.get('date',''),
+            "cost" : request.json['cost']
+        }
+        events.append(event)
+        return jsonify({'event': event}),201
+
+    #get a specific event
+    @app.route('/api/v1/events/<int:eventid>', methods=['GET'])
+    def getEvent(eventid):
+        event = [event for event in events if event['eventid'] == eventid]
+        if len(event) == 0:
+            abort(404)
+        return jsonify({'event': event[0]})
+
+
 
     return app
