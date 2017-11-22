@@ -19,9 +19,9 @@ def createApp():
     @app.route('/api/v1/auth/register', methods=['POST'])
     def register():
         if not request.json or not 'email' in request.json: #email must be included
-            abort(404)
+            abort(403)
         if not request.json or not 'password' in request.json: #password must be included
-            abort(404)
+            abort(403)
         user = {
             'id':len(users)+ 1,
             'email': request.json['email'],
