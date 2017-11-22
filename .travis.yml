@@ -1,11 +1,6 @@
 language: python
  - "3.6"
-
-script:
- - tests/run_travis.sh 
-
-before_install:
- - chmod +x tests/run_travis.sh
+ 
 #dependacies and libraries to install
 install: 
  - pip install -t lib -r requirements.txt
