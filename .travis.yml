@@ -2,10 +2,7 @@ language: python
  - "3.6"
 
 script:
- - tests/run_travis.sh
-
-before_install:
- - chmod +x tests/run_travis.sh
+ - python test_app_tests.py > /dev/null & nosetests --with-coverage
 
 #dependacies and libraries to install
 install: 
