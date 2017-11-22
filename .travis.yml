@@ -2,7 +2,7 @@ language: python
  - "3.6"
 
 script:
- - python test_app_tests.py > /dev/null & nosetests --with-coverage
+ - python test_app_tests.py
 
 #dependacies and libraries to install
 install: 
