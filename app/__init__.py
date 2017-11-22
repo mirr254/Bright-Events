@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, jsonify,abort,request
+from flask import Flask, jsonify,abort,request, unicode
 from flask import make_response
 
 def createApp():
@@ -83,6 +83,29 @@ def createApp():
             abort(404)
         events.remove(event[0])
         return jsonify({'event': True})
+
+    #edit and event
+    @app.route('/api/v1/events/<int:eventid>', methods=['PUT'])
+    def editEvent(eventid):
+        event = [event for event in events if event['eventid'] == eventid]
+        if len(event) == 0:
+            abort(404)
+        if not request.json:
+            abort(404)
+        if 'name' in request.json and type(request.json['name']) != unicode:
+            abort(400) #bad request
+        if 'description' in request.json and type(request.json['description']) != unicode:
+            abort(400) #bad request
+        if 'location' in request.json and type(request.json['location']) != unicode:
+            abort(400) #bad request
+        if 'category' in request.json and type(request.json['category']) != unicode:
+            abort(400) #bad request
+        event[0]['name'] = request.json.get('name', event[0]['name']) #if no changes made let the initial remain
+        event[0]['description'] = request.json.get('description', event[0]['description'])
+        event[0]['location'] = request.json.get('location', event[0]['location'])
+        event[0]['category'] = request.json.get('category', event[0]['category'])
+        
+        return jsonify({'event':event[0]})
 
 
 
