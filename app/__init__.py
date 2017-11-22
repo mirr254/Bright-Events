@@ -46,11 +46,15 @@ def createApp():
             abort(403)
         if not request.json or not 'cost' in request.json: #cost must be included
             abort(403)
+        if not request.json or not 'location' in request.json:
+            abort(403)
+        if not request.json or not 'category' in request.json:
+            abort(403)
         event = {
             "eventid": len(events) + 1,
             "userid" : request.json['userid'],
-            "name" : request.json['name'],
-            "location" : request.json.get('location', ''),
+            "name" : request.json.get('name'),
+            "location" : request.json['location'],
             "description" : request.json.get('description', ''),
             "date": request.json.get('date',''),
             "cost" : request.json['cost']
@@ -67,9 +71,21 @@ def createApp():
         return jsonify({'event': event[0]})
 
     #get all events
-    app.route('/api/v1/events')
+    @app.route('/api/v1/events')
     def getAllEvents():
         return jsonify({'events': events})
+
+    #deleting an event
+    @app.route('/api/v1/events/<int:eventid>', methods=['DELETE'])
+    def deleteEvent(eventid):
+        event = [event for event in events if event['eventid'] == eventid]
+        if len(event) == 0:
+            abort(404)
+        events.remove(event[0])
+        return jsonify({'event': True})
+
+
+
 
 
 
