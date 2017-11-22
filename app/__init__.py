@@ -66,6 +66,11 @@ def createApp():
             abort(404)
         return jsonify({'event': event[0]})
 
+    #get all events
+    app.route('/api/v1/events')
+    def getAllEvents():
+        return jsonify({'events': events})
+
 
 
     return app
