@@ -7,6 +7,7 @@ script:
 #dependacies and libraries to install
 install: 
  - pip install -t lib -r requirements.txt
+  - pip install nosetests
 
 after_success:
  - coveralls
