@@ -97,3 +97,5 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_add_event_has_userid(self):
         res = self.client().post('/api/v1/events', data=json.dumps(self.event4), content_type='application/json')
         self.assertEqual(res.status_code, 403)
+
+    
