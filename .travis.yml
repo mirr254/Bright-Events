@@ -2,7 +2,7 @@ language: python
  - "3.6"
 
 script:
- - python tests/test_app_tests.py
+ - nosetests tests/test_app_tests.py
 
 #dependacies and libraries to install
 install: 
