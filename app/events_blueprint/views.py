@@ -60,7 +60,7 @@ def editEvent(eventid):
         abort(404)
     if not request.json:
         abort(403)
-    # if 'name' in request.json and type(request.json['name']) != Unicode:
+    # if 'name' in request.json and type(request.json['name']) != string:
     #     abort(400) #bad request
     # if 'description' in request.json and type(request.json['description']) != Unicode:
     #     abort(400) #bad request
@@ -75,11 +75,10 @@ def editEvent(eventid):
     
     return jsonify({'event':event[0]})
 
-#search by location
-@events.route('/api/v1/events/<basestring:location>', methods=['GET'])
+#search by name
+@events.route('/api/v1/events/<string:name>', methods=['GET'])
 def searchByLocation(location):
-    event_searched = [event for event in events_list if event['location'] == location]
+    event_searched = [event for event in events_list if event['name'] == location]
     if event_searched:
         return jsonify({'events', event_searched})
     abort(404)
-
