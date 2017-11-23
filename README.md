@@ -11,3 +11,7 @@ Bright events provides a platform for event organizers to create and manage diff
 - Users can search for events based on event location or event category
 
 This is a web application implemented in python
+
+The API can be accessed from [Brighter-events Api] (https://brighter-event.herokuapp.com/)
+
+The app skeleton to be integrated with API can be accessed through github pages found at [Designs] (https://mirr254.github.io/)
