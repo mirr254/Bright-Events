@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, jsonify,abort,request, unicode
+from flask import Flask, jsonify,abort,request
 from flask import make_response
 
 def createApp():
@@ -91,15 +91,15 @@ def createApp():
         if len(event) == 0:
             abort(404)
         if not request.json:
-            abort(404)
-        if 'name' in request.json and type(request.json['name']) != unicode:
-            abort(400) #bad request
-        if 'description' in request.json and type(request.json['description']) != unicode:
-            abort(400) #bad request
-        if 'location' in request.json and type(request.json['location']) != unicode:
-            abort(400) #bad request
-        if 'category' in request.json and type(request.json['category']) != unicode:
-            abort(400) #bad request
+            abort(403)
+        # if 'name' in request.json and type(request.json['name']) != Unicode:
+        #     abort(400) #bad request
+        # if 'description' in request.json and type(request.json['description']) != Unicode:
+        #     abort(400) #bad request
+        # if 'location' in request.json and type(request.json['location']) != Unicode:
+        #     abort(400) #bad request
+        # if 'category' in request.json and type(request.json['category']) != Unicode:
+        #     abort(400) #bad request
         event[0]['name'] = request.json.get('name', event[0]['name']) #if no changes made let the initial remain
         event[0]['description'] = request.json.get('description', event[0]['description'])
         event[0]['location'] = request.json.get('location', event[0]['location'])
