@@ -76,7 +76,7 @@ def editEvent(eventid):
     return jsonify({'event':event[0]})
 
 #search by location
-@events.route('/api/v1/events/<str:location>', methods=['GET'])
+@events.route('/api/v1/events/<basestring:location>', methods=['GET'])
 def searchByLocation(location):
     event_searched = [event for event in events_list if event['location'] == location]
     if event_searched:
