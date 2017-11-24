@@ -99,3 +99,5 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.assertEqual(res.status_code, 403)
 
     
+    #if __name__ == '__main__':        
+    
