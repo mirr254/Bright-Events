@@ -23,3 +23,11 @@ def register():
     }
     users_list.append(user)
     return jsonify({'task': user}),201
+
+#edit and event
+@auth.route('/api/v1/auth/reset-password', methods=['PUT'])
+def editEvent(email):
+    user = [event for event in users_list if event['email'] == email]
+    if len(user) == 0  and not request.json:
+        abort(404)
+    user[0]['email'] = request.json.get('email', user[0]['email'])
