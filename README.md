@@ -18,7 +18,7 @@ The app skeleton to be integrated with API can be accessed through github pages 
 
 ## Installation
 - Clone the repo 
-![Clone] (https://github.com/mirr254/Bright-Events.git)
+[Clone] (https://github.com/mirr254/Bright-Events.git)
 - Change directoy
 
   `cd Bright-Events`
