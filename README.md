@@ -1,5 +1,7 @@
 # Bright Events
 
+![travis build](https://travis-ci.org/mirr254/Bright-Events.svg?branch=master)
+
 ## Description
 Bright events provides a platform for event organizers to create and manage different types of events while making them easily accessible to target markets.
 
