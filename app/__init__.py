@@ -1,10 +1,12 @@
 #!flask/bin/python
 from flask import Flask
+from instance.config import app_config
 
-def createApp():
+def createApp(conf_name):
 
     app = Flask(__name__)
-    app.secret_key = 'jhjghjsdvvhgggjhsdvvvvhgsd'
+    app.config.from_object(app_config['development'])
+    app.config.from_pyfile('config.py')
 
       #register the blueprints 
     
