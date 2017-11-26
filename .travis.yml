@@ -1,12 +1,12 @@
 language: python
  - "3.6"
 
-script:
- - python nosetests tests/test_app_tests.py
-
 #dependacies and libraries to install
 install: 
  - pip install -t lib -r requirements.txt
+
+script:
+ - nosetests tests/test_app_tests.py
 
 after_success:
  - coveralls
