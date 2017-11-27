@@ -30,7 +30,10 @@ def login():
     password = request.json['password']
     user = [user for user in models.User.users_list if user['email'] == email and user['password'] == password]
     if user:
-        return jsonify({'task':user}),200
+        session.email = user[0]['email']
+        session.userid = user[0]['id']
+        
+        return jsonify({'user':user}),200
     abort(404)
 
 
