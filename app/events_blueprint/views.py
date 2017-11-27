@@ -2,10 +2,8 @@
 from flask import Flask, jsonify,abort,request
 from flask import make_response
 from . import models
-from flask_httpauth import HTTPBasicAuth
 
 from . import events
-from auth_blueprint import views
 """ HANDLE EVENTS ACTIVITIES """
 
 #create a new event
@@ -41,7 +39,6 @@ def getEvent(eventid):
     return jsonify({'event': event[0]})
 
 #get all events
-@views.user_status.login_required
 @events.route('/api/v1/events')
 def getAllEvents():
     return jsonify({'events': models.Events.events_list})
