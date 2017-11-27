@@ -1,13 +1,11 @@
 language: python
+python:
  - "3.6.1"
 
 #dependacies and libraries to install
-install: 
- - pip install -r requirements.txt
- - pip install nose --upgrade
+install: pip install -r requirements.txt
 
-script:
- - nosetests tests/
+script: sh run_travis.sh
 
 after_success:
  - coveralls
