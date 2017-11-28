@@ -1,7 +1,7 @@
 import unittest
 import json
 from app import createApp
-from flask import session
+from flask import session, request
 
 
 class UserActivitiesTestcase(unittest.TestCase):
@@ -81,6 +81,14 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_auth_register_password_notEmpty(self):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user3),content_type='application/json')
         self.assertEqual(res.status_code, 403)
+
+    #test reset password api 
+    def test_auth_reset_password(self):
+        res = self.client().post('/api/v1/auth/reset-password/<string:email>', data="",content_type='application/json')
+        if(self.user['email'] != request.json['email']):
+            self.assertEqual(res.status_code, 404)
+        self.assertEqual(res.status_code, 201)
+
 
     #test if response is ok after logout
     # def test_auth_logout_user(self):
