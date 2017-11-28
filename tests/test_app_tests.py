@@ -83,27 +83,12 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.assertEqual(res.status_code, 403)
 
     #test reset password api 
-    def test_auth_reset_password(self):
-        res = self.client().post('/api/v1/auth/reset-password/<string:email>', data="",content_type='application/json')
-        if(self.user['email'] != request.json['email']):
-            self.assertEqual(res.status_code, 404)
-        self.assertEqual(res.status_code, 201)
+    # def test_auth_reset_password(self):
+    #     res = self.client().post('/api/v1/auth/reset-password/<string:email>', data="",content_type='application/json')
+    #     if(self.user['email'] != request.json['email']):
+    #         self.assertEqual(res.status_code, 404)
+    #     self.assertEqual(res.status_code, 201)
 
-
-    #test if response is ok after logout
-    # def test_auth_logout_user(self):
-    #     res = self.client().get('api/v1/auth/logout')
-    #     self.assertEqual(res.status_code, 200)
-
-    #test if session has been cleared
-    # def test_session_is_cleared(self):
-    #     #res = self.client().get('api/v1/auth/logout')
-    #     self.assertIsNone(session['id'])
-
-
-    # def test_if_auth_login_has_email(self):
-    #     res = self.client().post('/api/v1/auth/login/', data = json.dumps(self.user_login_withou_email), content_type='application/json')
-    #     self.assertEqual(res.status_code, 403)
 
     """Unit tests for events goes here"""
     
