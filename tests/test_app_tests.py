@@ -63,7 +63,7 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.rsvp_ = {
             "rsvp_id":1,
             "eventid":20,
-            "user_email":"sam@gmail",
+            "userid":"sam@gmail",
             "rsvp":"attending"
         }
 

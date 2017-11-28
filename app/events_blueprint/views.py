@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, jsonify,abort,request
+from flask import Flask, jsonify,abort,request,session
 from flask import make_response
 from . import models
 
@@ -80,5 +80,21 @@ def editEvent(eventid):
 def searchByLocation(location):
     event_searched = [event for event in models.Events.events_list if event['name'] == location]
     if event_searched:
-        return jsonify({'events', event_searched})
+        return jsonify({'events': event_searched}),200
+    abort(404)
+
+#rsvp or respond to an event (attending/not attending/maybe)
+@events.route('/api/v1/events/<int:eventid>/rsvp', methods=['POST'])
+def rsvpToAnEvent(eventid):
+    if not request.json or not 'rsvp' in request.json: #name must be included
+        abort(403)
+    event = [event for event in models.Events.events_list if event['eventid'] == eventid]
+    if event:
+        rsvp_ = {
+            "rsvp_id": models.Events.get_random_id(),
+            "eventid": eventid,
+            "userid": models.Events.get_random_id(), #to be changed after testing. take user id from session
+            "rsvp": request.json['rsvp']
+        }
+        return jsonify({'rsvp status': rsvp_}),201
     abort(404)
