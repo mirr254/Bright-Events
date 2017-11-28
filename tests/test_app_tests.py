@@ -83,8 +83,7 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.assertEqual(res.status_code, 403)
 
 
-    """Unit tests for events goes here"""
-    
+    """Unit tests for events goes here"""    
 
     def test_add_event(self):
         res = self.client().post('/api/v1/events', data=json.dumps(self.event1), content_type='application/json')
@@ -101,6 +100,11 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_add_event_has_userid(self):
         res = self.client().post('/api/v1/events', data=json.dumps(self.event4), content_type='application/json')
         self.assertEqual(res.status_code, 403)
+
+    #test api can get all events
+    def test_can_get_events(self):
+        res = self.client().get('/api/v1/events', content_type='application/json')
+        self.assertEqual(res.status_code, 200)
 
     
     if __name__ == '__main__':
