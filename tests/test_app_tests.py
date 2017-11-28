@@ -60,6 +60,12 @@ class UserActivitiesTestcase(unittest.TestCase):
             "date": "10/10/2017",
             "cost" : 2000
         }
+        self.rsvp_ = {
+            "rsvp_id":1,
+            "eventid":20,
+            "user_email":"sam@gmail",
+            "rsvp":"attending"
+        }
 
         self.user_login_withou_email = {
             
@@ -105,6 +111,14 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_can_get_events(self):
         res = self.client().get('/api/v1/events', content_type='application/json')
         self.assertEqual(res.status_code, 200)
+
+    #test rsvp
+    def test_rsvp_an_event(self):
+        #make sure before rsvp we have an add event api working
+        resp = self.client().post('/api/v1/events', data=json.dumps(self.event1), content_type='application/json')
+        self.assertEqual(resp.status_code, 201)
+        res = self.client().post('/api/v1/events/1/rsvp',data=json.dumps(self.rsvp_) ,content_type='application/json')
+        self.assertEqual(resp.status_code, 201)
 
     
     if __name__ == '__main__':
