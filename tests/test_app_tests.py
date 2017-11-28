@@ -1,6 +1,7 @@
 import unittest
 import json
 from app import createApp
+from flask import session
 
 
 class UserActivitiesTestcase(unittest.TestCase):
@@ -32,7 +33,8 @@ class UserActivitiesTestcase(unittest.TestCase):
             "location" : "Nairobu",
             "description" : "here and 2",
             "date": "10/10/2017",
-            "cost" : 2000
+            "cost" : 2000,
+            "category":"indoors"
         }
         self.event2 = {
             "eventid":1,
@@ -59,6 +61,11 @@ class UserActivitiesTestcase(unittest.TestCase):
             "cost" : 2000
         }
 
+        self.user_login_withou_email = {
+            
+            "password":"string1"
+        }
+
 
     #test if user can register
     def test_auth_register(self):
@@ -75,16 +82,13 @@ class UserActivitiesTestcase(unittest.TestCase):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user3),content_type='application/json')
         self.assertEqual(res.status_code, 403)
 
-    # def test_auth_login(self):
-    #     res = self.client().get('/api/v1/auth/login/1')
-    #     self.assertEqual(res.data, {'id': 4, 'username': 'lauren'})
 
     """Unit tests for events goes here"""
     
 
-    # def test_add_event(self):
-    #     res = self.client().post('/api/v1/events', data=json.dumps(self.event1), content_type='application/json')
-    #     self.assertEqual(res.status_code, 201)
+    def test_add_event(self):
+        res = self.client().post('/api/v1/events', data=json.dumps(self.event1), content_type='application/json')
+        self.assertEqual(res.status_code, 201)
     
     def test_add_event_has_location(self):
         res = self.client().post('/api/v1/events', data=json.dumps(self.event2), content_type='application/json')
