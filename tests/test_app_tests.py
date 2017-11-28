@@ -34,7 +34,7 @@ class UserActivitiesTestcase(unittest.TestCase):
             "description" : "here and 2",
             "date": "10/10/2017",
             "cost" : 2000,
-            "category":"indoors"
+            "category": "Indoors"
         }
         self.event2 = {
             "eventid":1,
@@ -82,6 +82,20 @@ class UserActivitiesTestcase(unittest.TestCase):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user3),content_type='application/json')
         self.assertEqual(res.status_code, 403)
 
+    #test if response is ok after logout
+    # def test_auth_logout_user(self):
+    #     res = self.client().get('api/v1/auth/logout')
+    #     self.assertEqual(res.status_code, 200)
+
+    #test if session has been cleared
+    # def test_session_is_cleared(self):
+    #     #res = self.client().get('api/v1/auth/logout')
+    #     self.assertIsNone(session['id'])
+
+
+    # def test_if_auth_login_has_email(self):
+    #     res = self.client().post('/api/v1/auth/login/', data = json.dumps(self.user_login_withou_email), content_type='application/json')
+    #     self.assertEqual(res.status_code, 403)
 
     """Unit tests for events goes here"""
     

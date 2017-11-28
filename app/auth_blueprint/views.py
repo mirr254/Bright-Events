@@ -43,9 +43,9 @@ def login():
 
 #edit and password
 
-@auth.route('/api/v1/auth/reset-password/<string:email>', methods=['PUT'])
-def resetPassword(password):
-    user = [user for user in models.User.users_list if user['email'] == 'him@']
-    if len(user) == 0  and not request.json:
-        abort(404)
-    user[0]['password'] = request.json.get('password', user[0]['password'])
+# @auth.route('/api/v1/auth/reset-password/<string:email>', methods=['PUT'])
+# def resetPassword(password):
+#     user = [user for user in models.User.users_list if user['email'] == 'him@']
+#     if len(user) == 0  and not request.json:
+#         abort(404)
+#     user[0]['password'] = request.json.get('password', user[0]['password'])
