@@ -118,7 +118,7 @@ class UserActivitiesTestcase(unittest.TestCase):
         resp = self.client().post('/api/v1/events', data=json.dumps(self.event1), content_type='application/json')
         self.assertEqual(resp.status_code, 201)
         res = self.client().post('/api/v1/events/1/rsvp',data=json.dumps(self.rsvp_) ,content_type='application/json')
-        self.assertEqual(resp.status_code, 201)
+        self.assertEqual(res.status_code, 201)
 
     
     if __name__ == '__main__':
