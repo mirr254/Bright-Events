@@ -5,7 +5,7 @@ python:
 #dependacies and libraries to install
 install: pip install -r requirements.txt
 
-script: sh run_travis.sh
+script: sh run_travis.sh --cov-config .coveragerc
 
 after_success:
  - coveralls --config_file .coveragerc
