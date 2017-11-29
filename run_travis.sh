@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 python app.py > /dev/null &
-nosetests tests/ --with-coverage
+nosetests tests/ --with-coverage --cov-config .coveragerc --logging-level=INFO
