@@ -61,10 +61,13 @@ class UserActivitiesTestcase(unittest.TestCase):
             "cost" : 2000
         }
 
-        self.user_login_withou_email = {
+        self.user_login_without_email = {
             
             "password":"string1"
         }
+        self.new_password = {
+                  "password":"1234@"
+              }
 
 
     #test if user can register
@@ -83,11 +86,15 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.assertEqual(res.status_code, 403)
 
     #test reset password api 
-    # def test_auth_reset_password(self):
-    #     res = self.client().post('/api/v1/auth/reset-password/<string:email>', data="",content_type='application/json')
-    #     if(self.user['email'] != request.json['email']):
-    #         self.assertEqual(res.status_code, 404)
-    #     self.assertEqual(res.status_code, 201)
+    def test_auth_reset_password(self):
+        #test if user can register before changing password
+        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user),content_type='application/json')
+        self.assertEqual(res.status_code, 201)
+        # test if user can now update password
+        res = self.client().put('/api/v1/auth/reset-password/email@', 
+              data=json.dumps(self.new_password),
+              content_type='application/json')
+        self.assertEqual(res.status_code, 200)
 
 
     """Unit tests for events goes here"""
