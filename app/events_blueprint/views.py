@@ -20,7 +20,7 @@ def addevent():
         abort(403)
     event = {
         "eventid": models.Events.get_random_id(),
-        "userid" : request.json['userid'],
+        #"userid" : request.json['userid'],
         "name" : request.json.get('name'),
         "location" : request.json['location'],
         "description" : request.json.get('description', ''),

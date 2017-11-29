@@ -1,7 +1,7 @@
 import unittest
 import json
 from app import createApp
-from flask import session
+from flask import session, request
 
 
 class UserActivitiesTestcase(unittest.TestCase):
@@ -34,7 +34,7 @@ class UserActivitiesTestcase(unittest.TestCase):
             "description" : "here and 2",
             "date": "10/10/2017",
             "cost" : 2000,
-            "category":"indoors"
+            "category": "Indoors"
         }
         self.event2 = {
             "eventid":1,
@@ -67,10 +67,13 @@ class UserActivitiesTestcase(unittest.TestCase):
             "rsvp":"attending"
         }
 
-        self.user_login_withou_email = {
+        self.user_login_without_email = {
             
             "password":"string1"
         }
+        self.new_password = {
+                  "password":"1234@"
+              }
 
 
     #test if user can register
@@ -87,6 +90,17 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_auth_register_password_notEmpty(self):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user3),content_type='application/json')
         self.assertEqual(res.status_code, 403)
+
+    #test reset password api 
+    def test_auth_reset_password(self):
+        #test if user can register before changing password
+        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user),content_type='application/json')
+        self.assertEqual(res.status_code, 201)
+        # test if user can now update password
+        res = self.client().put('/api/v1/auth/reset-password/email@', 
+              data=json.dumps(self.new_password),
+              content_type='application/json')
+        self.assertEqual(res.status_code, 200)
 
 
     """Unit tests for events goes here"""    
