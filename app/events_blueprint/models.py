@@ -2,6 +2,7 @@ import random
 class Events(object):
 
     events_list = []
+    rsvp_list = []
 
     def get_random_id():
         # generate a random unique integer to be used as ID
