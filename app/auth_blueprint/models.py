@@ -3,7 +3,14 @@
 class User(object):
 
     #store user details in a list of dic
-    users_list = []
+    users_list = [
+        {
+            'id': 11,
+            'email': 'email@',
+            'username':'samuel',
+            'password':'hardpass'
+        }
+    ]
 
     #hash the user password
     # def hash_password(self, password):

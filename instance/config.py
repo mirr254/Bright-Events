@@ -3,7 +3,7 @@ import os
 class Config(object):
     #parent configuration class
     DEBUG = False
-    CSRF_ENABLED = True
+    #CSRF_ENABLED = True
     SECRET = os.getenv('SECRETKEY')
 
 class DevelopmentConfig(Config):
@@ -11,7 +11,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
 
 class ProductionCofig(Config):
-    DEBUG = True
+    DEBUG = False
 
 #export the enviroment specified
 app_config = {
