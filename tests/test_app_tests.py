@@ -63,7 +63,7 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.rsvp_ = {
             "rsvp_id":1,
             "eventid":20,
-            "userid":"sam@gmail",
+            "userid":23456,
             "rsvp":"attending"
         }
 
@@ -131,9 +131,32 @@ class UserActivitiesTestcase(unittest.TestCase):
         #make sure before rsvp we have an add event api working
         resp = self.client().post('/api/v1/events', data=json.dumps(self.event1), content_type='application/json')
         self.assertEqual(resp.status_code, 201)
-        res = self.client().post('/api/v1/events/1/rsvp',data=json.dumps(self.rsvp_) ,content_type='application/json')
-        self.assertEqual(resp.status_code, 201)
+        result_in_json = json.loads(resp.data.decode('utf-8').replace("'", "\""))
+        #get eventid of newly created event
+        eventid = str( result_in_json['event']['eventid'])
+        res = self.client().post('/api/v1/events/'+eventid+'/rsvp',
+             data=json.dumps(self.rsvp_) ,content_type='application/json')
+        self.assertEqual(res.status_code, 201)
 
+    #test listing users who have responded (rsvp) to an event
+    def test_list_rsvp_users(self):
+        #test create an event
+        resp = self.client().post('/api/v1/events', data=json.dumps(self.event1), content_type='application/json')
+        self.assertEqual(resp.status_code, 201)
+        ### test user can rsvp to that event ###
+        result_in_json = json.loads(resp.data.decode('utf-8').replace("'", "\""))
+        #get eventid of newly created event
+        eventid = str( result_in_json['event']['eventid'])
+        res = self.client().post('/api/v1/events/'+eventid+'/rsvp',data=json.dumps(self.rsvp_) ,content_type='application/json')
+        
+        self.assertEqual(res.status_code, 201)
+
+        #test the endpoint for retrieving the users. will retrieve users based on eventid
+        # result_as_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
+
+        # res = self.client().get('/api/v1/events/'+eventid+'/rsvp',content_type='application/json')
+        # #print(json.loads(res.data.decode('utf-8').replace("'", "\"")))
+        # self.assertEqual(res.status_code, 200)
     
     if __name__ == '__main__':
         unittest.main()       
