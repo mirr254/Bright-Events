@@ -30,6 +30,12 @@ def register():
     user = [user for user in models.User.users_list if user['email'] == request.json['email']]
     if user:
         abort(400)
+    
+    #check if username exists
+    user = [user for user in models.User.users_list if user['username'] == request.json['username']]
+    if user:
+        abort(400)
+    #register user
     user = {
         'id':len(models.User.users_list)+ 1,
         'email': request.json['email'],
