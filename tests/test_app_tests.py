@@ -1,7 +1,8 @@
 import unittest
 import json
 from app import createApp
-from flask import session, request
+from flask import request
+import re
 
 
 class UserActivitiesTestcase(unittest.TestCase):
@@ -83,6 +84,9 @@ class UserActivitiesTestcase(unittest.TestCase):
     #test if user can register
     def test_auth_register(self):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user),content_type='application/json')
+        result_in_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
+        bad_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', result_in_json['user']['email'])
+        self.assertEqual(bad_email, None)
         self.assertEqual(res.status_code, 201)
 
     #make sure email is not empty
@@ -105,24 +109,6 @@ class UserActivitiesTestcase(unittest.TestCase):
               data=json.dumps(self.new_password),
               content_type='application/json')
         self.assertEqual(res.status_code, 200)
-
-    #test logout
-    def test_logout(self):
-        #register first
-        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user),content_type='application/json')
-        self.assertEqual(res.status_code, 201)
-        #test login
-        res_login = self.client().post('/api/v1/auth/login', data=json.dumps(self.login_data),content_type='application/json')
-        result_in_json = json.loads(res_login.data.decode('utf-8').replace("'", "\""))
-        print(result_in_json)
-        session['email'] = str( result_in_json['user']['email'])
-        session['userid'] = str( result_in_json['user']['userid'])
-        self.assertEqual(res.status_code, 200)
-        #then test logout
-        self.assertEqual(session['email'], None)
-        self.assertEqual(session['userid'], None)
-        
-
 
 
     """Unit tests for events goes here"""    
