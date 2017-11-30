@@ -27,18 +27,19 @@ The app skeleton to be integrated with API can be accessed through github pages 
 -Create a virtue enviroment to work on
  `virtualenv -p python3 <name>`
 
--Activate the virtue enviroment
+- Activate the virtue enviroment
 
- `source <name>/scripts/activate `
+  `source <name>/scripts/activate `
 
-- Install the dependancies 
+- Install the dependancies
+
   `pip install -r requirements.txt`
 
 ## Tests
 
 Running all tests via nosetests. Wil perform tests on the tests folder
 
-`nosetest tests`
+`nosetests tests/`
 
 ## Running the app
 
