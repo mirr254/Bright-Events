@@ -14,13 +14,13 @@ Bright events provides a platform for event organizers to create and manage diff
 
 This is a web application implemented in python
 
-The API can be accessed from ![Brighter-events Api] (https://brighter-event.herokuapp.com/)
+The API can be accessed from [Brighter-events Api](https://brighter-event.herokuapp.com/)
 
-The app skeleton to be integrated with API can be accessed through github pages found at ![Designs] (https://mirr254.github.io/)
+The app skeleton to be integrated with API can be accessed through github pages found at [Brighter Events homepage](https://mirr254.github.io/)
 
 ## Installation
 - Clone the repo 
-[Clone] (https://github.com/mirr254/Bright-Events.git)
+[Clone](https://github.com/mirr254/Bright-Events.git)
 - Change directoy
 
   `cd Bright-Events`
