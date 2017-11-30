@@ -49,7 +49,7 @@ def login():
         session.email = user[0]['email']
         session.userid = user[0]['id']
         
-        return jsonify({'user':user}),200
+        return jsonify({'user':user[0]}),200
     abort(404)
 
 
@@ -62,3 +62,10 @@ def resetPassword(email):
         abort(404)
     user[0]['password'] = request.json.get('password', user[0]['password'])
     return jsonify({'user':user}),200
+
+#logout
+@auth.route('/api/v1/auth/logout')
+def logout():
+    session['email'] = None
+    session['userid'] = None
+

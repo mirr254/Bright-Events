@@ -74,6 +74,10 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.new_password = {
                   "password":"1234@"
               }
+        self.login_data = {
+            "email":"email@",
+            "password":"hardpass"
+        }
 
 
     #test if user can register
@@ -101,6 +105,24 @@ class UserActivitiesTestcase(unittest.TestCase):
               data=json.dumps(self.new_password),
               content_type='application/json')
         self.assertEqual(res.status_code, 200)
+
+    #test logout
+    def test_logout(self):
+        #register first
+        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user),content_type='application/json')
+        self.assertEqual(res.status_code, 201)
+        #test login
+        res_login = self.client().post('/api/v1/auth/login', data=json.dumps(self.login_data),content_type='application/json')
+        result_in_json = json.loads(res_login.data.decode('utf-8').replace("'", "\""))
+        print(result_in_json)
+        session['email'] = str( result_in_json['user']['email'])
+        session['userid'] = str( result_in_json['user']['userid'])
+        self.assertEqual(res.status_code, 200)
+        #then test logout
+        self.assertEqual(session['email'], None)
+        self.assertEqual(session['userid'], None)
+        
+
 
 
     """Unit tests for events goes here"""    
