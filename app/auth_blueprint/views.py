@@ -7,6 +7,18 @@ from . import auth
 
 """ HANDLE USER ACTIVITIES"""
 
+#error handlers for custom errors
+@auth.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404)
+
+@auth.errorhandler(400)
+def bad_request(error):
+    return make_response(jsonify({'error': 'Resource Already exist '}), 404)
+
+@auth.errorhandler(403)
+def forbiden(error):
+    return make_response(jsonify({'error': 'Please dont leave some fields blank'}), 404)
 # register user
 @auth.route('/api/v1/auth/register', methods=['POST'])
 def register():
@@ -14,6 +26,10 @@ def register():
         abort(403)
     if not request.json or not 'password' in request.json: #password must be included
         abort(403)
+    #check if email exists
+    user = [user for user in models.User.users_list if user['email'] == request.json['email']]
+    if user:
+        abort(400)
     user = {
         'id':len(models.User.users_list)+ 1,
         'email': request.json['email'],
