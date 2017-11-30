@@ -11,9 +11,9 @@ from . import auth
 @auth.route('/api/v1/auth/register', methods=['POST'])
 def register():
     if not request.json or not 'email' in request.json: #email and password must be included
-        abort(403)
+        return jsonify({"Hey":"Email must be included"})
     if not request.json or not 'password' in request.json: #password must be included
-        abort(403)
+        return jsonify({"Hey":"Password must be included"})
     user = {
         'id':len(models.User.users_list)+ 1,
         'email': request.json['email'],
