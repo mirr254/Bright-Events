@@ -14,31 +14,32 @@ Bright events provides a platform for event organizers to create and manage diff
 
 This is a web application implemented in python
 
-The API can be accessed from ![Brighter-events Api] (https://brighter-event.herokuapp.com/)
+The API can be accessed from [Brighter-events Api](https://brighter-event.herokuapp.com/)
 
-The app skeleton to be integrated with API can be accessed through github pages found at ![Designs] (https://mirr254.github.io/)
+The app skeleton to be integrated with API can be accessed through github pages found at [Brighter Events homepage](https://mirr254.github.io/)
 
 ## Installation
 - Clone the repo 
-[Clone] (https://github.com/mirr254/Bright-Events.git)
+[Clone](https://github.com/mirr254/Bright-Events.git)
 - Change directoy
 
   `cd Bright-Events`
 -Create a virtue enviroment to work on
  `virtualenv -p python3 <name>`
 
--Activate the virtue enviroment
+- Activate the virtue enviroment
 
- `source <name>/scripts/activate `
+  `source <name>/scripts/activate `
 
-- Install the dependancies 
+- Install the dependancies
+
   `pip install -r requirements.txt`
 
 ## Tests
 
 Running all tests via nosetests. Wil perform tests on the tests folder
 
-`nosetest tests`
+`nosetests tests/`
 
 ## Running the app
 

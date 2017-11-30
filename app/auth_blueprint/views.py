@@ -23,19 +23,9 @@ def forbiden(error):
 @auth.route('/api/v1/auth/register', methods=['POST'])
 def register():
     if not request.json or not 'email' in request.json: #email and password must be included
-        abort(403)
+        return jsonify({"Hey":"Email must be included"})
     if not request.json or not 'password' in request.json: #password must be included
-        abort(403)
-    #check if email exists
-    # user = [user for user in models.User.users_list if user['email'] == request.json['email']]
-    # if user:
-    #     abort(400)
-    
-    #check if username exists
-    # user = [user for user in models.User.users_list if user['username'] == request.json['username']]
-    # if user:
-    #     abort(400)
-    #register user
+        return jsonify({"Hey":"Password must be included"})
     user = {
         'id':len(models.User.users_list)+ 1,
         'email': request.json['email'],
