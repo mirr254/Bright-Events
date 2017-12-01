@@ -3,7 +3,6 @@ import os
 class Config(object):
     #parent configuration class
     DEBUG = False
-    #CSRF_ENABLED = True
     SECRET = os.getenv('SECRETKEY')
 
 class DevelopmentConfig(Config):
