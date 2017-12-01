@@ -27,12 +27,17 @@ def register():
     if not request.json or not 'password' in request.json: #password must be included
         return jsonify({"Hey":"Password must be included"})
     #check correct emai
-    bad_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', request.json['email'])
-    
+    bad_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', request.json['email'])    
     if bad_email == None:
        return jsonify({"Bad Email":"Please provide a valid email"})
+
+    #check if user exists
+    user1 = [user for user in models.User.users_list if user['email'] == request.json['email']]
+    if user1:
+        return jsonify({"Error": "Email already taken"})
+
     user = {
-        'id':len(models.User.users_list)+ 1,
+        'id':models.User.get_random_id(),
         'email': request.json['email'],
         'username':request.json['username'],
         'password':request.json['password']

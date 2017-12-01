@@ -11,7 +11,6 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.app = createApp('development')
         self.client = self.app.test_client
         self.user = {
-            'id': 1,
             'email': 'email@kungu.com',
             'username':'samuel',
             'password':'hardpass'
@@ -23,8 +22,13 @@ class UserActivitiesTestcase(unittest.TestCase):
         }
         self.user3 = {
             'id': 1,
-            'email': 'emai@gma',
+            'email': 'emai@gmail.com',
             'username':'samuel'            
+        }
+        self.user4 = {            
+            'email': 'emai@gmail.com',
+            'username':'samuel',
+            'password':'easypass'          
         }
         self.event1 = {
             "eventid":1,
@@ -84,10 +88,9 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_auth_register(self):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user),content_type='application/json')
         result_in_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
-        print(result_in_json)
         bad_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', result_in_json['user']['email'])
-        print(bad_email)
         self.assertNotEqual(bad_email, None)
+        #test if user exists       
         self.assertEqual(res.status_code, 201)
 
     #make sure email is not empty
@@ -103,10 +106,10 @@ class UserActivitiesTestcase(unittest.TestCase):
     #test reset password api 
     def test_auth_reset_password(self):
         #test if user can register before changing password
-        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user),content_type='application/json')
+        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user4),content_type='application/json')
         self.assertEqual(res.status_code, 201)
         # test if user can now update password
-        res = self.client().put('/api/v1/auth/reset-password/email@', 
+        res = self.client().put('/api/v1/auth/reset-password/email@kungu.com',
               data=json.dumps(self.new_password),
               content_type='application/json')
         self.assertEqual(res.status_code, 200)

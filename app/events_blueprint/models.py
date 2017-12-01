@@ -3,8 +3,8 @@ class Events(object):
 
     events_list = [
         {
-            "eventid":1,
-            "userid" : 2,
+            "eventid":112,
+            "userid" : 11,
             "name" : "Partymad",
             "location" : "Nairobu",
             "description" : "here and 2",
@@ -15,8 +15,8 @@ class Events(object):
     ]
     rsvp_list = [
          {
-            "rsvp_id":1,
-            "eventid":20,
+            "rsvp_id":543,
+            "eventid":112,
             "userid":"sam@gmail",
             "rsvp":"attending"
         }

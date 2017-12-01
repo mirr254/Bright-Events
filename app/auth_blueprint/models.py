@@ -1,4 +1,5 @@
 # from passlib.apps import custom_app_context as pwd_context
+import random
 
 class User(object):
 
@@ -6,11 +7,15 @@ class User(object):
     users_list = [
         {
             'id': 11,
-            'email': 'email@',
+            'email': 'email@gmail.com',
             'username':'samuel',
             'password':'hardpass'
         }
     ]
+    def get_random_id():
+        # generate a random unique integer to be used as ID
+        random_id = random.randrange(1, 10000000)
+        return random_id
 
     #hash the user password
     # def hash_password(self, password):
