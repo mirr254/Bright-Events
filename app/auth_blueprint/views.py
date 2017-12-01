@@ -1,8 +1,8 @@
 #!flask/bin/python
 from flask import Flask, jsonify,abort,request,session
 from flask import make_response, g
+import re
 from . import models
-
 from . import auth
 
 """ HANDLE USER ACTIVITIES"""
@@ -14,11 +14,11 @@ def not_found(error):
 
 @auth.errorhandler(400)
 def bad_request(error):
-    return make_response(jsonify({'error': 'Resource Already exist '}), 404)
+    return make_response(jsonify({'error': 'Resource Already exist '}), 403)
 
 @auth.errorhandler(403)
 def forbiden(error):
-    return make_response(jsonify({'error': 'Please dont leave some fields blank'}), 404)
+    return make_response(jsonify({'error': 'Please dont leave some fields blank'}), 403)
 # register user
 @auth.route('/api/v1/auth/register', methods=['POST'])
 def register():
@@ -26,6 +26,11 @@ def register():
         return jsonify({"Hey":"Email must be included"})
     if not request.json or not 'password' in request.json: #password must be included
         return jsonify({"Hey":"Password must be included"})
+    #check correct emai
+    bad_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', request.json['email'])
+    
+    if bad_email == None:
+       return jsonify({"Bad Email":"Please provide a valid email"})
     user = {
         'id':len(models.User.users_list)+ 1,
         'email': request.json['email'],

@@ -4,7 +4,6 @@ from app import createApp
 from flask import request
 import re
 
-
 class UserActivitiesTestcase(unittest.TestCase):
     """This class will be used for user test cases"""
 
@@ -13,7 +12,7 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.client = self.app.test_client
         self.user = {
             'id': 1,
-            'email': 'email@',
+            'email': 'email@kungu.com',
             'username':'samuel',
             'password':'hardpass'
         }
@@ -85,8 +84,10 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_auth_register(self):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user),content_type='application/json')
         result_in_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
+        print(result_in_json)
         bad_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', result_in_json['user']['email'])
-        self.assertEqual(bad_email, None)
+        print(bad_email)
+        self.assertNotEqual(bad_email, None)
         self.assertEqual(res.status_code, 201)
 
     #make sure email is not empty
