@@ -23,7 +23,7 @@ def forbiden(error):
 @auth.route('/api/v1/auth/register', methods=['POST'])
 def register():
     if not request.json or not 'email' in request.json: #email and password must be included
-        return jsonify({"Hey":"Email must be included"})
+        return jsonify({"Hey":"Email must be included"}),403
     if not request.json or not 'password' in request.json: #password must be included
         return jsonify({"Hey":"Password must be included"})
     #check correct emai
@@ -69,7 +69,7 @@ def login():
 def resetPassword(email):
     user = [user for user in models.User.users_list if user['email'] == email]
     if not user:
-        abort(404)
+        return jsonify({'Not found':'Email not found'}),404
     user[0]['password'] = request.json.get('password', user[0]['password'])
     return jsonify({'Success':'Password reset success'}),200
 

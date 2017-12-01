@@ -11,16 +11,16 @@ from . import events
 @events.route('/api/v1/events', methods=['POST'])
 def addevent():
     if not request.json or not 'name' in request.json: #name must be included
-        abort(403)
+        return jsonify({"Hey":"Name must be included"}),403
     if not request.json or not 'cost' in request.json: #cost must be included
-        abort(403)
+        return jsonify({"Hey":"Cost must be included"}),403
     if not request.json or not 'location' in request.json:
-        abort(403)
+        return jsonify({"Hey":"Location must be included"}),403
     if not request.json or not 'category' in request.json:
-        abort(403)
+        return jsonify({"Hey":"Category must be included"}),403
     event = {
         "eventid": models.Events.get_random_id(),
-        #"userid" : request.json['userid'],
+        "userid" : request.json['userid'],
         "name" : request.json.get('name'),
         "location" : request.json['location'],
         "description" : request.json.get('description', ''),
@@ -35,7 +35,7 @@ def addevent():
 def getEvent(eventid):
     event = [event for event in models.Events.events_list if event['eventid'] == eventid]
     if len(event) == 0:
-        abort(404)
+        return jsonify({'Not found':'Event with that id is not available'}),404
     return jsonify({'event': event[0]})
 
 #get all events
@@ -48,26 +48,19 @@ def getAllEvents():
 def deleteEvent(eventid):
     event = [event for event in models.Events.events_list if event['eventid'] == eventid]
     if len(event) == 0:
-        abort(404)
+        return jsonify({'Not found':'Event with that id is not available'}),404
     models.Events.events_list.remove(event[0])
-    return jsonify({'event': True})
+    return jsonify({'event': "Event deletion successful"})
 
 #edit and event
 @events.route('/api/v1/events/<int:eventid>', methods=['PUT'])
 def editEvent(eventid):
     event = [event for event in models.Events.events_list if event['eventid'] == eventid]
     if len(event) == 0:
-        abort(404)
+        return jsonify({'Not found':'Event with that id is not available'}),404
     if not request.json:
         abort(403)
-    # if 'name' in request.json and type(request.json['name']) != string:
-    #     abort(400) #bad request
-    # if 'description' in request.json and type(request.json['description']) != Unicode:
-    #     abort(400) #bad request
-    # if 'location' in request.json and type(request.json['location']) != Unicode:
-    #     abort(400) #bad request
-    # if 'category' in request.json and type(request.json['category']) != Unicode:
-    #     abort(400) #bad request
+    
     event[0]['name'] = request.json.get('name', event[0]['name']) #if no changes made let the initial remain
     event[0]['description'] = request.json.get('description', event[0]['description'])
     event[0]['location'] = request.json.get('location', event[0]['location'])
