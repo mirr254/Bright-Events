@@ -31,10 +31,15 @@ def register():
     if bad_email == None:
        return jsonify({"Bad Email":"Please provide a valid email"})
 
-    #check if user exists
+    #check if email already exists
     user1 = [user for user in models.User.users_list if user['email'] == request.json['email']]
     if user1:
         return jsonify({"Error": "Email already taken"})
+
+    #test username
+    user1 = [user for user in models.User.users_list if user['email'] == request.json['username']]
+    if user1:
+        return jsonify({"Error": "Username already taken"})
 
     user = {
         'id':models.User.get_random_id(),
