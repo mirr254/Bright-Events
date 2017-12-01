@@ -81,20 +81,25 @@ def searchByLocation(location):
     event_searched = [event for event in models.Events.events_list if event['name'] == location]
     if event_searched:
         return jsonify({'events': event_searched}),200
-    abort(404)
+    return jsonify({'Not found':'No event with that id'}),404
 
 #rsvp or respond to an event (attending/not attending/maybe)
 @events.route('/api/v1/events/<int:eventid>/rsvp', methods=['POST'])
 def rsvpToAnEvent(eventid):
     if not request.json or not 'rsvp' in request.json: #name must be included
-        abort(403)
-    event = [event for event in models.Events.events_list if event['eventid'] == eventid]
-    if event:
-        rsvp_ = {
-            "rsvp_id": models.Events.get_random_id(),
-            "eventid": eventid,
-            "userid": models.Events.get_random_id(), #to be changed after testing. take user id from session
-            "rsvp": request.json['rsvp']
-        }
-        return jsonify({'rsvp status': rsvp_}),201
-    abort(404)
+        return jsonify({'Error':'Please provide rsvp details'})
+
+    rsvp = request.json['rsvp']
+    if rsvp == 'attending' or rsvp =='not attending' or rsvp == 'maybe':
+        #return jsonify({'Error':'Rsvp with attending, not attending or maybe'}),403
+        event = [event for event in models.Events.events_list if event['eventid'] == eventid]
+        if event:
+            rsvp_ = {
+                "rsvp_id": models.Events.get_random_id(),
+                "eventid": eventid,
+                "userid": models.Events.get_random_id(), #to be changed after testing. take user id from session
+                "rsvp": request.json['rsvp']
+            }
+            return jsonify({'rsvp status': rsvp_}),201
+        return jsonify({'Event not found':'No event with that id'}),404
+    return jsonify({'Error':'rsvp must be either attending/maybe/not attending'}),403

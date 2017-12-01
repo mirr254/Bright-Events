@@ -156,7 +156,7 @@ class UserActivitiesTestcase(unittest.TestCase):
         #get eventid of newly created event
         eventid = str( result_in_json['event']['eventid'])
         res = self.client().post('/api/v1/events/'+eventid+'/rsvp',data=json.dumps(self.rsvp_) ,content_type='application/json')
-        
+        print(res)
         self.assertEqual(res.status_code, 201)
 
         #test the endpoint for retrieving the users. will retrieve users based on eventid
