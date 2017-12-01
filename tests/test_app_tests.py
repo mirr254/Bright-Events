@@ -86,11 +86,7 @@ class UserActivitiesTestcase(unittest.TestCase):
 
     #test if user can register
     def test_auth_register(self):
-        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user),content_type='application/json')
-        result_in_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
-        bad_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', result_in_json['user']['email'])
-        self.assertNotEqual(bad_email, None)
-        #test if user exists       
+        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user),content_type='application/json')            
         self.assertEqual(res.status_code, 201)
 
     #make sure email is not empty
