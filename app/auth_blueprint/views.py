@@ -1,5 +1,5 @@
 #!flask/bin/python
-from flask import Flask, jsonify,abort,request,session
+from flask import Flask, jsonify,abort,request,session, render_template
 from flask import make_response, g
 import re
 from . import models
@@ -19,6 +19,11 @@ def bad_request(error):
 @auth.errorhandler(403)
 def forbiden(error):
     return make_response(jsonify({'error': 'Please dont leave some fields blank'}), 403)
+
+#view api docs in heroku
+@auth.route('/')
+def index():
+	return render_template('documentation.html') 
 # register user
 @auth.route('/api/v1/auth/register', methods=['POST'])
 def register():
