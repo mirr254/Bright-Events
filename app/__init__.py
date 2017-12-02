@@ -2,7 +2,7 @@
 from flask import Flask
 from instance.config import app_config
 
-def createApp(conf_name):
+def createApp():
 
     app = Flask(__name__)    
 
