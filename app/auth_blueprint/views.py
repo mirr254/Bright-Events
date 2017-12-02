@@ -24,6 +24,7 @@ def forbiden(error):
 @auth.route('/')
 def index():
 	return render_template('documentation.html') 
+
 # register user
 @auth.route('/api/v1/auth/register', methods=['POST'])
 def register():
