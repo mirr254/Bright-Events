@@ -8,8 +8,6 @@ install: pip install -r requirements.txt
 script:
 - nosetests --with-coverage --cover-package=app
 
-#sh run_travis.sh --cov-config .coveragerc --with-coverage --cover-package=tests 
-
 after_success:
  - coveralls --config_file .coveragerc
   
