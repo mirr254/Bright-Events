@@ -1,9 +1,11 @@
 #!flask/bin/python
 from flask import Flask
-from instance.config import app_config
 from flask_api import FlaskAPI
 from flask_sqlalchemy import SQLAlchemy
 import os
+
+from instance.config import app_config
+
 
 db = SQLAlchemy()
 

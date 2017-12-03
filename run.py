@@ -1,7 +1,11 @@
 #!flask/bin/python
-from app import createApp 
+import os
 
-app = createApp('development')
+from app import createApp
+
+config_name = os.getenv('APP_SETTINGS') # config_name = "development"
+
+app = createApp(config_name)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
