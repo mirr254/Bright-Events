@@ -1,6 +1,6 @@
 import unittest
 import json
-from app import createApp
+from app import createApp,db
 from flask import request
 import re
 
@@ -8,8 +8,14 @@ class UserActivitiesTestcase(unittest.TestCase):
     """This class will be used for user test cases"""
 
     def setUp(self):
-        self.app = createApp('development')
+        self.app = createApp(conf_name='testing')
         self.client = self.app.test_client
+
+        # binds the app to the current context
+        with self.app.app_context():
+            # create all tables
+            db.create_all()
+
         self.user = {
             'email': 'email@kungu.com',
             'username':'samuel',
