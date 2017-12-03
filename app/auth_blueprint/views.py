@@ -1,8 +1,8 @@
 #!flask/bin/python
+import re
 from flask import Flask, jsonify,abort,request,session, render_template
 from flask import make_response, g
 from flask_httpauth import HTTPBasicAuth
-import re
 from . import models
 from . import auth
 from app import db

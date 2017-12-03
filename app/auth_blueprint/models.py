@@ -9,8 +9,6 @@ from app import db, createApp
 class User(db.Model):
     """This class represents the users table."""
 
-    app = createApp(conf_name=os.getenv('APP_SETTINGS'))
-
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
