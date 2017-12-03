@@ -13,7 +13,7 @@ class User(db.Model):
 
     __tablename__ = 'users'
 
-    userid = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), index=True)
     email = db.Column(db.String(50), index=True)
     password_hash = db.Column(db.String(255))
@@ -36,12 +36,12 @@ class User(db.Model):
         db.session.commit()
 
     def generate_auth_token(self, expiration = 600):
-        s = Serializer(createApp(conf_name=os.getenv('APP_SETTINGS')).config['SECRET_KEY'], expires_in = expiration)
+        s = Serializer("super awesome secret #$%^*(", expires_in = expiration)
         return s.dumps({ 'id': self.id })
 
     @staticmethod
     def verify_auth_token(token):
-        s = Serializer(createApp(conf_name=os.getenv('APP_SETTINGS')).config['SECRET_KEY'])
+        s = Serializer("super awesome secret #$%^*(")
         try:
             data = s.loads(token)
         except SignatureExpired:

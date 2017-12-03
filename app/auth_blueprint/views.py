@@ -48,14 +48,14 @@ def register():
     if models.User.query.filter_by(username = username).first() is not None:
         return jsonify({"Error": "Username already taken"})
 
-    user = models.User(username = username)
+    user = models.User(username = username, email =email)
     user.hash_password(password)
     user.save()
     
     return jsonify({'Successful': 'User registered successfully. You can now log in'}),201
 
 @authenticate.verify_password
-def checkuser(username_or_token, password):
+def verify_password(username_or_token, password):
     # first try to authenticate by token
     user = models.User.verify_auth_token(username_or_token)
     if not user:
@@ -71,7 +71,8 @@ def checkuser(username_or_token, password):
 @authenticate.login_required
 def login():    
     token = g.user.generate_auth_token()
-    return jsonify({'Welcome':'Login Okay'}),200
+    return jsonify({ 'token': token.decode('ascii') })
+    #return jsonify({'Welcome':'Login Okay'}),200
    
 
 
@@ -82,15 +83,13 @@ def resetPassword(email):
     user = models.User.query.filter_by(email=email).first()
     if not user:
         return jsonify({'Not found':'Email not found'}),404
-    password = str(request.data.get('password', ''))
+    password = str(request.json.get('password', ''))
     user.hash_password(password)
     user.save()
     return jsonify({'Success':'Password reset success'}),200
 
 #logout
 @auth.route('/api/v1/auth/logout')
-def logout():
-    session['email'] = None
-    session['userid'] = None
+def logout():    
     return jsonify({"Success":"Log out okay"})
 
