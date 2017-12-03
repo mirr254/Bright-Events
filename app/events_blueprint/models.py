@@ -35,6 +35,16 @@ class Events(db.Model):
     def __repr__(self):
         return "<Event: {}>".format(self.name) #object instance of the model whenever it is queried
 
+    def __init__(self, name, userid, cost,location,date,description,category):        
+        self.name = name
+        self.userid = userid
+        self.cost = cost
+        self.location = location
+        self.date = date
+        self.description = description
+        self.category = category
+
+
 
 
 class Rsvp(db.Model):
@@ -51,9 +61,11 @@ class Rsvp(db.Model):
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
 
-    def __init__(self, rsvpid):
+    def __init__(self, eventid,rsvp,userid):
         """initialize with name."""
-        self.rsvpid = rsvpid
+        self.eventid = eventid
+        self.rsvp = rsvp
+        self.userid = userid
 
     def save(self):
         db.session.add(self)

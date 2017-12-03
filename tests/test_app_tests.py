@@ -36,8 +36,7 @@ class UserActivitiesTestcase(unittest.TestCase):
             'username':'samuel',
             'password':'easypass'          
         }
-        self.event1 = {
-            "eventid":1,
+        self.event1 = {            
             "userid" : 2,
             "name" : "Partymad",
             "location" : "Nairobu",
@@ -47,7 +46,6 @@ class UserActivitiesTestcase(unittest.TestCase):
             "category": "Indoors"
         }
         self.event2 = {
-            "eventid":1,
             "userid" : 2,
             "name" : "Partymad",            
             "description" : "here and 2",
@@ -55,25 +53,22 @@ class UserActivitiesTestcase(unittest.TestCase):
             "cost" : 2000
         }
         self.event3 = {
-            "eventid":1,
             "userid" : 2,            
             "location" : "Nairobu",
             "description" : "here and 2",
             "date": "10/10/2017",
             "cost" : 2000
         }
-        self.event4 = {
-            "eventid":1,            
+        self.event4 = {            
             "name" : "Partymad",
             "location" : "Nairobu",
             "description" : "here and 2",
             "date": "10/10/2017",
             "cost" : 2000
         }
-        self.rsvp_ = {
-            "rsvp_id":1,
-            "eventid":20,
-            "userid":23456,
+        self.rsvp_ = {            
+            "eventid":1,
+            "userid":2,
             "rsvp":"attending"
         }
 
@@ -144,11 +139,9 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_rsvp_an_event(self):
         #make sure before rsvp we have an add event api working
         resp = self.client().post('/api/v1/events', data=json.dumps(self.event1), content_type='application/json')
-        self.assertEqual(resp.status_code, 201)
-        result_in_json = json.loads(resp.data.decode('utf-8').replace("'", "\""))
-        #get eventid of newly created event
-        eventid = str( result_in_json['event']['eventid'])
-        res = self.client().post('/api/v1/events/'+eventid+'/rsvp',
+        self.assertEqual(resp.status_code, 201)        
+        
+        res = self.client().post('/api/v1/events/1/rsvp',
              data=json.dumps(self.rsvp_) ,content_type='application/json')
         self.assertEqual(res.status_code, 201)
 
@@ -159,9 +152,8 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.assertEqual(resp.status_code, 201)
         ### test user can rsvp to that event ###
         result_in_json = json.loads(resp.data.decode('utf-8').replace("'", "\""))
-        #get eventid of newly created event
-        eventid = str( result_in_json['event']['eventid'])
-        res = self.client().post('/api/v1/events/'+eventid+'/rsvp',data=json.dumps(self.rsvp_) ,content_type='application/json')
+        #get eventid of newly created event        
+        res = self.client().post('/api/v1/events/1/rsvp',data=json.dumps(self.rsvp_) ,content_type='application/json')
         print(res)
         self.assertEqual(res.status_code, 201)
 
