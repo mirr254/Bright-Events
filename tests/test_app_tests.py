@@ -17,8 +17,8 @@ class UserActivitiesTestcase(unittest.TestCase):
             db.create_all()
 
         self.user = {
-            'email': 'email@kungu.com',
-            'username':'samuel',
+            'email': 'test@kungu.com',
+            'username':'test',
             'password':'hardpass'
         }
         self.user2 = {
@@ -92,7 +92,8 @@ class UserActivitiesTestcase(unittest.TestCase):
 
     #test if user can register
     def test_auth_register(self):
-        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user),content_type='application/json')            
+        res = self.client().post('/api/v1/auth/register', data=self.user, content_type='application/json')
+        print(res.data)            
         self.assertEqual(res.status_code, 201)
 
     #make sure email is not empty
@@ -171,6 +172,13 @@ class UserActivitiesTestcase(unittest.TestCase):
         # res = self.client().get('/api/v1/events/'+eventid+'/rsvp',content_type='application/json')
         # #print(json.loads(res.data.decode('utf-8').replace("'", "\"")))
         # self.assertEqual(res.status_code, 200)
+
+    def tearDown(self):
+        """teardown all initialized variables."""
+        with self.app.app_context():
+            # drop all tables
+            db.session.remove()
+            db.drop_all()
     
     if __name__ == '__main__':
         unittest.main()       

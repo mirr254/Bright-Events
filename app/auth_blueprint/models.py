@@ -1,10 +1,15 @@
 # from passlib.apps import custom_app_context as pwd_context
 import random
+import os
 from passlib.apps import custom_app_context as passwd_context #based on sha256_crypt algo
-from app import db
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
+from app import db, createApp
 
 class User(db.Model):
     """This class represents the users table."""
+
+    app = createApp(conf_name=os.getenv('APP_SETTINGS'))
 
     __tablename__ = 'users'
 
@@ -25,4 +30,24 @@ class User(db.Model):
     #verify if password supplied is equal to hashed password
     def verify_password(self, password):
         return passwd_context.verify(password, self.password_hash) #true if paswd is correct
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def generate_auth_token(self, expiration = 600):
+        s = Serializer(createApp(conf_name=os.getenv('APP_SETTINGS')).config['SECRET_KEY'], expires_in = expiration)
+        return s.dumps({ 'id': self.id })
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(createApp(conf_name=os.getenv('APP_SETTINGS')).config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None # valid token, but expired
+        except BadSignature:
+            return None # invalid token
+        user = User.query.get(data['id'])
+        return user
 
