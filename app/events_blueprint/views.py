@@ -11,13 +11,17 @@ from . import events
 @events.route('/api/v1/events', methods=['POST'])
 def addevent():
     if not request.json or not 'name' in request.json: #name must be included
-        return jsonify({"Hey":"Name must be included"}),403
-    if not request.json or not 'cost' in request.json: #cost must be included
-        return jsonify({"Hey":"Cost must be included"}),403
+        return jsonify({"Hey":"Name must be included"}),403    
     if not request.json or not 'location' in request.json:
         return jsonify({"Hey":"Location must be included"}),403
     if not request.json or not 'category' in request.json:
         return jsonify({"Hey":"Category must be included"}),403
+    #check if cost is int
+    cost = request.json.get('cost')
+    if cost:
+        if isinstance(cost, (int, float)) != True:
+            return jsonify({"Error":"Cost must be numbers only"}),403
+
     event = {
         "eventid": models.Events.get_random_id(),
         "userid" : request.json['userid'],

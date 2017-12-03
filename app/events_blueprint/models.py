@@ -18,10 +18,7 @@ class Events(db.Model):
     date_modified = db.Column(
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
-
-    def __init__(self, name):
-        """initialize with name."""
-        self.name = name
+   
 
     def save(self):
         db.session.add(self)
@@ -38,31 +35,6 @@ class Events(db.Model):
     def __repr__(self):
         return "<Event: {}>".format(self.name) #object instance of the model whenever it is queried
 
-    events_list = [
-        {
-            "eventid":112,
-            "userid" : 11,
-            "name" : "Partymad",
-            "location" : "Nairobu",
-            "description" : "here and 2",
-            "date": "10/10/2017",
-            "cost" : 2000,
-            "category":"indoors"
-        }
-    ]
-    rsvp_list = [
-         {
-            "rsvp_id":543,
-            "eventid":112,
-            "userid":"sam@gmail",
-            "rsvp":"attending"
-        }
-    ]
-
-    def get_random_id():
-        # generate a random unique integer to be used as ID
-        random_id = random.randrange(1, 10000000)
-        return random_id
 
 
 class Rsvp(db.Model):
