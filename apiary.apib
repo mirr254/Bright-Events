@@ -5,7 +5,7 @@ HOST: https://brighter-event.herokuapp.com/
 
 Bright events provides a platform for event organizers to create and manage different types of events while making them easily accessible to target markets.
  
-## User Authentication Collection [/api/v1/auth/register]
+## User Authentication Collection [/api/v1/auth/]
 
 ### Register a new user [POST]
 
@@ -40,6 +40,7 @@ object containing event details.
                     }
                     
                 ]
+                
                 
 ### Reset password [PUT]
 
@@ -117,6 +118,35 @@ object containing event details.
                         "location": "America",
                         "name": "Learners hub",
                         "userid": 34566
+                    }
+                }
+
+## Events RSVP [/api/v1/events/<int:eventid>/rsvp]
+### RSVP to an event [POST]
+
+A user may rsvp to an event. It takes a JSON
+object containing event details.
+
++ Request (application/json)
+
+        {
+            "rsvp":"not attending"
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /api/v1/events/112/rsvp
+
+    + Body
+            
+                {
+                    "event": {
+                        "eventid": 112,
+                        "rsvp": "not attending",
+                        "rsvp_id": 1901233,
+                        "userid": 9038462
                     }
                 }
                 
