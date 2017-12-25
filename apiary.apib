@@ -7,10 +7,11 @@ Bright events provides a platform for event organizers to create and manage diff
  
 ## User Authentication Collection [/api/v1/auth/]
 
+### Registration [/api/v1/auth/register]
 ### Register a new user [POST]
 
-A user may create an event using this action. It takes a JSON
-object containing event details.
+A user can create an account using this action. It takes a JSON
+object containing user details.
 
 + Request (application/json)
 
@@ -24,24 +25,46 @@ object containing event details.
 
     + Headers
 
-            Location: /api/v1/auth/register
+            Location: /api/v1/events
 
     + Body
             
                 [
                     {
                         "Successful": "User registered successfully"
-                    },
+                    }
+                    
+                ]
+### Login [/api/v1/auth/login]
+### Login a user [POST]
+
+A user can login using username and password. It takes a JSON
+object containing user details.
+
++ Request (application/json)
+
+        {
+            "username":"kungu",
+            "password":"1234"
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /api/v1/events
+
+    + Body
+            
+                [
                     {
-                        "email": "user2@gmail.com",
-                        "id": 6094835,
-                        "password": "1234",
-                        "username": "kungu"
+                        "Successful": "User registered successfully"
                     }
                     
                 ]
                 
-                
+
+### Password reset [/api/v1/auth/reset-password/user1@gmail.com]               
 ### Reset password [PUT]
 
 Password reset can be done by providing an email as json object 
@@ -56,7 +79,7 @@ Password reset can be done by providing an email as json object
 
     + Headers
 
-            Location: /api/v1/auth/reset-password/user1@gmail.com
+            Location: /api/v1/auth/login
 
     + Body
             
@@ -204,3 +227,6 @@ Events are deleted using eventid
                     "event": "Event deletion successful"
                 }
                 
+
+
+
