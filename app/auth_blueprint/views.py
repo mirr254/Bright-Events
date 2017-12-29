@@ -54,7 +54,7 @@ def register():
         'password':request.json['password']
     }
     models.User.users_list.append(user)
-    return jsonify({'Successful': 'User registered successfully'}, user),201
+    return jsonify({'Successful': 'User registered successfully'}),201
 
 #login user
 @auth.route('/api/v1/auth/login', methods=['POST'])
