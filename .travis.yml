@@ -6,9 +6,8 @@ python:
 install: pip install -r requirements.txt
 
 script:
-- nosetests tests/test_views.py --with-coverage
+- nosetests --with-coverage --cover-package=app
 
 after_success:
  - coveralls --config_file .coveragerc
- - coveralls
   
