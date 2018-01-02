@@ -9,6 +9,11 @@ from . import events
 """ HANDLE EVENTS ACTIVITIES """
 
 #create a new event
+@events.route('/api/v1/user')
+def getloggeduser():
+    print(g)
+    import pdb; pdb.set_trace()
+    return g
 
 @events.route('/api/v1/events', methods=['POST'])
 def addevent():

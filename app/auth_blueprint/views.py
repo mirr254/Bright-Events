@@ -64,6 +64,8 @@ def verify_password(username_or_token, password):
         if not user or not user.verify_password(password):
             return False
     g.user = user
+
+    import pdb; pdb.set_trace() #debugger
     return True
 
 #login user
