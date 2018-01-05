@@ -5,7 +5,7 @@ class Config(object):
     DEBUG = False
     CSRF_ENABLED = True
     SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/brighter_events'
-    SECRET = "super doober @#$%^$"
+    SECRET_KEY = "super awesome secret #$%^*("
 
 class DevelopmentConfig(Config):
     #configuration for development

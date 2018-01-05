@@ -1,15 +1,14 @@
 #!flask/bin/python
 import re
+import jwt
+import datetime
 from flask import Flask, jsonify,abort,request,session, render_template
-from flask import make_response, g
-from flask_httpauth import HTTPBasicAuth
+from flask import make_response
 from . import models
 from . import auth
-from app import db
+from app import db, createApp
 
 """ HANDLE USER ACTIVITIES"""
-
-authenticate = HTTPBasicAuth()
 
 #error handlers for custom errors
 @auth.errorhandler(404)
@@ -54,32 +53,26 @@ def register():
     
     return jsonify({'Successful': 'User registered successfully. You can now log in'}),201
 
-@authenticate.verify_password
-def verify_password(username_or_token, password):
-    # first try to authenticate by token
-    user = models.User.verify_auth_token(username_or_token)
-    if not user:
-        # try to authenticate with username/password
-        user = models.User.query.filter_by(username = username_or_token).first()
-        if not user or not user.verify_password(password):
-            return False
-    g.user = user
-
-    import pdb; pdb.set_trace() #debugger
-    return True
-
 #login user
 @auth.route('/api/v1/auth/login')
-@authenticate.login_required
 def login():    
-    token = g.user.generate_auth_token()
-    return jsonify({ 'token': token.decode('ascii') })
-    #return jsonify({'Welcome':'Login Okay'}),200
+    auth = request.authorization
+
+    if not auth or not auth.username or not auth.password:
+        return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})    
+    user = models.User.query.filter_by(username=auth.username).first()
+    
+    if not user:
+        return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
+
+    #check password
+    if user.verify_password(auth.password):
+        token = jwt.encode({'userid': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, createApp('development').config['SECRET_KEY'])
+        return jsonify({'token': token.decode('UTF-8')})
+
+    return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
    
-
-
 #edit and password
-
 @auth.route('/api/v1/auth/reset-password/<string:email>', methods=['PUT'])
 def resetPassword(email):
     user = models.User.query.filter_by(email=email).first()
@@ -92,6 +85,7 @@ def resetPassword(email):
 
 #logout
 @auth.route('/api/v1/auth/logout')
-def logout():    
-    return jsonify({"Success":"Log out okay"})
+def logout():  
+    import pdb; pdb.set_trace()  
+    return jsonify({"Success":"Logged out"})
 
