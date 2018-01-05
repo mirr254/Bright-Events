@@ -4,9 +4,14 @@ import jwt
 import datetime
 from flask import Flask, jsonify,abort,request,session, render_template
 from flask import make_response
+from functools import wraps
 from . import models
 from . import auth
 from app import db, createApp
+from app.common_functions import token_required
+
+#variables
+app = createApp('development')
 
 """ HANDLE USER ACTIVITIES"""
 
@@ -15,11 +20,11 @@ from app import db, createApp
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
 
-
 #view api docs in heroku
 @auth.route('/')
 def index():
 	return render_template('documentation.html') 
+
 
 # register user
 @auth.route('/api/v1/auth/register', methods=['POST'])
@@ -67,7 +72,7 @@ def login():
 
     #check password
     if user.verify_password(auth.password):
-        token = jwt.encode({'userid': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, createApp('development').config['SECRET_KEY'])
+        token = jwt.encode({'public_id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, createApp('development').config['SECRET_KEY'])
         return jsonify({'token': token.decode('UTF-8')})
 
     return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
@@ -85,7 +90,7 @@ def resetPassword(email):
 
 #logout
 @auth.route('/api/v1/auth/logout')
-def logout():  
-    import pdb; pdb.set_trace()  
+@token_required
+def logout(logged_user):        
     return jsonify({"Success":"Logged out"})
 
