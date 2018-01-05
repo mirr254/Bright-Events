@@ -1,19 +1,15 @@
 #!flask/bin/python
 from flask import Flask, jsonify,abort,request,session
-from flask import make_response,g
-from flask_httpauth import HTTPBasicAuth
+from flask import make_response
 
-from app.auth_blueprint import views as auth_views
 from . import models
 from . import events
 
 """ HANDLE EVENTS ACTIVITIES """
 
-
-
 @events.route('/api/v1/user', methods=['GET'])
-def getloggeduser():
-    idf = session['userid']
+def getloggeduser(logged_in_user):
+    idf = logged_in_user.id
     import pdb; pdb.set_trace() 
     return jsonify({"Logged in user id": "yes" })
     
