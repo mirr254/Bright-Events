@@ -1,20 +1,18 @@
 #!flask/bin/python
 from flask import Flask, jsonify,abort,request,session
 from flask import make_response
+from app import createApp
+from app.common_functions import token_required
 
 from . import models
 from . import events
+import app.common_functions
 
 """ HANDLE EVENTS ACTIVITIES """
-
-@events.route('/api/v1/user', methods=['GET'])
-def getloggeduser(logged_in_user):
-    idf = logged_in_user.id
-    import pdb; pdb.set_trace() 
-    return jsonify({"Logged in user id": "yes" })
     
 #create a new event
 @events.route('/api/v1/events', methods=['POST'])
+@token_required
 def addevent():
     if not request.json or not 'name' in request.json: #name must be included
         return jsonify({"Hey":"Name must be included"}),403    

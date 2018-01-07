@@ -6,7 +6,7 @@ from app import createApp
 import jwt
 
 #variables
-app = createApp('development')
+   
 
 def token_required(f):
     @wraps(f)
@@ -20,7 +20,7 @@ def token_required(f):
             return jsonify({'message' : 'Token is missing!'}), 401
 
         try: 
-            data = jwt.decode(token, app.config['SECRET_KEY'])
+            data = jwt.decode(token, createApp('development').config['SECRET_KEY'])
             logged_in_user = models.User.query.filter_by(id=data['public_id']).first()
         except Exception:
             return jsonify({'message' : 'Token is invalid!'}), 401
