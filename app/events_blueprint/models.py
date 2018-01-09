@@ -8,6 +8,7 @@ class Events(db.Model):
     __tablename__ = 'events'
 
     eventid = db.Column(db.Integer, primary_key=True)
+    cost = db.Column(db.Integer)
     name = db.Column(db.String(255))
     user_public_id = db.Column(db.String(50))
     description = db.Column(db.String(255))
