@@ -9,12 +9,6 @@ from . import events
 import app.common_functions
 
 """ HANDLE EVENTS ACTIVITIES """
-@events.route('/api/v1/user', methods=['GET'])
-@token_required
-def show_logged_user(logged_in_user):
-    import pdb; pdb.set_trace()
-    p_id = logged_in_user.public_id
-    return jsonify({'logged user': p_id})
 #create a new event
 @events.route('/api/v1/events', methods=['POST'])
 @token_required
@@ -32,7 +26,7 @@ def addevent(logged_in_user):
     category = request.json.get('category')
     date = request.json.get('date')
     description = request.json.get('description')
-    userid =logged_in_user.public_id
+    public_userid =logged_in_user.public_id
         
     #check if cost is int
     if cost:
@@ -42,10 +36,10 @@ def addevent(logged_in_user):
     event = models.Events(
                         name=name,
                         cost=cost,
-                        userid=userid,
+                        user_public_id=public_userid,
                         location=location,
                         description=description,
-                        date = date,
+                        date = date, #yyy-mm-dd
                         category=category )
 
     event.save()
@@ -53,7 +47,8 @@ def addevent(logged_in_user):
 
 #get a specific event
 @events.route('/api/v1/events/<int:eventid>', methods=['GET'])
-def getEvent(eventid):
+@token_required
+def getEvent(logged_in_user, eventid):
     # retrieve a event using its ID
     event = models.Events.query.filter_by(eventid=eventid).first()
     if len(event) == 0:
@@ -62,7 +57,7 @@ def getEvent(eventid):
                 'id': event.eventid,
                 'name': event.name,
                 'cost': event.cost,
-                'userid': event.userid, #fetch user details using this ID
+                'public_userid': event.user_public_id, #fetch user details using this ID
                 'location': event.location,
                 'description': event.description,
                 'date' : event.date,
@@ -75,7 +70,8 @@ def getEvent(eventid):
 
 #get all events
 @events.route('/api/v1/events')
-def getAllEvents():
+@token_required
+def getAllEvents(logged_in_user):
     events = models.Events.get_all()
     results = [] # a list of events
     for event in events:
@@ -84,7 +80,7 @@ def getAllEvents():
             'id': event.eventid,
             'name': event.name,
             'cost': event.cost,
-            'userid': event.userid, #fetch user details using this ID
+            'public_userid': event.user_public_id, #fetch user details using this ID
             'location': event.location,
             'description': event.description,
             'date' : event.date,
@@ -99,7 +95,8 @@ def getAllEvents():
 
 #deleting an event
 @events.route('/api/v1/events/<int:eventid>', methods=['DELETE'])
-def deleteEvent(eventid):
+@token_required
+def deleteEvent(logged_in_user, eventid):
     # retrieve a event using its ID
     event = models.Events.query.filter_by(eventid=eventid).first()    
     if len(event) == 0:
@@ -129,7 +126,7 @@ def editEvent(eventid):
                 'id': event.eventid,
                     'name': event.name,
                     'cost': event.cost,
-                    'userid': event.userid, #fetch user details using this ID
+                    'public_userid': event.user_public_id, #fetch user details using this ID
                     'location': event.location,
                     'description': event.description,
                     'date' : event.date,
@@ -142,7 +139,8 @@ def editEvent(eventid):
 
 #search by name
 @events.route('/api/v1/events/<string:location>', methods=['GET'])
-def searchByLocation(location):
+@token_required
+def searchByLocation(logged_in_user, location):
     event_searched = models.Events.query.filter_by(location=location)
     if event_searched:
         results = [] # a list of events
@@ -152,7 +150,7 @@ def searchByLocation(location):
                 'id': event.eventid,
                 'name': event.name,
                 'cost': event.cost,
-                'userid': event.userid, #fetch user details using this ID
+                'public_userid': event.user_public_id, #fetch user details using this ID
                 'location': event.location,
                 'description': event.description,
                 'date' : event.date,
@@ -168,7 +166,8 @@ def searchByLocation(location):
 
 #rsvp or respond to an event (attending/not attending/maybe)
 @events.route('/api/v1/events/<int:eventid>/rsvp', methods=['POST'])
-def rsvpToAnEvent(eventid):
+@token_required
+def rsvpToAnEvent(logged_in_user, eventid):
     if not request.json or not 'rsvp' in request.json: #name must be included
         return jsonify({'Error':'Please provide rsvp details'})
 
