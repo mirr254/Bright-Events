@@ -34,8 +34,5 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def generate_auth_token(self, expiration = 600):
-        s = Serializer("super awesome secret #$%^*(", expires_in = expiration)
-        return s.dumps({ 'id': self.id })
 
 
