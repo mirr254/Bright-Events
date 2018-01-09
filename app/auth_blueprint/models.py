@@ -38,15 +38,4 @@ class User(db.Model):
         s = Serializer("super awesome secret #$%^*(", expires_in = expiration)
         return s.dumps({ 'id': self.id })
 
-    @staticmethod
-    def verify_auth_token(token):
-        s = Serializer("super awesome secret #$%^*(")
-        try:
-            data = s.loads(token)
-        except SignatureExpired:
-            return None # valid token, but expired
-        except BadSignature:
-            return None # invalid token
-        user = User.query.get(data['id'])
-        return user
 
