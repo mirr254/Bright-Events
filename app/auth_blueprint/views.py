@@ -56,7 +56,7 @@ def register():
     if models.User.query.filter_by(username = username).first() is not None:
         return jsonify({"Error": "Username already taken"})
 
-    user = models.User(username = username, email=email, public_id=str(uuid.uuid4))
+    user = models.User(username = username, email=email, public_id=str(uuid.uuid4() ))
     user.hash_password(password)
     user.save()
     

@@ -9,7 +9,12 @@ from . import events
 import app.common_functions
 
 """ HANDLE EVENTS ACTIVITIES """
-    
+@events.route('/api/v1/user', methods=['GET'])
+@token_required
+def show_logged_user(logged_in_user):
+    import pdb; pdb.set_trace()
+    p_id = logged_in_user.public_id
+    return jsonify({'logged user': p_id})
 #create a new event
 @events.route('/api/v1/events', methods=['POST'])
 @token_required
@@ -27,7 +32,7 @@ def addevent(logged_in_user):
     category = request.json.get('category')
     date = request.json.get('date')
     description = request.json.get('description')
-    userid =2 # g.user.id -> to be changed
+    userid =logged_in_user.public_id
         
     #check if cost is int
     if cost:
