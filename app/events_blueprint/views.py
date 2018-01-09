@@ -13,7 +13,7 @@ import app.common_functions
 #create a new event
 @events.route('/api/v1/events', methods=['POST'])
 @token_required
-def addevent():
+def addevent(logged_in_user):
     if not request.json or not 'name' in request.json: #name must be included
         return jsonify({"Hey":"Name must be included"}),403    
     if not request.json or not 'location' in request.json:

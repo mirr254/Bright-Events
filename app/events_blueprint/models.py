@@ -9,7 +9,7 @@ class Events(db.Model):
 
     eventid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
-    userid = db.Column(db.Integer)
+    user_public_id = db.Column(db.String(50))
     description = db.Column(db.String(255))
     category = db.Column(db.String(255))
     location = db.Column(db.String(255))
@@ -35,9 +35,9 @@ class Events(db.Model):
     def __repr__(self):
         return "<Event: {}>".format(self.name) #object instance of the model whenever it is queried
 
-    def __init__(self, name, userid, cost,location,date,description,category):        
+    def __init__(self, name, user_public_id, cost,location,date,description,category):        
         self.name = name
-        self.userid = userid
+        self.user_public_id = user_public_id
         self.cost = cost
         self.location = location
         self.date = date
@@ -53,7 +53,7 @@ class Rsvp(db.Model):
     __tablename__ = 'rsvps'
 
     rsvp_id = db.Column(db.Integer, primary_key=True)
-    userid = db.Column(db.Integer)
+    user_public_id = db.Column(db.Integer)
     eventid = db.Column(db.Integer)   
     rsvp = db.Column(db.String(255))   
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
@@ -61,11 +61,11 @@ class Rsvp(db.Model):
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
 
-    def __init__(self, eventid,rsvp,userid):
+    def __init__(self, eventid,rsvp,user_public_id):
         """initialize with name."""
         self.eventid = eventid
         self.rsvp = rsvp
-        self.userid = userid
+        self.user_public_id = user_public_id
 
     def save(self):
         db.session.add(self)
