@@ -12,7 +12,7 @@ import app.common_functions
 #create a new event
 @events.route('/api/v1/events', methods=['POST'])
 @token_required
-def addevent(logged_in_user):
+def add_event(logged_in_user):
     if not request.json or not 'name' in request.json: #name must be included
         return jsonify({"Hey":"Name must be included"}),403    
     if not request.json or not 'location' in request.json:
@@ -48,7 +48,7 @@ def addevent(logged_in_user):
 #get a specific event
 @events.route('/api/v1/events/<int:eventid>', methods=['GET'])
 @token_required
-def getEvent(logged_in_user, eventid):
+def get_event(logged_in_user, eventid):
     # retrieve a event using its ID
     event = models.Events.query.filter_by(eventid=eventid).first()
     if len(event) == 0:
@@ -71,7 +71,7 @@ def getEvent(logged_in_user, eventid):
 #get all events
 @events.route('/api/v1/events')
 @token_required
-def getAllEvents(logged_in_user):
+def get_all_events(logged_in_user):
     events = models.Events.get_all()
     results = [] # a list of events
     for event in events:
@@ -96,7 +96,7 @@ def getAllEvents(logged_in_user):
 #deleting an event
 @events.route('/api/v1/events/<int:eventid>', methods=['DELETE'])
 @token_required
-def deleteEvent(logged_in_user, eventid):
+def delete_event(logged_in_user, eventid):
     # retrieve a event using its ID
     event = models.Events.query.filter_by(eventid=eventid).first()    
     if len(event) == 0:
@@ -109,7 +109,7 @@ def deleteEvent(logged_in_user, eventid):
 
 #edit and event
 @events.route('/api/v1/events/<int:eventid>', methods=['PUT'])
-def editEvent(eventid):
+def edit_event(eventid):
     event = models.Events.query.filter_by(eventid=eventid).first()
     if len(event) == 0:
         return jsonify({'Not found':'Event with that id is not available'}),404
@@ -140,7 +140,7 @@ def editEvent(eventid):
 #search by name
 @events.route('/api/v1/events/<string:location>', methods=['GET'])
 @token_required
-def searchByLocation(logged_in_user, location):
+def searc_by_location(logged_in_user, location):
     event_searched = models.Events.query.filter_by(location=location)
     if event_searched:
         results = [] # a list of events
@@ -167,7 +167,7 @@ def searchByLocation(logged_in_user, location):
 #rsvp or respond to an event (attending/not attending/maybe)
 @events.route('/api/v1/events/<int:eventid>/rsvp', methods=['POST'])
 @token_required
-def rsvpToAnEvent(logged_in_user, eventid):
+def rsvp_to_an_event(logged_in_user, eventid):
     if not request.json or not 'rsvp' in request.json: #name must be included
         return jsonify({'Error':'Please provide rsvp details'})
 
