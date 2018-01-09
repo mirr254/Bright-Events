@@ -51,7 +51,7 @@ def add_event(logged_in_user):
 def get_event(logged_in_user, eventid):
     # retrieve a event using its ID
     event = models.Events.query.filter_by(eventid=eventid).first()
-    if len(event) == 0:
+    if not event:
         return jsonify({'Not found':'Event with that id is not available'}),404
     response = jsonify({
                 'id': event.eventid,
@@ -99,7 +99,7 @@ def get_all_events(logged_in_user):
 def delete_event(logged_in_user, eventid):
     # retrieve a event using its ID
     event = models.Events.query.filter_by(eventid=eventid).first()    
-    if len(event) == 0:
+    if not event:
         return jsonify({'Not found':'Event with that id is not available'}),404
 
     event.delete()
@@ -111,7 +111,7 @@ def delete_event(logged_in_user, eventid):
 @events.route('/api/v1/events/<int:eventid>', methods=['PUT'])
 def edit_event(eventid):
     event = models.Events.query.filter_by(eventid=eventid).first()
-    if len(event) == 0:
+    if not event:
         return jsonify({'Not found':'Event with that id is not available'}),404
     if not request.json:
         abort(403)
