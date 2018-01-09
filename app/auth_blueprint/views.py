@@ -4,7 +4,7 @@ from flask import Flask, jsonify,abort,request,session, render_template
 from flask import make_response
 from functools import wraps
 from app import createApp
-#from . import token_required
+from . import token_required
 from . import models
 from . import auth
 
@@ -56,7 +56,7 @@ def register():
     if models.User.query.filter_by(username = username).first() is not None:
         return jsonify({"Error": "Username already taken"})
 
-    user = models.User(username = username, email =email, public_id=str(uuid.uuid4))
+    user = models.User(username = username, email=email, public_id=str(uuid.uuid4))
     user.hash_password(password)
     user.save()
     
@@ -76,14 +76,14 @@ def login():
 
     #check password
     if user.verify_password(auth.password):
-        token = jwt.encode({'public_id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, createApp('development').config['SECRET_KEY'])
+        token = jwt.encode({'public_id': user.public_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, createApp('development').config['SECRET_KEY'])
         return jsonify({'token': token.decode('UTF-8')})
 
     return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
    
 #edit and password
 @auth.route('/api/v1/auth/reset-password/<string:email>', methods=['PUT'])
-def resetPassword(email):
+def reset_password(email):
     user = models.User.query.filter_by(email=email).first()
     if not user:
         return jsonify({'Not found':'Email not found'}),404
@@ -94,7 +94,7 @@ def resetPassword(email):
 
 #logout
 @auth.route('/api/v1/auth/logout')
-#@token_required
+@token_required
 def logout(logged_in_user):
-    return jsonify({"Logged out ": logged_in_user.id})
+    return jsonify({"Logged out ": logged_in_user.public_id})
 

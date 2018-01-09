@@ -21,7 +21,7 @@ def token_required(f):
 
         try: 
             data = jwt.decode(token, createApp('development').config['SECRET_KEY'])
-            logged_in_user = models.User.query.filter_by(id=data['public_id']).first()
+            logged_in_user = models.User.query.filter_by(public_id=data['public_id']).first()
         except Exception:
             return jsonify({'message' : 'Token is invalid!'}), 401
 
