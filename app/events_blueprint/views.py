@@ -105,7 +105,7 @@ def delete_event(logged_in_user, eventid):
     event.delete()
     return {
             "message": "Event {} deleted successfully".format(event.eventid) 
-         }, 200
+         }, 201
 
 #edit and event
 @events.route('/api/v1/events/<int:eventid>', methods=['PUT'])
@@ -120,6 +120,7 @@ def edit_event(eventid):
     event.description = request.json.get('description', event.description)
     event.location = request.json.get('location', event.location)
     event.category = request.json.get('category', event.category)
+    event.cost = request.json.get('cost', event.cost)
     event.save()
 
     response = jsonify({
@@ -134,7 +135,7 @@ def edit_event(eventid):
                     'date_created': event.date_created,
                     'date_modified': event.date_modified
             })
-    response.status_code = 200
+    response.status_code = 201
     return response
 
 #search by name
