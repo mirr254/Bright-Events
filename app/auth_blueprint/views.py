@@ -90,7 +90,7 @@ def reset_password(email):
     password = str(request.json.get('password', ''))
     user.hash_password(password)
     user.save()
-    return jsonify({'Success':'Password reset success'}),200
+    return jsonify({'Success':'Password reset success'}),201
 
 #logout
 @auth.route('/api/v1/auth/logout')

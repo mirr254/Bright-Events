@@ -6,13 +6,14 @@ from app.common_functions import token_required
 
 from . import models
 from . import events
-import app.common_functions
+
 
 """ HANDLE EVENTS ACTIVITIES """
 #create a new event
 @events.route('/api/v1/events', methods=['POST'])
 @token_required
 def add_event(logged_in_user):
+    #check if user is logged in
     if not request.json or not 'name' in request.json: #name must be included
         return jsonify({"Hey":"Name must be included"}),403    
     if not request.json or not 'location' in request.json:
@@ -72,6 +73,7 @@ def get_event(logged_in_user, eventid):
 @events.route('/api/v1/events')
 @token_required
 def get_all_events(logged_in_user):
+    
     events = models.Events.get_all()
     results = [] # a list of events
     for event in events:
