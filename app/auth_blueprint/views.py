@@ -4,7 +4,7 @@ from flask import Flask, jsonify,abort,request,session, render_template
 from flask import make_response
 from functools import wraps
 from app import createApp
-from . import token_required
+#from . import token_required
 from . import models
 from . import auth
 
@@ -94,7 +94,7 @@ def reset_password(email):
 
 #logout
 @auth.route('/api/v1/auth/logout')
-@token_required
+#@token_required
 def logout(logged_in_user):
     return jsonify({"Logged out ": logged_in_user.public_id})
 

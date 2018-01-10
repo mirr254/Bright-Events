@@ -54,7 +54,7 @@ class Rsvp(db.Model):
     __tablename__ = 'rsvps'
 
     rsvp_id = db.Column(db.Integer, primary_key=True)
-    user_public_id = db.Column(db.Integer)
+    user_public_id = db.Column(db.String(50))
     eventid = db.Column(db.Integer)   
     rsvp = db.Column(db.String(255))   
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
