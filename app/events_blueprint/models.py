@@ -54,7 +54,7 @@ class Rsvp(db.Model):
     __tablename__ = 'rsvps'
 
     rsvp_id = db.Column(db.Integer, primary_key=True)
-    user_public_id = db.Column(db.String(50))
+    user_pub_id = db.Column(db.String(50))
     eventid = db.Column(db.Integer)   
     rsvp = db.Column(db.String(255))   
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
@@ -66,7 +66,7 @@ class Rsvp(db.Model):
         """initialize with name."""
         self.eventid = eventid
         self.rsvp = rsvp
-        self.user_public_id = user_public_id
+        self.user_pub_id = user_public_id
 
     def save(self):
         db.session.add(self)

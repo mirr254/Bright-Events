@@ -179,8 +179,8 @@ def rsvp_to_an_event(logged_in_user, eventid):
         if event:
             rsvp = models.Rsvp(
                 eventid = eventid,
-                user_public_id = logged_in_user.public_id,#change to take of logged in user
-                rsvp = request.json['rsvp']
+                rsvp = request.json['rsvp'],
+                user_pub_id = logged_in_user.public_id   
             )
             rsvp.save()
             return jsonify({'Message': "Successfully responded to and event"}),201
