@@ -180,7 +180,7 @@ def rsvp_to_an_event(logged_in_user, eventid):
             rsvp = models.Rsvp(
                 eventid = eventid,
                 rsvp = request.json['rsvp'],
-                user_pub_id = logged_in_user.public_id   
+                user_pub_id = logged_in_user.public_id 
             )
             rsvp.save()
             return jsonify({'Message': "Successfully responded to and event"}),201

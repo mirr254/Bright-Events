@@ -62,11 +62,11 @@ class Rsvp(db.Model):
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
 
-    def __init__(self, eventid,rsvp,user_public_id):
+    def __init__(self, eventid,rsvp,user_pub_id):
         """initialize with name."""
         self.eventid = eventid
         self.rsvp = rsvp
-        self.user_pub_id = user_public_id
+        self.user_pub_id = user_pub_id
 
     def save(self):
         db.session.add(self)
