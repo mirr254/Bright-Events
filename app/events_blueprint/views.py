@@ -179,7 +179,7 @@ def rsvp_to_an_event(logged_in_user, eventid):
         if event:
             rsvp = models.Rsvp(
                 eventid = eventid,
-                userid = 2,#change to take of logged in user
+                user_public_id = logged_in_user.public_id,#change to take of logged in user
                 rsvp = request.json['rsvp']
             )
             rsvp.save()
