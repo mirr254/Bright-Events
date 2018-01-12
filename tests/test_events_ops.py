@@ -8,7 +8,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
         self.app = createApp(conf_name='testing')
         self.client = self.app.test_client
 
-         self.event1 = {            
+        self.event1 = {            
             "userid" : 2,
             "name" : "Partymad",
             "location" : "Nairobu",
@@ -44,7 +44,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "rsvp":"attending"
         }
 
-         """Unit tests for events goes here"""    
+        """Unit tests for events goes here"""    
 
      # binds the app to the current context
         with self.app.app_context():
@@ -102,7 +102,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
         # self.assertEqual(res.status_code, 200)
 
 
-     def tearDown(self):
+    def tearDown(self):
         """teardown all initialized variables."""
         with self.app.app_context():
             # drop all tables

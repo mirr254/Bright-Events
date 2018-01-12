@@ -35,7 +35,7 @@ class UserActivitiesTestcase(unittest.TestCase):
             'email': 'emai@gmail.com',
             'username':'samuel',
             'password':'easypass'          
-        }       
+        }
 
         self.user_login_without_email = {
             
@@ -69,7 +69,7 @@ class UserActivitiesTestcase(unittest.TestCase):
     # def test_auth_reset_password(self):
     #     #test if user can register before changing password
     #     res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user4),content_type='application/json')
-    #     self.assertEqual(res.status_code, 201)
+    #     self.assertEqual(res.status_code, 201
     #     # test if user can now update password
     #     res = self.client().put('/api/v1/auth/reset-password/email@kungu.com',
     #           data=json.dumps(self.new_password),
@@ -85,5 +85,4 @@ class UserActivitiesTestcase(unittest.TestCase):
             db.drop_all()
     
     if __name__ == '__main__':
-        unittest.main()       
-    
+        unittest.main()
