@@ -65,16 +65,14 @@ class UserActivitiesTestcase(unittest.TestCase):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user3),content_type='application/json')
         self.assertIn("Password must be included", str(res.data))
 
-    # #test reset password api 
-    # def test_auth_reset_password(self):
-    #     #test if user can register before changing password
-    #     res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user4),content_type='application/json')
-    #     self.assertEqual(res.status_code, 201
-    #     # test if user can now update password
-    #     res = self.client().put('/api/v1/auth/reset-password/email@kungu.com',
-    #           data=json.dumps(self.new_password),
-    #           content_type='application/json')
-    #     self.assertEqual(res.status_code, 200)
+    #test reset password api 
+    def test_auth_reset_password(self):
+        #test if user can register before changing password
+        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user4),content_type='application/json')
+        self.assertEqual(res.status_code, 201)
+        # test if user can now update password
+        res = self.client().put('/api/v1/auth/reset-password/emai@gmail.com',data=json.dumps(self.new_password),content_type='application/json')
+        self.assertEqual(res.status_code, 201)
 
 
     def tearDown(self):
