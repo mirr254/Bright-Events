@@ -68,7 +68,7 @@ class UserActivitiesTestcase(unittest.TestCase):
     #test if user login
     def test_auth_login(self):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')
-        #self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 201)
         res = self.open_with_auth('/api/v1/auth/login', 'GET', 'test@kungu.com', 'hardpass')
         
 
