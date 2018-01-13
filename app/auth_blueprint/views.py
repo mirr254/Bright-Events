@@ -8,6 +8,7 @@ from app import createApp
 from app.common_functions import token_required
 from . import models
 from . import auth
+from app import db
 
 import re
 import jwt
@@ -19,6 +20,7 @@ import uuid
 app = createApp('development')
 
 """ HANDLE USER ACTIVITIES"""
+
 
 #error handlers for custom errors
 @auth.errorhandler(404)
