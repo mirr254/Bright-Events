@@ -91,10 +91,12 @@ class EventsActivitiesTestCases(unittest.TestCase):
         return token
 
     def test_add_event(self):
-        token = self.get_verfication_token()        
+        token = self.get_verfication_token()   
+
         res = self.client().post('/api/v1/events',
-                      headers = dict(Authorization= 'Bearer ' + token),
+                      headers = {'x-access-token' : token },
                       data=json.dumps(self.event1), content_type='application/json')
+
         self.assertEqual(res.status_code, 201)
     
     def test_add_event_has_location(self):
