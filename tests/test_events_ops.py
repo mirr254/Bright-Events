@@ -44,6 +44,16 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "rsvp":"attending"
         }
 
+        self.user = {
+            'email': 'test@kungu.com',
+            'username':'test',
+            'password':'hardpass'
+        }
+        self.login_details = {
+            'username' : 'test@kungu.com',
+            'password' : 'hardpass'
+        }
+
         """Unit tests for events goes here"""    
 
      # binds the app to the current context
@@ -52,6 +62,13 @@ class EventsActivitiesTestCases(unittest.TestCase):
             db.create_all()
 
     def test_add_event(self):
+        #register user
+        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')
+        self.assertEqual(res.status_code, 201)
+        #login user to get token
+        res2 = self.client().post('api/v1/auth/login', data=json.dumps(self.login_details), content_type='application/json')
+        print(res2.data)
+
         res = self.client().post('/api/v1/events', data=json.dumps(self.event1), content_type='application/json')
         self.assertEqual(res.status_code, 201)
     

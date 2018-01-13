@@ -1,8 +1,12 @@
+from app import createApp,db
+from flask import request, jsonify
+from functools import wraps
+from app.auth_blueprint import models
+import jwt
+import re
 import unittest
 import json
-from app import createApp,db
-from flask import request
-import re
+import base64
 
 class UserActivitiesTestcase(unittest.TestCase):
     """This class will be used for user test cases"""
@@ -20,6 +24,10 @@ class UserActivitiesTestcase(unittest.TestCase):
             'email': 'test@kungu.com',
             'username':'test',
             'password':'hardpass'
+        }
+        self.login_details = {
+            'username' : 'test@kungu.com',
+            'password' : 'hardpass'
         }
         self.user2 = {
             'id': 1,            
@@ -44,16 +52,26 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.new_password = {
                   "password":"1234@"
               }
-        self.login_data = {
-            "email":"email@",
-            "password":"hardpass"
-        }
-
-
+       
     #test if user can register
     def test_auth_register(self):
-        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')
+        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user), content_type='application/json') 
         self.assertEqual(res.status_code, 201)
+
+    def open_with_auth(self, url, method, username, password):
+        return self.app.test_client().open(url,
+                   method = method,
+                   headers = {
+                        'Authorization': 'Basic ' + base64.b64encode(bytes(username + ":" + password, 'ascii')).decode('ascii') }
+    )
+
+    #test if user login
+    def test_auth_login(self):
+        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')
+        #self.assertEqual(res.status_code, 200)
+        res = self.open_with_auth('/api/v1/auth/login', 'GET', 'test@kungu.com', 'hardpass')
+        
+
 
     #make sure email is not empty
     def test_auth_register_email_notEmpty(self):

@@ -77,7 +77,7 @@ def login():
     #check password
     if user.verify_password(auth.password):
         token = jwt.encode({'public_id': user.public_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, createApp('development').config['SECRET_KEY'])
-        return jsonify({'token': token.decode('UTF-8')})
+        return jsonify({'token': token.decode('UTF-8')}),200
 
     return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
    
