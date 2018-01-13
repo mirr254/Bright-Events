@@ -16,13 +16,6 @@ class User(db.Model):
     date_modified = db.Column(
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
-
-    def __init__(self, username, password_hash, public_id, email):
-        self.username = username
-        self.password_hash = password_hash
-        self.public_id = public_id
-        self.email = email
-
   
 
     def save(self):

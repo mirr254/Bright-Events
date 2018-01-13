@@ -89,7 +89,8 @@ def reset_password(email):
     if not user:
         return jsonify({'Not found':'Email not found'}),404
     password = str(request.json.get('password', ''))
-    user.hash_password(password)
+    hashed_pass = generate_password_hash(password)
+    user.password_hash = hashed_pass
     user.save()
     return jsonify({'Success':'Password reset success'}),201
 
