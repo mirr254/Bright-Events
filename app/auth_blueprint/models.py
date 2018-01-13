@@ -1,9 +1,5 @@
 # from passlib.apps import custom_app_context as pwd_context
 import random
-import os
-from passlib.apps import custom_app_context as passwd_context #based on sha256_crypt algo
-from itsdangerous import (TimedJSONWebSignatureSerializer
-                          as Serializer, BadSignature, SignatureExpired)
 from app import db, createApp
 
 class User(db.Model):
@@ -20,15 +16,14 @@ class User(db.Model):
     date_modified = db.Column(
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
+
+    def __init__(self, username, password_hash, public_id, email):
+        self.username = username
+        self.password_hash = password_hash
+        self.public_id = public_id
+        self.email = email
+
   
-
-    #hash the user password
-    def hash_password(self, password):
-        self.password_hash = passwd_context.encrypt(password)
-
-    #verify if password supplied is equal to hashed password
-    def verify_password(self, password):
-        return passwd_context.verify(password, self.password_hash) #true if paswd is correct
 
     def save(self):
         db.session.add(self)

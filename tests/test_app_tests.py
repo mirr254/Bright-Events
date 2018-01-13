@@ -29,13 +29,11 @@ class UserActivitiesTestcase(unittest.TestCase):
             'username' : 'test@kungu.com',
             'password' : 'hardpass'
         }
-        self.user2 = {
-            'id': 1,            
+        self.user2 = {                        
             'username':'samuel',
             'password':'hardpass'
         }
-        self.user3 = {
-            'id': 1,
+        self.user3 = {            
             'email': 'emai@gmail.com',
             'username':'samuel'            
         }
@@ -67,9 +65,10 @@ class UserActivitiesTestcase(unittest.TestCase):
 
     #test if user login
     def test_auth_login(self):
-        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')
-        self.assertEqual(res.status_code, 201)
-        res = self.open_with_auth('/api/v1/auth/login', 'GET', 'test@kungu.com', 'hardpass')
+        # res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')
+        # self.assertEqual(res.status_code, 201)
+        self.test_auth_register()
+        res = self.open_with_auth('/api/v1/auth/login', 'GET', 'test', 'hardpass')
         
 
 

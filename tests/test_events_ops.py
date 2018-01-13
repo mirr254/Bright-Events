@@ -1,6 +1,8 @@
 import unittest
 import json
 from app import createApp, db
+from . import test_app_tests
+import base64
 
 class EventsActivitiesTestCases(unittest.TestCase):
 
@@ -8,24 +10,21 @@ class EventsActivitiesTestCases(unittest.TestCase):
         self.app = createApp(conf_name='testing')
         self.client = self.app.test_client
 
-        self.event1 = {            
-            "userid" : 2,
+        self.event1 = {
             "name" : "Partymad",
             "location" : "Nairobu",
             "description" : "here and 2",
-            "date": "10/10/2017",
+            "date": "2017-12-24",
             "cost" : 2000,
             "category": "Indoors"
         }
-        self.event2 = {
-            "userid" : 2,
+        self.event2 = {            
             "name" : "Partymad",            
             "description" : "here and 2",
-            "date": "10/10/2017",
+            "date": "2018-01-05",
             "cost" : 2000
         }
-        self.event3 = {
-            "userid" : 2,            
+        self.event3 = {                        
             "location" : "Nairobu",
             "description" : "here and 2",
             "date": "10/10/2017",
@@ -35,12 +34,11 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "name" : "Partymad",
             "location" : "Nairobu",
             "description" : "here and 2",
-            "date": "10/10/2017",
+            "date": "2017-10-10",
             "cost" : 2000
         }
         self.rsvp_ = {            
-            "eventid":1,
-            "userid":2,
+            "eventid":1,            
             "rsvp":"attending"
         }
 
@@ -50,7 +48,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
             'password':'hardpass'
         }
         self.login_details = {
-            'username' : 'test@kungu.com',
+            'username' : 'test',
             'password' : 'hardpass'
         }
 
@@ -61,15 +59,42 @@ class EventsActivitiesTestCases(unittest.TestCase):
             # create all tables
             db.create_all()
 
-    def test_add_event(self):
-        #register user
-        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')
-        self.assertEqual(res.status_code, 201)
-        #login user to get token
-        res2 = self.client().post('api/v1/auth/login', data=json.dumps(self.login_details), content_type='application/json')
-        print(res2.data)
+    #register a user
+    def register_users(self):
+        user_details = json.dumps(self.user)
+        return self.client().post('api/v1/auth/register', data=user_details, content_type='application/json')
 
-        res = self.client().post('/api/v1/events', data=json.dumps(self.event1), content_type='application/json')
+    def open_with_auth(self, url, method, username, password):
+        return self.app.test_client().open(url,
+                   method = method,
+                   headers = {
+                        'Authorization': 'Basic ' + base64.b64encode(bytes(username + ":" + password, 'utf-8')).decode('utf-8') }
+    )
+
+    #login the newly created user
+    def user_login(self):        
+        return self.open_with_auth('/api/v1/auth/login', 'GET', 'test', 'hardpass')
+
+    #get the token from logged in user
+    def get_verfication_token(self):
+        
+        #register user 1st
+        self.register_users()
+
+        #login the user
+        res = self.user_login()
+        #from nose.tools import set_trace; set_trace()
+        #get the access token        
+        token = json.loads(res.data.decode('utf-8'))['token']
+        #from nose.tools import set_trace; set_trace()
+            
+        return token
+
+    def test_add_event(self):
+        token = self.get_verfication_token()        
+        res = self.client().post('/api/v1/events',
+                      headers = dict(Authorization= 'Bearer ' + token),
+                      data=json.dumps(self.event1), content_type='application/json')
         self.assertEqual(res.status_code, 201)
     
     def test_add_event_has_location(self):
