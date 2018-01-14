@@ -9,7 +9,7 @@ before_script:
   - psql -c "CREATE DATABASE test_db_brighter_events;" -U postgres
 
 script:
-- nosetests --with-coverage --cover-package=tests
+- nosetests --with-coverage --cover-package=app
 
 after_success:
  - coveralls --config_file .coveragerc
