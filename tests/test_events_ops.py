@@ -85,8 +85,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
         res = self.user_login()
         #from nose.tools import set_trace; set_trace()
         #get the access token        
-        token = json.loads(res.data.decode('utf-8'))['token']
-        #from nose.tools import set_trace; set_trace()
+        token = json.loads(res.data.decode('utf-8'))['token']        
             
         return token
 
@@ -156,11 +155,13 @@ class EventsActivitiesTestCases(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
 
         #test the endpoint for retrieving the users. will retrieve users based on eventid
-        # result_as_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
+        result_as_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
+                
+        res = self.client().get('/api/v1/events/1/guests',
+                headers = {'x-access-token' : token },
+                content_type='application/json')        
+        self.assertEqual(res.status_code, 200)
 
-        # res = self.client().get('/api/v1/events/'+eventid+'/rsvp',content_type='application/json')
-        # #print(json.loads(res.data.decode('utf-8').replace("'", "\"")))
-        # self.assertEqual(res.status_code, 200)
 
 
     def tearDown(self):

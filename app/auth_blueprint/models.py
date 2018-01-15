@@ -22,5 +22,8 @@ class User(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def __repr__(self):
+        return "<User: {}>".format(self.username) #object instance of the model whenever it is queried
+
 
 

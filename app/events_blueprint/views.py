@@ -3,6 +3,7 @@ from flask import Flask, jsonify,abort,request,session
 from flask import make_response
 from app import createApp
 from app.common_functions import token_required
+from app.auth_blueprint import models as users_models
 
 from . import models
 from . import events
@@ -185,6 +186,34 @@ def rsvp_to_an_event(logged_in_user, eventid):
                 user_pub_id = logged_in_user.public_id 
             )
             rsvp.save()
-            return jsonify({'Message': "Successfully responded to and event"}),201
+            response = jsonify({
+                'eventid':eventid,
+                'Message': 'Successfully responded to and event'
+            })
+            return response,201
         return jsonify({'Event not found':'No event with that id'}),404
     return jsonify({'Error':'rsvp must be either attending/maybe/not attending'}),403
+
+@events.route('/api/v1/events/<int:eventid>/guests', methods=['GET'])
+@token_required
+def list_event_guests(token_required,eventid):
+    #check if event exists
+    event = models.Events.query.filter_by(eventid=eventid).first()
+    if event:
+        public_ids_of_users = []
+        list_dic_of_users_rsvp = []
+        rsvps = models.Rsvp.query.filter_by(eventid = eventid)
+        #if no rsvps
+        if not rsvps:
+            return jsonify({'Message':'This event has no guests yet.'}),404
+        for resp in rsvps:
+            user = users_models.User.query.filter_by( public_id = resp.user_pub_id).first()
+            import pdb; pdb.set_trace()
+            obj = {
+                user.username : resp.rsvp                
+            }
+            list_dic_of_users_rsvp.append(obj)
+            response = jsonify(list_dic_of_users_rsvp)
+            response.status_code = 200
+
+            return response
