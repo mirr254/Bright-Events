@@ -200,8 +200,7 @@ def list_event_guests(token_required,eventid):
     #check if event exists
     event = models.Events.query.filter_by(eventid=eventid).first()
     if event:
-        public_ids_of_users = []
-        list_dic_of_users_rsvp = []
+        dic_of_users_rsvp = {}
         rsvps = models.Rsvp.query.filter_by(eventid = eventid)
         #if no rsvps
         if not rsvps:
@@ -211,11 +210,9 @@ def list_event_guests(token_required,eventid):
         for resp in rsvps:
             user = users_models.User.query.filter_by( public_id = resp.user_pub_id).first()
             
-            obj = {
-                user.username : resp.rsvp                
-            }
-            list_dic_of_users_rsvp.append(obj)
-            response = jsonify(list_dic_of_users_rsvp)
-            response.status_code = 200
+            dic_of_users_rsvp.update({user.username : resp.rsvp})
 
-            return response
+        response = jsonify(dic_of_users_rsvp)
+        response.status_code = 200
+
+        return response
