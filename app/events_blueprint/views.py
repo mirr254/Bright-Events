@@ -205,10 +205,12 @@ def list_event_guests(token_required,eventid):
         rsvps = models.Rsvp.query.filter_by(eventid = eventid)
         #if no rsvps
         if not rsvps:
-            return jsonify({'Message':'This event has no guests yet.'}),404
+            response = jsonify({'Message':'This event has no guests yet.'})
+            response.status_code = 404
+            return response
         for resp in rsvps:
             user = users_models.User.query.filter_by( public_id = resp.user_pub_id).first()
-            import pdb; pdb.set_trace()
+            
             obj = {
                 user.username : resp.rsvp                
             }

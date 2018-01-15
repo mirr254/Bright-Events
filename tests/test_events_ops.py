@@ -145,23 +145,19 @@ class EventsActivitiesTestCases(unittest.TestCase):
             headers = {'x-access-token' : token }, 
             data=json.dumps(self.event1), content_type='application/json')
         self.assertEqual(resp.status_code, 201)
-        ### test user can rsvp to that event ###
-        result_in_json = json.loads(resp.data.decode('utf-8').replace("'", "\""))
-        #get eventid of newly created event        
+        
+        ### test user can rsvp to that event ###                
         res = self.client().post('/api/v1/events/1/rsvp',
             headers = {'x-access-token' : token },
             data=json.dumps(self.rsvp_) ,content_type='application/json')
         
         self.assertEqual(res.status_code, 201)
 
-        #test the endpoint for retrieving the users. will retrieve users based on eventid
-        result_as_json = json.loads(res.data.decode('utf-8').replace("'", "\""))
-                
+        #test the endpoint for retrieving the users. will retrieve users based on eventid                
         res = self.client().get('/api/v1/events/1/guests',
                 headers = {'x-access-token' : token },
                 content_type='application/json')        
         self.assertEqual(res.status_code, 200)
-
 
 
     def tearDown(self):
