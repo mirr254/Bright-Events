@@ -4,8 +4,8 @@ class Config(object):
     #parent configuration class
     DEBUG = False
     CSRF_ENABLED = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
-    SECRET = os.getenv('SECRET')
+    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/brighter_events'
+    SECRET_KEY = "super awesome secret #$%^*("
 
 class DevelopmentConfig(Config):
     #configuration for development

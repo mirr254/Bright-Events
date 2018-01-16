@@ -5,10 +5,12 @@ python:
 #dependacies and libraries to install
 install: pip install -r requirements.txt
 
+before_script:
+  - psql -c "CREATE DATABASE test_db_brighter_events;" -U postgres
+
 script:
-- nosetests tests/test_views.py --with-coverage
+- nosetests --with-coverage --cover-package=app
 
 after_success:
  - coveralls --config_file .coveragerc
- - coveralls
   
