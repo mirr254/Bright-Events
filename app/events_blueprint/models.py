@@ -45,9 +45,6 @@ class Events(db.Model):
         self.description = description
         self.category = category
 
-
-
-
 class Rsvp(db.Model):
     """This class represents the rsvp table. Details of users rsvp"""
 
