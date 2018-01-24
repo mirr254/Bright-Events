@@ -1,7 +1,7 @@
 import unittest
 import json
 from app import createApp, db
-from . import test_app_tests
+from . import test_user_auth
 import base64
 
 class EventsActivitiesTestCases(unittest.TestCase):
