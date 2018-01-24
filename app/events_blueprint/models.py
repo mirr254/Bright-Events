@@ -19,7 +19,7 @@ class Events(db.Model):
     date_modified = db.Column(
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
-   
+
 
     def save(self):
         db.session.add(self)
