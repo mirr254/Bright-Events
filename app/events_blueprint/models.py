@@ -19,7 +19,7 @@ class Events(db.Model):
     date_modified = db.Column(
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
-   
+
 
     def save(self):
         db.session.add(self)
@@ -44,9 +44,6 @@ class Events(db.Model):
         self.date = date
         self.description = description
         self.category = category
-
-
-
 
 class Rsvp(db.Model):
     """This class represents the rsvp table. Details of users rsvp"""
