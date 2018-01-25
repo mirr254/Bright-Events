@@ -46,6 +46,8 @@ def register():
         return jsonify({"Hey":"Username must be included"}),403
     if password is None: #password must be included
         return jsonify({"Hey":"Password must be included"}),403
+    if len(password) < 8:
+        return jsonify({'Sorry', 'Password lenth must be more than 8 characters'}),403
     #check correct emai
     bad_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email)    
     if bad_email == None:
