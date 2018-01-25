@@ -105,6 +105,9 @@ def delete_event(logged_in_user, eventid):
     if not event:
         return jsonify({'Not found':'Event with that id is not available'}),404
 
+    # if event.user_public_id != logged_in_user.public_id:
+    #     return jsonify({'Authorization error':'You can only delete your own event'}),401
+
     event.delete()
     return {
             "message": "Event {} deleted successfully".format(event.eventid) 
@@ -112,12 +115,15 @@ def delete_event(logged_in_user, eventid):
 
 #edit and event
 @events.route('/api/v1/events/<int:eventid>', methods=['PUT'])
-def edit_event(eventid):
+@token_required
+def edit_event(logged_in_user,eventid):
     event = models.Events.query.filter_by(eventid=eventid).first()
     if not event:
         return jsonify({'Not found':'Event with that id is not available'}),404
     if not request.json:
         abort(403)
+    if event.user_public_id != logged_in_user.public_id:
+        return jsonify({'Authorization error':'You can only update your own event'}), 401
     
     event.name = request.json.get('name', event.name) #if no changes made let the initial remain
     event.description = request.json.get('description', event.description)
@@ -129,7 +135,7 @@ def edit_event(eventid):
     response = jsonify({
                 'id': event.eventid,
                     'name': event.name,
-                    'cost': event.cost,
+                    'cost': event.cost, 
                     'public_userid': event.user_public_id, #fetch user details using this ID
                     'location': event.location,
                     'description': event.description,
