@@ -55,21 +55,21 @@ def get_event(logged_in_user, eventid):
     event = models.Events.query.filter_by(eventid=eventid).first()
     if not event:
         return jsonify({'Not found':'Event with that id is not available'}),404
-    response = jsonify({
-                'id': event.eventid,
+    response = return_response(event)
+    response.status_code = 200
+    return response
+
+def return_response(event):
+    response = jsonify({                
                 'name': event.name,
-                'cost': event.cost,
-                'public_userid': event.user_public_id, #fetch user details using this ID
+                'cost': event.cost,                
                 'location': event.location,
                 'description': event.description,
                 'date' : event.date,
                 'category': event.category,
-                'date_created': event.date_created,
-                'date_modified': event.date_modified
+                'date_created': event.date_created               
             })
-    response.status_code = 200
     return response
-
 #get all events
 @events.route('/api/v1/events')
 @token_required
@@ -108,8 +108,6 @@ def delete_event(logged_in_user, eventid):
     if event.user_public_id != logged_in_user.public_id:
         return jsonify({'Authorization error':'You can only delete your own event'}),401
 
-    import pdb; pdb.set_trace()
-
     event.delete()
     return jsonify({"message": "Event {} deleted successfully".format(event.eventid)}), 200
 
@@ -131,14 +129,7 @@ def edit_event(logged_in_user,eventid):
     event.cost = request.json.get('cost', event.cost)
     event.save()
 
-    response = jsonify({                        
-                    'name': event.name,
-                    'cost': event.cost,                     
-                    'location': event.location,
-                    'description': event.description,
-                    'date' : event.date,
-                    'category': event.category                   
-            })
+    response = return_response(event)
     response.status_code = 201
     return response
 
