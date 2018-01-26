@@ -120,8 +120,7 @@ def edit_event(logged_in_user,eventid):
     event = models.Events.query.filter_by(eventid=eventid).first()
     if not event:
         return jsonify({'Not found':'Event with that id is not available'}),404
-    if not request.json:
-        abort(403)
+   
     if event.user_public_id != logged_in_user.public_id:
         return jsonify({'Authorization error':'You can only update your own event'}), 401
 
@@ -132,11 +131,9 @@ def edit_event(logged_in_user,eventid):
     event.cost = request.json.get('cost', event.cost)
     event.save()
 
-    response = jsonify({
-                'id': event.eventid,
+    response = jsonify({                        
                     'name': event.name,
-                    'cost': event.cost, 
-                    'public_userid': event.user_public_id, #fetch user details using this ID
+                    'cost': event.cost,                     
                     'location': event.location,
                     'description': event.description,
                     'date' : event.date,
