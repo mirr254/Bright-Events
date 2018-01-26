@@ -59,17 +59,7 @@ def get_event(logged_in_user, eventid):
     response.status_code = 200
     return response
 
-def return_response(event):
-    response = jsonify({                
-                'name': event.name,
-                'cost': event.cost,                
-                'location': event.location,
-                'description': event.description,
-                'date' : event.date,
-                'category': event.category,
-                'date_created': event.date_created               
-            })
-    return response
+
 #get all events
 @events.route('/api/v1/events')
 @token_required
@@ -79,18 +69,8 @@ def get_all_events(logged_in_user):
     results = [] # a list of events
     for event in events:
         
-        obj = {
-            'id': event.eventid,
-            'name': event.name,
-            'cost': event.cost,
-            'public_userid': event.user_public_id, #fetch user details using this ID
-            'location': event.location,
-            'description': event.description,
-            'date' : event.date,
-            'category': event.category,
-            'date_created': event.date_created,
-            'date_modified': event.date_modified
-        }
+        obj = return_obj(event)
+
         results.append(obj)
     response = jsonify(results)
     response.status_code = 200
@@ -140,9 +120,18 @@ def searc_by_location(logged_in_user, location):
     event_searched = models.Events.query.filter_by(location=location)
     if event_searched:
         results = [] # a list of events
-        for event in events:
+        for event in event_searched:
 
-            obj = {
+            obj =return_obj(event)
+
+            results.append(obj)
+        response = jsonify(results)
+        response.status_code = 200
+        return response    
+    return jsonify({'Not found':'No event in that location'}),404
+
+def return_obj(event):
+    obj =  {
                 'id': event.eventid,
                 'name': event.name,
                 'cost': event.cost,
@@ -154,11 +143,20 @@ def searc_by_location(logged_in_user, location):
                 'date_created': event.date_created,
                 'date_modified': event.date_modified
             }
-            results.append(obj)
-        response = jsonify(results)
-        response.status_code = 200
-        return response    
-    return jsonify({'Not found':'No event in that location'}),404
+    return obj
+
+def return_response(event):
+    response = jsonify({                
+                'name': event.name,
+                'cost': event.cost,                
+                'location': event.location,
+                'description': event.description,
+                'date' : event.date,
+                'category': event.category,
+                'date_created': event.date_created               
+            })
+    return response
+
 
 #rsvp or respond to an event (attending/not attending/maybe)
 @events.route('/api/v1/events/<int:eventid>/rsvp', methods=['POST'])
