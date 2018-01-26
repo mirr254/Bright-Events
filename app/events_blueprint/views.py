@@ -101,17 +101,17 @@ def get_all_events(logged_in_user):
 @token_required
 def delete_event(logged_in_user, eventid):
     # retrieve a event using its ID
-    event = models.Events.query.filter_by(eventid=eventid).first()    
+    event = models.Events.query.filter_by(eventid=eventid).first()
     if not event:
         return jsonify({'Not found':'Event with that id is not available'}),404
 
     # if event.user_public_id != logged_in_user.public_id:
     #     return jsonify({'Authorization error':'You can only delete your own event'}),401
 
+    import pdb; pdb.set_trace()
+
     event.delete()
-    return {
-            "message": "Event {} deleted successfully".format(event.eventid) 
-         }, 201
+    return jsonify({"message": "Event {} deleted successfully".format(event.eventid)}), 200
 
 #edit and event
 @events.route('/api/v1/events/<int:eventid>', methods=['PUT'])

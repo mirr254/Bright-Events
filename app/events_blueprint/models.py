@@ -34,7 +34,7 @@ class Events(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return "<Event: {}>".format(self.name) #object instance of the model whenever it is queried
+        return "<Event: {}>".format(self.eventid) #object instance of the model whenever it is queried
 
     def __init__(self, name, user_public_id, cost,location,date,description,category):        
         self.name = name
