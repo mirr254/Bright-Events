@@ -1,6 +1,6 @@
 # Bright Events
 
-![travis build](https://travis-ci.org/mirr254/Bright-Events.svg?branch=development) [![Coverage Status](https://coveralls.io/repos/github/mirr254/Bright-Events/badge.svg?branch=development)](https://coveralls.io/github/mirr254/Bright-Events?branch=development)
+![travis build](https://travis-ci.org/mirr254/Bright-Events.svg?branch=development) [![Coverage Status](https://coveralls.io/repos/github/mirr254/Bright-Events/badge.svg?branch=development)](https://coveralls.io/github/mirr254/Bright-Events?branch=development) [![Maintainability](https://api.codeclimate.com/v1/badges/113acdcc6ca3deff6f20/maintainability)](https://codeclimate.com/github/mirr254/Bright-Events/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/113acdcc6ca3deff6f20/test_coverage)](https://codeclimate.com/github/mirr254/Bright-Events/test_coverage)
 
 ## Description
 Bright events provides a platform for event organizers to create and manage different types of events while making them easily accessible to target markets.
