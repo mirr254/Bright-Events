@@ -124,7 +124,7 @@ def edit_event(logged_in_user,eventid):
         abort(403)
     if event.user_public_id != logged_in_user.public_id:
         return jsonify({'Authorization error':'You can only update your own event'}), 401
-    
+
     event.name = request.json.get('name', event.name) #if no changes made let the initial remain
     event.description = request.json.get('description', event.description)
     event.location = request.json.get('location', event.location)
@@ -140,9 +140,7 @@ def edit_event(logged_in_user,eventid):
                     'location': event.location,
                     'description': event.description,
                     'date' : event.date,
-                    'category': event.category,
-                    'date_created': event.date_created,
-                    'date_modified': event.date_modified
+                    'category': event.category                   
             })
     response.status_code = 201
     return response
