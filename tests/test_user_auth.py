@@ -50,10 +50,21 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.new_password = {
                   "password":"1234@"
               }
+
+    
+    #helper methods to login and register
+    #login
+    def auth_login(self):
+        return self.open_with_auth('/api/v1/auth/login', 'GET', 'test', 'hardpass')
+
+    #register a user
+    def register_users(self):
+        user_details = json.dumps(self.user)
+        return self.client().post('api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')
        
     #test if user can register
     def test_auth_register(self):
-        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user), content_type='application/json') 
+        res = self.register_users() 
         self.assertEqual(res.status_code, 201)
 
     def open_with_auth(self, url, method, username, password):
@@ -65,13 +76,19 @@ class UserActivitiesTestcase(unittest.TestCase):
 
     #test if user login
     def test_auth_login(self):
-               
+
         self.test_auth_register()
-        res = self.open_with_auth('/api/v1/auth/login', 'GET', 'test', 'hardpass')
+        res = self.auth_login()
         self.assertEqual(res.status_code, 200)
 
+    #test for logout endpoint
     def test_auth_logout(self):
-        self.test_auth_login()
+        #log in user 1st
+        res = self.auth_login()
+
+        #log out user
+        #res = self.open_with_auth('/api/v1/auth/login', 'GET')
+        #self.assertIn('User has logged out', str(res.data))
 
 
     #make sure email is not empty
