@@ -5,7 +5,7 @@ from flask import make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from app import createApp
-from app.common_functions import token_required
+#from app.common_functions import token_required
 from . import models
 from . import auth
 from app import db
@@ -99,8 +99,8 @@ def reset_password(email):
     return jsonify({'Success':'Password reset success'}),201
 
 #logout
-@auth.route('/api/v1/auth/logout')
-@token_required
-def logout(logged_in_user):
-    return jsonify({"Logged out ": logged_in_user.public_id})
+# @auth.route('/api/v1/auth/logout')
+# @token_required
+# def logout(logged_in_user):
+#     return jsonify({"Logged out ": logged_in_user.public_id})
 
