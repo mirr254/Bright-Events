@@ -4,6 +4,7 @@ from app import createApp, db
 from . import test_user_auth
 import base64
 
+
 class EventsActivitiesTestCases(unittest.TestCase):
 
     def setUp(self):

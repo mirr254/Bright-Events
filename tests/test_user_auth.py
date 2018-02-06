@@ -61,6 +61,20 @@ class UserActivitiesTestcase(unittest.TestCase):
     def register_users(self):
         user_details = json.dumps(self.user)
         return self.client().post('api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')
+
+     #get the token from logged in user
+    def get_verfication_token(self):
+        
+        #register user 1st
+        self.register_users()
+
+        #login the user
+        res = self.auth_login()
+        #from nose.tools import set_trace; set_trace()
+        #get the access token        
+        token = json.loads(res.data.decode('utf-8'))['token']        
+            
+        return token
        
     #test if user can register
     def test_auth_register(self):
@@ -83,12 +97,21 @@ class UserActivitiesTestcase(unittest.TestCase):
 
     #test for logout endpoint
     def test_auth_logout(self):
+        #register user
+        res = self.register_users()
+        self.assertEqual(res.status_code, 201)
         #log in user 1st
         res = self.auth_login()
+        res.assertEqual(res.status_code, 200)
 
         #log out user
-        #res = self.open_with_auth('/api/v1/auth/login', 'GET')
-        #self.assertIn('User has logged out', str(res.data))
+        token = self.get_verfication_token()
+
+        res = self.client().get('/api/v1/auth/logout',
+                    headers = {'x-access-token' : token },
+                    content_type='application/json')
+        self.assertIn('User has logged out', str(res.data))
+        self.assertEqual(res.status_code, 200)
 
 
     #make sure email is not empty
