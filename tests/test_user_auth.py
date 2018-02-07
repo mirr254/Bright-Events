@@ -117,12 +117,12 @@ class UserActivitiesTestcase(unittest.TestCase):
     #make sure email is not empty
     def test_auth_register_email_notEmpty(self):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user2),content_type='application/json')
-        self.assertIn("Email must be included", str(res.data))
+        self.assertIn("Email, username and password are required", str(res.data))
 
     # #make sure password is set
     def test_auth_register_password_notEmpty(self):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user3),content_type='application/json')
-        self.assertIn("Password must be included", str(res.data))
+        self.assertIn("Email, username and password are required", str(res.data))
 
     #test reset password api 
     def test_auth_reset_password(self):

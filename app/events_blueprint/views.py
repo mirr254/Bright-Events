@@ -27,18 +27,17 @@ def add_event(logged_in_user):
     if check_blacklisted_token(token) == True:
         return jsonify({'Session expired':'Please login again'}),403
 
-    #check if user is logged in
     if not request.json or not 'name' in request.json: #name must be included
-        return jsonify({"Hey":"Name must be included"}),403    
+        return jsonify({"message":"Name must be included"}),403    
     if not request.json or not 'location' in request.json:
-        return jsonify({"Hey":"Location must be included"}),403
+        return jsonify({"message":"Location must be included"}),403
     if not request.json or not 'category' in request.json:
-        return jsonify({"Hey":"Category must be included"}),403
+        return jsonify({"message":"Category must be included"}),403
    
     #check if cost is int
     if request.json.get('cost'):
         if isinstance(request.json.get('cost'), (int, float)) != True:
-            return jsonify({"Error":"Cost must be numbers only"}),403
+            return jsonify({"message":"Cost must be numbers only"}),403
 
     event = models.Events(
                         name= request.json.get('name'),
@@ -50,7 +49,7 @@ def add_event(logged_in_user):
                         category= request.json.get('category') )
 
     event.save()
-    return jsonify({'Message': "Successfully created an event"}),201
+    return jsonify({'message': "Successfully created an event"}),201
 
 #get a specific event
 @events.route('/api/v1/events/<int:eventid>', methods=['GET'])
