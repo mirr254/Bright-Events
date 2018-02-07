@@ -5,7 +5,7 @@ from flask import make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from app import createApp
-from app.common_functions import token_required
+from app.common_scripts.common_functions import token_required
 from . import models
 from . import auth
 from app import db
@@ -18,6 +18,7 @@ import uuid
 
 #variables
 app = createApp('development')
+
 
 """ HANDLE USER ACTIVITIES"""
 
@@ -102,8 +103,8 @@ def reset_password(email):
 @auth.route('/api/v1/auth/logout')
 @token_required
 def logout(logged_in_user):
-    
-    blacklisted_tok = models.TokenBlackList(logged_in_user)
+    token = request.headers['x-access-token']    
+    blacklisted_tok = models.TokenBlackList(token)
     blacklisted_tok.save()
     return jsonify({"User has logged out ": logged_in_user.public_id}),200
 

@@ -2,12 +2,20 @@
 from flask import Flask, jsonify,abort,request,session
 from flask import make_response
 from app import createApp
-from app.common_functions import token_required
+from app.common_scripts.common_functions import token_required
 from app.auth_blueprint import models as users_models
 
 from . import models
 from . import events
 
+"""Helper function to check for blacklisted tokens"""
+
+def check_blacklisted_token(token):
+
+    token = users_models.TokenBlackList.query.filter_by(token=token).first()
+    if token:
+        return True
+    return False
 
 """ HANDLE EVENTS ACTIVITIES """
 #create a new event
