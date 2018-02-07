@@ -21,7 +21,8 @@ def check_blacklisted_token(token):
 #create a new event
 @events.route('/api/v1/events', methods=['POST'])
 @token_required
-def add_event(logged_in_user):
+def add_event(logged_in_user):    
+
     #check if user is logged in
     if not request.json or not 'name' in request.json: #name must be included
         return jsonify({"Hey":"Name must be included"}),403    
@@ -29,28 +30,20 @@ def add_event(logged_in_user):
         return jsonify({"Hey":"Location must be included"}),403
     if not request.json or not 'category' in request.json:
         return jsonify({"Hey":"Category must be included"}),403
-    
-    cost = request.json.get('cost')
-    name = request.json.get('name')
-    location = request.json.get('location')
-    category = request.json.get('category')
-    date = request.json.get('date')
-    description = request.json.get('description')
-    public_userid =logged_in_user.public_id
-        
+   
     #check if cost is int
-    if cost:
-        if isinstance(cost, (int, float)) != True:
+    if request.json.get('cost'):
+        if isinstance(request.json.get('cost'), (int, float)) != True:
             return jsonify({"Error":"Cost must be numbers only"}),403
 
     event = models.Events(
-                        name=name,
-                        cost=cost,
-                        user_public_id=public_userid,
-                        location=location,
-                        description=description,
-                        date = date, #yyy-mm-dd
-                        category=category )
+                        name= request.json.get('name'),
+                        cost= request.json.get('cost'),
+                        user_public_id= logged_in_user.public_id,
+                        location= request.json.get('location'),
+                        description= request.json.get('description'),
+                        date = request.json.get('date'), #yyy-mm-dd
+                        category= request.json.get('category') )
 
     event.save()
     return jsonify({'Message': "Successfully created an event"}),201
@@ -72,6 +65,11 @@ def get_event(logged_in_user, eventid):
 @events.route('/api/v1/events')
 @token_required
 def get_all_events(logged_in_user):
+
+    #check if token is blacklisted
+    token = request.headers['x-access-token']
+    if check_blacklisted_token(token) == True:
+        return jsonify({'Session expired':'Please login again'}),403
     
     events = models.Events.get_all()
     results = [] # a list of events
@@ -140,7 +138,6 @@ def searc_by_location(logged_in_user, location):
 
 def return_obj(event):
     obj =  {
-                'id': event.eventid,
                 'name': event.name,
                 'cost': event.cost,
                 'public_userid': event.user_public_id, #fetch user details using this ID
@@ -148,8 +145,7 @@ def return_obj(event):
                 'description': event.description,
                 'date' : event.date,
                 'category': event.category,
-                'date_created': event.date_created,
-                'date_modified': event.date_modified
+                'date_created': event.date_created                
             }
     return obj
 
