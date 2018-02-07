@@ -102,7 +102,7 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.assertEqual(res.status_code, 201)
         #log in user 1st
         res = self.auth_login()
-        res.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 200)
 
         #log out user
         token = self.get_verfication_token()
