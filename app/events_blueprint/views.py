@@ -73,14 +73,13 @@ def get_all_events(logged_in_user):
     token = request.headers['x-access-token']
     if check_blacklisted_token(token) == True:
         return jsonify({'Session expired':'Please login again'}),403
-    
-    events = models.Events.get_all()
+    page = request.get.args('page',1,type=int )
+    events = models.Events.get_all().paginate(page, app.config['POSTS_PER_PAGE'], False)
     results = [] # a list of events
-    for event in events:
-        
+    for event in events:        
         obj = return_obj(event)
-
         results.append(obj)
+
     response = jsonify(results)
     response.status_code = 200
     return response    
