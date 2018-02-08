@@ -3,7 +3,7 @@ import os
 
 from app import createApp
 
-config_name = "development"
+config_name = os.getenv('APP_SETTINGS') #"development"
 
 app = createApp(config_name)
 

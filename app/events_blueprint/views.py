@@ -1,4 +1,5 @@
 #!flask/bin/python
+import os
 from flask import Flask, jsonify,abort,request,session
 from flask import make_response
 from app import createApp
@@ -7,6 +8,9 @@ from app.auth_blueprint import models as users_models
 
 from . import models
 from . import events
+
+#script global variables
+app = createApp(os.getenv('APP_SETTINGS'))
 
 """Helper function to check for blacklisted tokens"""
 
@@ -68,13 +72,12 @@ def get_event(logged_in_user, eventid):
 @events.route('/api/v1/events')
 @token_required
 def get_all_events(logged_in_user):
-
     #check if token is blacklisted
     token = request.headers['x-access-token']
     if check_blacklisted_token(token) == True:
         return jsonify({'Session expired':'Please login again'}),403
-    page = request.get.args('page',1,type=int )
-    events = models.Events.get_all().paginate(page, app.config['POSTS_PER_PAGE'], False)
+    page = request.args.get('page',1,type=int )
+    events = models.Events.query.paginate(page, app.config['POSTS_PER_PAGE'], False).items
     results = [] # a list of events
     for event in events:        
         obj = return_obj(event)
