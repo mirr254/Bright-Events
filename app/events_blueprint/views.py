@@ -77,7 +77,8 @@ def get_all_events(logged_in_user):
     if check_blacklisted_token(token) == True:
         return jsonify({'Session expired':'Please login again'}),403
     page = request.args.get('page',1,type=int )
-    events = models.Events.query.paginate(page, app.config['POSTS_PER_PAGE'], False).items
+    limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
+    events = models.Events.query.paginate(page, limit, False).items
     results = [] # a list of events
     for event in events:        
         obj = return_obj(event)
@@ -134,15 +135,16 @@ def edit_event(logged_in_user,eventid):
     return response
 
 #search by name
-@events.route('/api/v1/events/<string:location>', methods=['GET'])
+@events.route('/api/v1/events/location/', methods=['GET'])
 @token_required
-def searc_by_location(logged_in_user, location):
+def searc_by_location(logged_in_user):
      #check if token is blacklisted
     token = request.headers['x-access-token']
     if check_blacklisted_token(token) == True:
         return jsonify({'Session expired':'Please login again'}),403
-
-    event_searched = models.Events.query.filter_by(location=location)
+    location = session.args.get('location')
+    event_searched = models.Events.query.filter( models.Events.location.like('%'+location+'%'))
+    import pdb; pdb.set_trace()
     if event_searched:
         results = [] # a list of events
         for event in event_searched:
