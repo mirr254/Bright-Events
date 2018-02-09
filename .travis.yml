@@ -8,6 +8,11 @@ install: pip install -r requirements.txt
 before_script:
   - psql -c "CREATE DATABASE test_db_brighter_events;" -U postgres
 
+env:
+  export SQLALCHEMY_DATABASE_URI=postgresql://localhost/brighter_events
+  SECRET_KEY=super awesome secret #$%^*(
+  APP_SETTINGS=development
+
 script:
 - nosetests --with-coverage --cover-package=app
 
