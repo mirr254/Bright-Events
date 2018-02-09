@@ -135,15 +135,15 @@ def edit_event(logged_in_user,eventid):
     return response
 
 #search by name
-@events.route('/api/v1/events/location/', methods=['GET'])
+@events.route('/api/v1/events/search/', methods=['GET'])
 @token_required
 def searc_by_location(logged_in_user):
      #check if token is blacklisted
     token = request.headers['x-access-token']
     if check_blacklisted_token(token) == True:
         return jsonify({'Session expired':'Please login again'}),403
-    location = session.args.get('location')
-    event_searched = models.Events.query.filter( models.Events.location.like('%'+location+'%'))
+    name = request.args.get('q')
+    event_searched = models.Events.query.filter( models.Events.name.like('%'+name+'%'))
     import pdb; pdb.set_trace()
     if event_searched:
         results = [] # a list of events
