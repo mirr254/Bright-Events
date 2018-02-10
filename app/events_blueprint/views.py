@@ -72,13 +72,32 @@ def get_event(logged_in_user, eventid):
 @events.route('/api/v1/events')
 @token_required
 def get_all_events(logged_in_user):
+    
     #check if token is blacklisted
     token = request.headers['x-access-token']
     if check_blacklisted_token(token) == True:
         return jsonify({'Session expired':'Please login again'}),403
     page = request.args.get('page',1,type=int )
     limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
+    location_filter = request.args.get('location', type=str)
+    
+    if location_filter:
+        events = models.Events.query.filter(models.Events.location.ilike('%{}%'.format(location_filter)))
+        return return_event_results(events)
+    
     events = models.Events.query.paginate(page, limit, False).items
+    return return_event_results(events)
+  
+def return_event_results(events):
+    """helper function to return necessary events based on request args
+
+    Args:
+    events: event items from the query
+
+    Returns:
+        response: response with data 
+
+    """ 
     results = [] # a list of events
     for event in events:        
         obj = return_obj(event)
@@ -86,7 +105,8 @@ def get_all_events(logged_in_user):
 
     response = jsonify(results)
     response.status_code = 200
-    return response    
+    return response 
+
 
 #deleting an event
 @events.route('/api/v1/events/<int:eventid>', methods=['DELETE'])
