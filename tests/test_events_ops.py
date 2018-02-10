@@ -119,10 +119,23 @@ class EventsActivitiesTestCases(unittest.TestCase):
     def test_can_get_events(self):
         token = self.get_verfication_token()
 
+        res = self.client().post('/api/v1/events',
+                    headers = {'x-access-token' : token },
+                    data=json.dumps(self.event1), content_type='application/json')  
+
         res = self.client().get('/api/v1/events',
              headers = {'x-access-token' : token },
              content_type='application/json')
         self.assertEqual(res.status_code, 200)
+        self.assertIn('Partymad', str(res.data))
+
+    #test filtering events by location
+    def test_filter_events_by_location(self):
+        token = self.get_verfication_token()
+        res = self.client().get('/api/v1/events', 
+              headers = {'x-access-token': token},
+              content_type='application/json')
+        
 
     #test rsvp
     def test_rsvp_an_event(self):
