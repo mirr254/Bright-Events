@@ -8,25 +8,12 @@ from app.auth_blueprint import models as users_models
 from . import models
 from . import events
 
-"""Helper function to check for blacklisted tokens"""
-
-def check_blacklisted_token(token):
-
-    token = users_models.TokenBlackList.query.filter_by(token=token).first()
-    if token:
-        return True
-    return False
 
 """ HANDLE EVENTS ACTIVITIES """
 #create a new event
 @events.route('/api/v1/events', methods=['POST'])
 @token_required
-def add_event(logged_in_user):    
-     #check if token is blacklisted
-    token = request.headers['x-access-token']
-    if check_blacklisted_token(token) == True:
-        return jsonify({'Session expired':'Please login again'}),403
-
+def add_event(logged_in_user):
     if not request.json or not 'name' in request.json: #name must be included
         return jsonify({"message":"Name must be included"}),403    
     if not request.json or not 'location' in request.json:
@@ -69,11 +56,6 @@ def get_event(logged_in_user, eventid):
 @token_required
 def get_all_events(logged_in_user):
 
-    #check if token is blacklisted
-    token = request.headers['x-access-token']
-    if check_blacklisted_token(token) == True:
-        return jsonify({'Session expired':'Please login again'}),403
-    
     events = models.Events.get_all()
     results = [] # a list of events
     for event in events:
@@ -89,10 +71,6 @@ def get_all_events(logged_in_user):
 @events.route('/api/v1/events/<int:eventid>', methods=['DELETE'])
 @token_required
 def delete_event(logged_in_user, eventid):
-     #check if token is blacklisted
-    token = request.headers['x-access-token']
-    if check_blacklisted_token(token) == True:
-        return jsonify({'Session expired':'Please login again'}),403
     # retrieve a event using its ID
     event = models.Events.query.filter_by(eventid=eventid).first()
     if not event:
@@ -108,10 +86,6 @@ def delete_event(logged_in_user, eventid):
 @events.route('/api/v1/events/<int:eventid>', methods=['PUT'])
 @token_required
 def edit_event(logged_in_user,eventid):
-     #check if token is blacklisted
-    token = request.headers['x-access-token']
-    if check_blacklisted_token(token) == True:
-        return jsonify({'Session expired':'Please login again'}),403
 
     event = models.Events.query.filter_by(eventid=eventid).first()
     if not event:
@@ -135,10 +109,6 @@ def edit_event(logged_in_user,eventid):
 @events.route('/api/v1/events/<string:location>', methods=['GET'])
 @token_required
 def searc_by_location(logged_in_user, location):
-     #check if token is blacklisted
-    token = request.headers['x-access-token']
-    if check_blacklisted_token(token) == True:
-        return jsonify({'Session expired':'Please login again'}),403
 
     event_searched = models.Events.query.filter_by(location=location)
     if event_searched:
@@ -183,10 +153,6 @@ def return_response(event):
 @events.route('/api/v1/events/<int:eventid>/rsvp', methods=['POST'])
 @token_required
 def rsvp_to_an_event(logged_in_user, eventid):
-     #check if token is blacklisted
-    token = request.headers['x-access-token']
-    if check_blacklisted_token(token) == True:
-        return jsonify({'Session expired':'Please login again'}),403
 
     if not request.json or not 'rsvp' in request.json: #name must be included
         return jsonify({'Error':'Please provide rsvp details'})
@@ -213,10 +179,6 @@ def rsvp_to_an_event(logged_in_user, eventid):
 @events.route('/api/v1/events/<int:eventid>/guests', methods=['GET'])
 @token_required
 def list_event_guests(token_required,eventid):
-     #check if token is blacklisted
-    token = request.headers['x-access-token']
-    if check_blacklisted_token(token) == True:
-        return jsonify({'Session expired':'Please login again'}),403
 
     #check if event exists
     event = models.Events.query.filter_by(eventid=eventid).first()
