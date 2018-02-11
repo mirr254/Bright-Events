@@ -13,7 +13,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
 
         self.event1 = {
             "name" : "Partymad",
-            "location" : "Nairobu",
+            "location" : "Nairobi",
             "description" : "here and 2",
             "date": "2017-12-24",
             "cost" : 2000,
@@ -131,10 +131,10 @@ class EventsActivitiesTestCases(unittest.TestCase):
     def test_filter_events_by_location(self):
         token = self.get_verfication_token()
 
-        self.test_add_event()
-        res = self.client().get('/api/v1/events', 
+        res = self.client().get('/api/v1/events?location=nairobi', 
               headers = {'x-access-token': token},
               content_type='application/json')
+        self.assertIn('Nairobi', str(res.data))
         
 
     #test rsvp
