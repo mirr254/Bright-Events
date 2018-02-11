@@ -6,8 +6,8 @@ python:
 install: pip install -r requirements.txt
 
 env: 
- - SECRET_KEY='super awesome secret #$%^*('
- - APP_SETTINGS='development'
+ - "SECRET_KEY=super awesome secret #$%^*("
+ - "APP_SETTINGS=development"
 
 before_script:
   - psql -c "CREATE DATABASE test_db_brighter_events;" -U postgres
