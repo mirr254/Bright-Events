@@ -3,6 +3,9 @@ from flask import request, jsonify
 from app.auth_blueprint import models
 from app import createApp
 import jwt
+import os
+
+app = createApp( os.getenv('APP_SETTINGS'))
 
 def check_blacklisted_token(token):
     """Helper function to check for blacklisted tokens.
@@ -35,7 +38,7 @@ def token_required(f):
             return jsonify({'Session expired':'Please login again'}),403
 
         try: 
-            data = jwt.decode(token, createApp('development').config['SECRET_KEY'])
+            data = jwt.decode(token, app.config['SECRET_KEY'])
             logged_in_user = models.User.query.filter_by(public_id=data['public_id']).first()
         except Exception:
             return jsonify({'message' : 'Token is invalid!'}), 401
