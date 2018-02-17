@@ -131,6 +131,9 @@ class EventsActivitiesTestCases(unittest.TestCase):
     def test_filter_events_by_location(self):
         token = self.get_verfication_token()
 
+        #add event before testing the filtering
+        self.test_add_event()
+
         res = self.client().get('/api/v1/events?location=nairobi', 
               headers = {'x-access-token': token},
               content_type='application/json')
