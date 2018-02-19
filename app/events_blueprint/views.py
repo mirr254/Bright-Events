@@ -180,6 +180,7 @@ def searc_by_location(logged_in_user):
 def return_obj(event):
     obj =  {
                 'name': event.name,
+                'id': event.eventid,
                 'cost': event.cost,
                 'public_userid': event.user_public_id, #fetch user details using this ID
                 'location': event.location,
