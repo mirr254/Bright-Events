@@ -70,10 +70,6 @@ def get_event(logged_in_user, eventid):
 @events.route('/api/v1/events')
 @token_required
 def get_all_events(logged_in_user):
-<<<<<<< HEAD
-
-    events = models.Events.get_all()
-=======
     
     #check if token is blacklisted
     token = request.headers['x-access-token']
@@ -100,7 +96,6 @@ def return_event_results(events):
         response: response with data 
 
     """ 
->>>>>>> ft-pagination-and-filtering-153051694
     results = [] # a list of events
     for event in events:        
         obj = return_obj(event)
