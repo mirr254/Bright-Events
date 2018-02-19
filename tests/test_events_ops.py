@@ -13,7 +13,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
 
         self.event1 = {
             "name" : "Partymad",
-            "location" : "Nairobu",
+            "location" : "Nairobi",
             "description" : "here and 2",
             "date": "2017-12-24",
             "cost" : 2000,
@@ -119,46 +119,54 @@ class EventsActivitiesTestCases(unittest.TestCase):
     def test_can_get_events(self):
         token = self.get_verfication_token()
 
+        self.test_add_event()  
+
         res = self.client().get('/api/v1/events',
              headers = {'x-access-token' : token },
              content_type='application/json')
         self.assertEqual(res.status_code, 200)
+        self.assertIn('Partymad', str(res.data))
+
+    #test filtering events by location
+    def test_filter_events_by_location(self):
+        token = self.get_verfication_token()
+
+        #add event before testing the filtering
+        self.test_add_event()
+
+        res = self.client().get('/api/v1/events?location=nairobi', 
+              headers = {'x-access-token': token},
+              content_type='application/json')
+        self.assertIn('Nairobi', str(res.data))
+        
 
     #test rsvp
     def test_rsvp_an_event(self):
         token = self.get_verfication_token()
         #make sure before rsvp we have an add event api working
-        resp = self.client().post('/api/v1/events',
-             headers = {'x-access-token' : token },
-             data=json.dumps(self.event1), content_type='application/json')
-        self.assertEqual(resp.status_code, 201)        
+        self.test_add_event()        
         
         res = self.client().post('/api/v1/events/1/rsvp',
              headers = {'x-access-token' : token },
              data=json.dumps(self.rsvp_) ,content_type='application/json')
         self.assertEqual(res.status_code, 201)
+        self.assertIn('Successfully responded to and event', str(res.data))
 
     #test listing users who have responded (rsvp) to an event
     def test_list_rsvp_users(self):
         token = self.get_verfication_token()
         #test create an event
-        resp = self.client().post('/api/v1/events',
-            headers = {'x-access-token' : token }, 
-            data=json.dumps(self.event1), content_type='application/json')
-        self.assertEqual(resp.status_code, 201)
+        self.test_add_event()
         
         ### test user can rsvp to that event ###                
-        res = self.client().post('/api/v1/events/1/rsvp',
-            headers = {'x-access-token' : token },
-            data=json.dumps(self.rsvp_) ,content_type='application/json')
-        
-        self.assertEqual(res.status_code, 201)
+        self.test_rsvp_an_event() 
 
         #test the endpoint for retrieving the users. will retrieve users based on eventid                
         res = self.client().get('/api/v1/events/1/guests',
                 headers = {'x-access-token' : token },
                 content_type='application/json')        
         self.assertEqual(res.status_code, 200)
+        self.assertIn('test', str(res.data))
 
 
     def tearDown(self):

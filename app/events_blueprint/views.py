@@ -1,4 +1,5 @@
 #!flask/bin/python
+import os
 from flask import Flask, jsonify,abort,request,session
 from flask import make_response
 from app import createApp
@@ -8,6 +9,20 @@ from app.auth_blueprint import models as users_models
 from . import models
 from . import events
 
+<<<<<<< HEAD
+=======
+#script global variables
+app = createApp(os.getenv('APP_SETTINGS'))
+
+"""Helper function to check for blacklisted tokens"""
+
+def check_blacklisted_token(token):
+
+    token = users_models.TokenBlackList.query.filter_by(token=token).first()
+    if token:
+        return True
+    return False
+>>>>>>> ft-pagination-and-filtering-153051694
 
 """ HANDLE EVENTS ACTIVITIES """
 #create a new event
@@ -55,17 +70,46 @@ def get_event(logged_in_user, eventid):
 @events.route('/api/v1/events')
 @token_required
 def get_all_events(logged_in_user):
+<<<<<<< HEAD
 
     events = models.Events.get_all()
-    results = [] # a list of events
-    for event in events:
-        
-        obj = return_obj(event)
+=======
+    
+    #check if token is blacklisted
+    token = request.headers['x-access-token']
+    if check_blacklisted_token(token) == True:
+        return jsonify({'Session expired':'Please login again'}),403
+    page = request.args.get('page',1,type=int )
+    limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
+    location_filter = request.args.get('location', type=str)
+    
+    if location_filter:
+        events = models.Events.query.filter(models.Events.location.ilike('%{}%'.format(location_filter)))
+        return return_event_results(events)
+    
+    events = models.Events.query.paginate(page, limit, False).items
+    return return_event_results(events)
+  
+def return_event_results(events):
+    """helper function to return necessary events based on request args
 
+    Args:
+    events: event items from the query
+
+    Returns:
+        response: response with data 
+
+    """ 
+>>>>>>> ft-pagination-and-filtering-153051694
+    results = [] # a list of events
+    for event in events:        
+        obj = return_obj(event)
         results.append(obj)
+
     response = jsonify(results)
     response.status_code = 200
-    return response    
+    return response 
+
 
 #deleting an event
 @events.route('/api/v1/events/<int:eventid>', methods=['DELETE'])
@@ -106,11 +150,22 @@ def edit_event(logged_in_user,eventid):
     return response
 
 #search by name
-@events.route('/api/v1/events/<string:location>', methods=['GET'])
+@events.route('/api/v1/events/search/', methods=['GET'])
 @token_required
+<<<<<<< HEAD
 def searc_by_location(logged_in_user, location):
 
     event_searched = models.Events.query.filter_by(location=location)
+=======
+def searc_by_location(logged_in_user):
+     #check if token is blacklisted
+    token = request.headers['x-access-token']
+    if check_blacklisted_token(token) == True:
+        return jsonify({'Session expired':'Please login again'}),403
+    name = request.args.get('q')
+    event_searched = models.Events.query.filter( models.Events.name.like('%'+name+'%'))
+    import pdb; pdb.set_trace()
+>>>>>>> ft-pagination-and-filtering-153051694
     if event_searched:
         results = [] # a list of events
         for event in event_searched:
@@ -126,6 +181,7 @@ def searc_by_location(logged_in_user, location):
 def return_obj(event):
     obj =  {
                 'name': event.name,
+                'id': event.eventid,
                 'cost': event.cost,
                 'public_userid': event.user_public_id, #fetch user details using this ID
                 'location': event.location,
