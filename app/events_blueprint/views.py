@@ -9,8 +9,6 @@ from app.auth_blueprint import models as users_models
 from . import models
 from . import events
 
-<<<<<<< HEAD
-=======
 #script global variables
 app = createApp(os.getenv('APP_SETTINGS'))
 
@@ -22,7 +20,6 @@ def check_blacklisted_token(token):
     if token:
         return True
     return False
->>>>>>> ft-pagination-and-filtering-153051694
 
 """ HANDLE EVENTS ACTIVITIES """
 #create a new event
