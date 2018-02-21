@@ -144,11 +144,6 @@ def edit_event(logged_in_user,eventid):
 #search by name
 @events.route('/api/v1/events/search/', methods=['GET'])
 @token_required
-<<<<<<< HEAD
-def searc_by_location(logged_in_user, location):
-
-    event_searched = models.Events.query.filter_by(location=location)
-=======
 def searc_by_location(logged_in_user):
      #check if token is blacklisted
     token = request.headers['x-access-token']
@@ -157,7 +152,6 @@ def searc_by_location(logged_in_user):
     name = request.args.get('q')
     event_searched = models.Events.query.filter( models.Events.name.like('%'+name+'%'))
     import pdb; pdb.set_trace()
->>>>>>> ft-pagination-and-filtering-153051694
     if event_searched:
         results = [] # a list of events
         for event in event_searched:
