@@ -5,7 +5,7 @@ from flask import make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from app import createApp
-from app.common_scripts.common_functions import token_required
+from app.utils.common_functions import token_required
 from . import models
 from . import auth
 from app import db
@@ -14,11 +14,11 @@ import re
 import jwt
 import datetime
 import uuid
+import os
 
 
 #variables
-app = createApp('development')
-
+app = createApp( conf_name = os.getenv('APP_SETTINGS') )
 
 """ HANDLE USER ACTIVITIES"""
 

@@ -3,7 +3,7 @@ import os
 from flask import Flask, jsonify,abort,request,session
 from flask import make_response
 from app import createApp
-from app.common_scripts.common_functions import token_required
+from app.utils.common_functions import token_required
 from app.auth_blueprint import models as users_models
 
 from . import models
