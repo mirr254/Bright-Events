@@ -25,6 +25,11 @@ class UserActivitiesTestcase(unittest.TestCase):
             'username':'test',
             'password':'hardpass'
         }
+        self.user1 = {
+            'email' : 'test1@kungu.com',
+            'username' : 'test1',
+            'password' :  '        '
+        }
         self.login_details = {
             'username' : 'test@kungu.com',
             'password' : 'hardpass'
@@ -75,19 +80,26 @@ class UserActivitiesTestcase(unittest.TestCase):
         token = json.loads(res.data.decode('utf-8'))['token']        
             
         return token
-       
-    #test if user can register
-    def test_auth_register(self):
-        res = self.register_users() 
-        self.assertEqual(res.status_code, 201)
 
+    
     def open_with_auth(self, url, method, username, password):
         return self.app.test_client().open(url,
                    method = method,
                    headers = {
                         'Authorization': 'Basic ' + base64.b64encode(bytes(username + ":" + password, 'ascii')).decode('ascii') }
     )
+       
+    #test if user can register
+    def test_auth_register(self):
+        res = self.register_users() 
+        self.assertEqual(res.status_code, 201)
 
+    #test password length
+    def test_auth_password_length_on_registration(self):        
+        passwrd = self.user['password']
+        res = self.client().post('api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')             
+        self.assertGreaterEqual( len(passwrd), 7)
+    
     #test if user login
     def test_auth_login(self):
 
@@ -115,20 +127,20 @@ class UserActivitiesTestcase(unittest.TestCase):
 
 
     #make sure email is not empty
-    def test_auth_register_email_notEmpty(self):
+    def test_auth_register_has_email(self):
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user2),content_type='application/json')
-        self.assertIn("Email, username and password are required", str(res.data))
+        self.assertIn("email, username and password are required", str(res.data))
 
     # #make sure password is set
-    def test_auth_register_password_notEmpty(self):
-        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user3),content_type='application/json')
-        self.assertIn("Email, username and password are required", str(res.data))
+    # def test_auth_register_has_password(self):
+    #     res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user3),content_type='application/json')
+    #     self.assertIn("email, username and password are required", str(res.data))
 
     #test reset password api 
     def test_auth_reset_password(self):
         #test if user can register before changing password
         res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user4),content_type='application/json')
-        self.assertEqual(res.status_code, 201)
+       
         # test if user can now update password
         res = self.client().put('/api/v1/auth/reset-password/emai@gmail.com',data=json.dumps(self.new_password),content_type='application/json')
         self.assertEqual(res.status_code, 201)

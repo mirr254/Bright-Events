@@ -11,6 +11,10 @@ class EventsActivitiesTestCases(unittest.TestCase):
         self.app = createApp(conf_name='testing')
         self.client = self.app.test_client
 
+        #url route variable
+        self.base_event_url = "/api/v1/events"
+        self.base_auth_url = "/api/v1/auth"
+
         self.event1 = {
             "name" : "Partymad",
             "location" : "Nairobi",
@@ -63,7 +67,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
     #register a user
     def register_users(self):
         user_details = json.dumps(self.user)
-        return self.client().post('api/v1/auth/register', data=user_details, content_type='application/json')
+        return self.client().post(self.base_auth_url+'/register', data=user_details, content_type='application/json')
 
     def open_with_auth(self, url, method, username, password):
         return self.app.test_client().open(url,
@@ -74,7 +78,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
 
     #login the newly created user
     def user_login(self):        
-        return self.open_with_auth('/api/v1/auth/login', 'GET', 'test', 'hardpass')
+        return self.open_with_auth(self.base_auth_url+'/login', 'GET', 'test', 'hardpass')
 
     #get the token from logged in user
     def get_verfication_token(self):
@@ -93,24 +97,24 @@ class EventsActivitiesTestCases(unittest.TestCase):
     def test_add_event(self):
         token = self.get_verfication_token()   
 
-        res = self.client().post('/api/v1/events',
+        res = self.client().post(self.base_event_url,
                       headers = {'x-access-token' : token },
                       data=json.dumps(self.event1), content_type='application/json')
 
         self.assertEqual(res.status_code, 201)
     
-    def test_add_event_has_location(self):
+    def test_if_add_event_has_location(self):
         token = self.get_verfication_token()
 
-        res = self.client().post('/api/v1/events',
+        res = self.client().post(self.base_event_url,
               headers = {'x-access-token' : token },
               data=json.dumps(self.event2), content_type='application/json')
         self.assertEqual(res.status_code, 403)
 
-    def test_add_event_has_name(self):
+    def test_if_add_event_has_name(self):
         token = self.get_verfication_token()
 
-        res = self.client().post('/api/v1/events', 
+        res = self.client().post(self.base_event_url, 
             headers = {'x-access-token' : token },
             data=json.dumps(self.event3), content_type='application/json')
         self.assertEqual(res.status_code, 403)
@@ -121,20 +125,20 @@ class EventsActivitiesTestCases(unittest.TestCase):
 
         self.test_add_event()  
 
-        res = self.client().get('/api/v1/events',
+        res = self.client().get(self.base_event_url,
              headers = {'x-access-token' : token },
              content_type='application/json')
         self.assertEqual(res.status_code, 200)
         self.assertIn('Partymad', str(res.data))
 
     #test filtering events by location
-    def test_filter_events_by_location(self):
+    def test_for_filter_events_by_location(self):
         token = self.get_verfication_token()
 
         #add event before testing the filtering
         self.test_add_event()
 
-        res = self.client().get('/api/v1/events?location=nairobi', 
+        res = self.client().get(self.base_event_url+'?location=nairobi', 
               headers = {'x-access-token': token},
               content_type='application/json')
         self.assertIn('Nairobi', str(res.data))
@@ -146,7 +150,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
         #make sure before rsvp we have an add event api working
         self.test_add_event()        
         
-        res = self.client().post('/api/v1/events/1/rsvp',
+        res = self.client().post(self.base_event_url+'/1/rsvp',
              headers = {'x-access-token' : token },
              data=json.dumps(self.rsvp_) ,content_type='application/json')
         self.assertEqual(res.status_code, 201)
@@ -162,7 +166,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
         self.test_rsvp_an_event() 
 
         #test the endpoint for retrieving the users. will retrieve users based on eventid                
-        res = self.client().get('/api/v1/events/1/guests',
+        res = self.client().get(self.base_event_url+'/1/guests',
                 headers = {'x-access-token' : token },
                 content_type='application/json')        
         self.assertEqual(res.status_code, 200)
