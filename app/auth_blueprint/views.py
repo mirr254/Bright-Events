@@ -49,22 +49,22 @@ def register():
         #check correct emai
         bad_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email)    
         if bad_email == None:
-            return jsonify({"Bad Email":"Please provide a valid email"})   
+            return jsonify({"message":"Please provide a valid email"})   
 
         #check if email already exists
         if models.User.query.filter_by(email = email).first() is not None:
-            return jsonify({"Error": "Email already taken"})
+            return jsonify({"message": "Email already taken"})
 
         #test username
         if models.User.query.filter_by(username = username).first() is not None:
-            return jsonify({"Error": "Username already taken"})
+            return jsonify({"message": "Username already taken"})
 
         hashed_pass = generate_password_hash(password, method='pbkdf2:sha256')
         user = models.User(username = username, email=email, public_id=str(uuid.uuid4()), password_hash = hashed_pass)   
         user.save()
         
-        return jsonify({'Successful': 'User registered successfully. You can now log in'}),201
-    return jsonify({'message':'Email, username and password are required'}),403
+        return jsonify({'message': 'User registered successfully. You can now log in'}),201
+    return jsonify({'message':'email, username and password are required'}),403
 
 #login user
 @auth.route('/api/v1/auth/login')
@@ -95,7 +95,7 @@ def reset_password(email):
     hashed_pass = generate_password_hash(password)
     user.password_hash = hashed_pass
     user.save()
-    return jsonify({'Success':'Password reset success'}),201
+    return jsonify({'message':'Password reset success'}),201
 
 #logout
 @auth.route('/api/v1/auth/logout')
