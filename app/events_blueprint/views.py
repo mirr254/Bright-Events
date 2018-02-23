@@ -208,13 +208,9 @@ def return_response(event):
 @events.route('/api/v1/events/<int:eventid>/rsvp', methods=['POST'])
 @token_required
 def rsvp_to_an_event(logged_in_user, eventid):
-     #check if token is blacklisted
-    token = request.headers['x-access-token']
-    if check_blacklisted_token(token) == True:
-        return jsonify({'Session expired':'Please login again'}),403
 
     if not request.json or not 'rsvp' in request.json: #name must be included
-        return jsonify({'Error':'Please provide rsvp details'})
+        return jsonify({'message':'Please provide rsvp details'})
 
     rsvp = request.json['rsvp']
     if rsvp == 'attending' or rsvp =='not attending' or rsvp == 'maybe':
@@ -222,18 +218,18 @@ def rsvp_to_an_event(logged_in_user, eventid):
         event = models.Events.query.filter_by(eventid=eventid).first()
         if event:
             rsvp = models.Rsvp(
-                eventid = eventid,
+                event = event,
                 rsvp = request.json['rsvp'],
                 user_pub_id = logged_in_user.public_id 
             )
             rsvp.save()
             response = jsonify({
                 'eventid':eventid,
-                'Message': 'Successfully responded to and event'
+                'message': 'Successfully responded to and event'
             })
             return response,201
-        return jsonify({'Event not found':'No event with that id'}),404
-    return jsonify({'Error':'rsvp must be either attending/maybe/not attending'}),403
+        return jsonify({'message':'No event with that id'}),404
+    return jsonify({'message':'rsvp must be either attending/maybe/not attending'}),403
 
 @events.route('/api/v1/events/<int:eventid>/guests', methods=['GET'])
 @token_required
@@ -241,7 +237,7 @@ def list_event_guests(token_required,eventid):
      #check if token is blacklisted
     token = request.headers['x-access-token']
     if check_blacklisted_token(token) == True:
-        return jsonify({'Session expired':'Please login again'}),403
+        return jsonify({'message':'Session expired. Kindly login again'}),403
 
     #check if event exists
     event = models.Events.query.filter_by(eventid=eventid).first()
@@ -250,7 +246,7 @@ def list_event_guests(token_required,eventid):
         rsvps = models.Rsvp.query.filter_by(eventid = eventid)
         #if no rsvps
         if not rsvps:
-            response = jsonify({'Message':'This event has no guests yet.'})
+            response = jsonify({'message':'This event has no guests yet.'})
             response.status_code = 404
             return response
         for resp in rsvps:

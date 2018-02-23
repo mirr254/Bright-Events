@@ -5,7 +5,7 @@ from flask import make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from app import createApp
-#from app.utils.common_functions import token_required
+from app.utils.common_functions import token_required
 from . import models
 from . import auth
 from app import db
@@ -100,7 +100,7 @@ def reset_password(email):
 
 #logout
 @auth.route('/api/v1/auth/logout')
-#@token_required
+@token_required
 def logout(logged_in_user):
     token = request.headers['x-access-token']    
     blacklisted_tok = models.TokenBlackList(token)

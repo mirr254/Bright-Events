@@ -43,7 +43,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "cost" : 2000
         }
         self.rsvp_ = {            
-            "eventid":1,            
+            "event" : self.event1,           
             "rsvp":"attending"
         }
 
