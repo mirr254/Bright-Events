@@ -81,6 +81,14 @@ class UserActivitiesTestcase(unittest.TestCase):
         res = self.register_users() 
         self.assertEqual(res.status_code, 201)
 
+    #test password length
+    def test_auth_password_length_on_registration(self):
+        user_details = json.dumps(self.user)
+        passwrd = self.user['password']
+        res = self.client().post('api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')        
+        self.assertGreater( len(passwrd), 7)
+
+
     def open_with_auth(self, url, method, username, password):
         return self.app.test_client().open(url,
                    method = method,
