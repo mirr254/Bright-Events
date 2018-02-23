@@ -99,7 +99,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
 
         self.assertEqual(res.status_code, 201)
     
-    def test_add_event_has_location(self):
+    def test_if_add_event_has_location(self):
         token = self.get_verfication_token()
 
         res = self.client().post('/api/v1/events',
@@ -107,7 +107,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
               data=json.dumps(self.event2), content_type='application/json')
         self.assertEqual(res.status_code, 403)
 
-    def test_add_event_has_name(self):
+    def test_if_add_event_has_name(self):
         token = self.get_verfication_token()
 
         res = self.client().post('/api/v1/events', 
@@ -128,7 +128,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
         self.assertIn('Partymad', str(res.data))
 
     #test filtering events by location
-    def test_filter_events_by_location(self):
+    def test_for_filter_events_by_location(self):
         token = self.get_verfication_token()
 
         #add event before testing the filtering
