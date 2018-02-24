@@ -81,7 +81,7 @@ def confirm(token):
         email = confirm_token(token)
     except:
         return jsonify({'message':'invalid token. Email not confirmed'}),403
-    user = models.User.filter_by(email=email).first_or_404()
+    user = models.User.query.filter_by(email=email).first_or_404()
     #check if user is already confirmed
     if user.email_confirmed:
         return jsonify({'message': 'user already confirmed'})
