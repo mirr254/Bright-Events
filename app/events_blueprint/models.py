@@ -19,6 +19,7 @@ class Events(db.Model):
     date_modified = db.Column(
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
+    rsvps = db.relationship('Rsvp', backref='event', cascade='all, delete', lazy='dynamic')
 
 
     def save(self):
@@ -52,18 +53,13 @@ class Rsvp(db.Model):
 
     rsvp_id = db.Column(db.Integer, primary_key=True)
     user_pub_id = db.Column(db.String(50))
-    eventid = db.Column(db.Integer)   
+    eventid = db.Column(db.Integer, db.ForeignKey('events.eventid'))   
     rsvp = db.Column(db.String(255))   
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     date_modified = db.Column(
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
-
-    def __init__(self, eventid,rsvp,user_pub_id):
-        """initialize with name."""
-        self.eventid = eventid
-        self.rsvp = rsvp
-        self.user_pub_id = user_pub_id
+    
 
     def save(self):
         db.session.add(self)

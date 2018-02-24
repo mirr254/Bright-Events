@@ -43,7 +43,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "cost" : 2000
         }
         self.rsvp_ = {            
-            "eventid":1,            
+            "event" : self.event1,           
             "rsvp":"attending"
         }
 
@@ -155,6 +155,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
              data=json.dumps(self.rsvp_) ,content_type='application/json')
         self.assertEqual(res.status_code, 201)
         self.assertIn('Successfully responded to and event', str(res.data))
+        self.assertIn('eventid', str(res.data))
 
     #test listing users who have responded (rsvp) to an event
     def test_list_rsvp_users(self):

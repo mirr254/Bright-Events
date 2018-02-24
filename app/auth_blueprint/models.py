@@ -13,6 +13,8 @@ class User(db.Model):
     email = db.Column(db.String(50), index=True)
     password_hash = db.Column(db.String(255))
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
+    email_confirmed = db.Column(db.Boolean, nullable=True, default=False)
+    email_confirmed_on = db.Column(db.DateTime, nullable=True)
     date_modified = db.Column(
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())

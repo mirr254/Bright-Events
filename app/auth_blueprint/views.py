@@ -1,11 +1,13 @@
 #!flask/bin/python
 
 from flask import Flask, jsonify,abort,request,session, render_template
-from flask import make_response
+from flask import make_response, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+from app.utils.token import generate_confirmation_token, confirm_token
 from app import createApp
 from app.utils.common_functions import token_required
+from app.utils.email import send_email
 from . import models
 from . import auth
 from app import db
@@ -19,6 +21,7 @@ import os
 
 #variables
 app = createApp( conf_name = os.getenv('APP_SETTINGS') )
+_AUTH_BASE_URL = '/api/v1/auth/'
 
 """ HANDLE USER ACTIVITIES"""
 
@@ -26,7 +29,7 @@ app = createApp( conf_name = os.getenv('APP_SETTINGS') )
 #error handlers for custom errors
 @auth.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
+    return make_response(jsonify({'message': 'Not found'}), 404)
 
 #view api docs in heroku
 @auth.route('/')
@@ -35,7 +38,7 @@ def index():
 
 
 # register user
-@auth.route('/api/v1/auth/register', methods=['POST'])
+@auth.route(_AUTH_BASE_URL+'register', methods=['POST'])
 def register():
     username = request.json.get('username')
     password =str(request.json.get('password')).strip()
@@ -63,9 +66,31 @@ def register():
         hashed_pass = generate_password_hash(password, method='pbkdf2:sha256')
         user = models.User(username = username, email=email, public_id=str(uuid.uuid4()), password_hash = hashed_pass)   
         user.save()
+        token = generate_confirmation_token(user.email)
+        confirm_url = url_for( 'auth.confirm', token=token, _external=True)
+        html = render_template('activate.html', confirm_url=confirm_url)
+        send_email(user.email, 'Email confirmation', html)
         
-        return jsonify({'message': 'User registered successfully. You can now log in'}),201
+        return jsonify({'message': 'User registered successfully. Please check your mail to confirm email address'}),201
     return jsonify({'message':'email, username and password are required'}),403
+
+#confirm email address
+@auth.route(_AUTH_BASE_URL+'confirm/<token>')
+def confirm(token):
+    try:
+        email = confirm_token(token)
+    except:
+        return jsonify({'message':'invalid token. Email not confirmed'}),403
+    user = models.User.filter_by(email=email).first_or_404()
+    #check if user is already confirmed
+    if user.email_confirmed:
+        return jsonify({'message': 'user already confirmed'})
+    else:
+        user.email_confirmed = True
+        user.email_confirmed_on = datetime.datetime.now()
+        user.save()
+        return jsonify({'message': 'Success. Email confirmed. Now you can login'})
+    
 
 #login user
 @auth.route('/api/v1/auth/login')
@@ -81,7 +106,8 @@ def login():
 
     #check password
     if check_password_hash(user.password_hash, auth.password):
-        token = jwt.encode({'public_id': user.public_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, createApp('development').config['SECRET_KEY'])
+        token = jwt.encode({'public_id': user.public_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, 
+                       createApp( conf_name = os.getenv('APP_SETTINGS').config['SECRET_KEY']))
         return jsonify({'token': token.decode('UTF-8')}),200
 
     return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})

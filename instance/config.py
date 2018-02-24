@@ -5,8 +5,22 @@ class Config(object):
     DEBUG = False
     CSRF_ENABLED = True
     POSTS_PER_PAGE = 4
-    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')# 'postgresql://localhost/brighter_events'
-    SECRET_KEY = os.getenv('SECRET_KEY')# "super awesome secret #$%^*("
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    SECURITY_PASSWORD_SALT = os.getenv('SECURITY_PASSWORD_SALT')
+
+    # mail settings
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
+
+    # gmail authentication
+    MAIL_USERNAME = os.environ['APP_MAIL_USERNAME']
+    MAIL_PASSWORD = os.environ['APP_MAIL_PASSWORD']
+
+    # mail accounts
+    MAIL_DEFAULT_SENDER = 'sammysteppa90@gmail.com'
 
 class DevelopmentConfig(Config):
     #configuration for development
