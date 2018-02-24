@@ -14,6 +14,7 @@ class UserActivitiesTestcase(unittest.TestCase):
     def setUp(self):
         self.app = createApp(conf_name='testing')
         self.client = self.app.test_client
+        self.AUTH_URL_BASE_ROUTE = '/api/v1/auth/'
 
         # binds the app to the current context
         with self.app.app_context():
@@ -21,17 +22,17 @@ class UserActivitiesTestcase(unittest.TestCase):
             db.create_all()
 
         self.user = {
-            'email': 'test@kungu.com',
+            'email': 'kungus@ymail.com',
             'username':'test',
             'password':'hardpass'
         }
         self.user1 = {
-            'email' : 'test1@kungu.com',
+            'email' : 'kungus@ymail.com',
             'username' : 'test1',
             'password' :  '        '
         }
         self.login_details = {
-            'username' : 'test@kungu.com',
+            'username' : 'kungus@ymail.com',
             'password' : 'hardpass'
         }
         self.user2 = {                        
@@ -39,11 +40,11 @@ class UserActivitiesTestcase(unittest.TestCase):
             'password':'hardpass'
         }
         self.user3 = {            
-            'email': 'emai@gmail.com',
+            'email': 'kungus@ymail.com',
             'username':'samuel'            
         }
         self.user4 = {            
-            'email': 'emai@gmail.com',
+            'email': 'kungus@ymail.com',
             'username':'samuel',
             'password':'easypass'          
         }
@@ -53,19 +54,19 @@ class UserActivitiesTestcase(unittest.TestCase):
             "password":"string1"
         }
         self.new_password = {
-                  "password":"1234@"
+                  "password":"123456@"
               }
 
     
     #helper methods to login and register
     #login
     def auth_login(self):
-        return self.open_with_auth('/api/v1/auth/login', 'GET', 'test', 'hardpass')
+        return self.open_with_auth( self.AUTH_URL_BASE_ROUTE+'login', 'GET', 'test', 'hardpass')
 
     #register a user
     def register_users(self):
         user_details = json.dumps(self.user)
-        return self.client().post('api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')
+        return self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user), content_type='application/json')
 
      #get the token from logged in user
     def get_verfication_token(self):
@@ -97,7 +98,7 @@ class UserActivitiesTestcase(unittest.TestCase):
     #test password length
     def test_auth_password_length_on_registration(self):        
         passwrd = self.user['password']
-        res = self.client().post('api/v1/auth/register', data=json.dumps(self.user), content_type='application/json')             
+        res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user), content_type='application/json')             
         self.assertGreaterEqual( len(passwrd), 7)
     
     #test if user login
@@ -119,7 +120,7 @@ class UserActivitiesTestcase(unittest.TestCase):
         #log out user
         token = self.get_verfication_token()
 
-        res = self.client().get('/api/v1/auth/logout',
+        res = self.client().get(self.AUTH_URL_BASE_ROUTE+'logout',
                     headers = {'x-access-token' : token },
                     content_type='application/json')
         self.assertIn('User has logged out', str(res.data))
@@ -128,7 +129,7 @@ class UserActivitiesTestcase(unittest.TestCase):
 
     #make sure email is not empty
     def test_auth_register_has_email(self):
-        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user2),content_type='application/json')
+        res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user2),content_type='application/json')
         self.assertIn("email, username and password are required", str(res.data))
 
     # #make sure password is set
@@ -139,10 +140,10 @@ class UserActivitiesTestcase(unittest.TestCase):
     #test reset password api 
     def test_auth_reset_password(self):
         #test if user can register before changing password
-        res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user4),content_type='application/json')
+        res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user4),content_type='application/json')
        
         # test if user can now update password
-        res = self.client().put('/api/v1/auth/reset-password/emai@gmail.com',data=json.dumps(self.new_password),content_type='application/json')
+        res = self.client().put(self.AUTH_URL_BASE_ROUTE+'reset-password/emai@gmail.com',data=json.dumps(self.new_password),content_type='application/json')
         self.assertEqual(res.status_code, 201)
 
 

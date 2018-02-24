@@ -66,13 +66,19 @@ def register():
         hashed_pass = generate_password_hash(password, method='pbkdf2:sha256')
         user = models.User(username = username, email=email, public_id=str(uuid.uuid4()), password_hash = hashed_pass)   
         user.save()
-        token = generate_confirmation_token(user.email)
-        confirm_url = url_for( 'auth.confirm', token=token, _external=True)
-        html = render_template('activate.html', confirm_url=confirm_url)
-        send_email(user.email, 'Email confirmation', html)
+
+        #call mailer helper function
+        mailer_helper(user.email)      
         
         return jsonify({'message': 'User registered successfully. Please check your mail to confirm email address'}),201
     return jsonify({'message':'email, username and password are required'}),403
+
+#mailer helper function
+def mailer_helper(email):
+    token = generate_confirmation_token(email)
+    confirm_url = url_for( 'auth.confirm', token=token, _external=True)
+    html = render_template('activate.html', confirm_url=confirm_url)
+    send_email(email, 'Email confirmation', html)
 
 #confirm email address
 @auth.route(_AUTH_BASE_URL+'confirm/<token>')
