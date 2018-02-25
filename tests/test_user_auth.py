@@ -143,7 +143,7 @@ class UserActivitiesTestcase(unittest.TestCase):
         res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user4),content_type='application/json')
        
         # test if user can now update password
-        res = self.client().put(self.AUTH_URL_BASE_ROUTE+'reset-password/emai@gmail.com',data=json.dumps(self.new_password),content_type='application/json')
+        res = self.client().put(self.AUTH_URL_BASE_ROUTE+'reset-password/kungus@ymail.com',data=json.dumps(self.new_password),content_type='application/json')
         self.assertEqual(res.status_code, 201)
 
 
