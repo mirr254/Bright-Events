@@ -6,4 +6,7 @@ class AppConfigTestCases(unittest.TestCase):
 
     def setup(self):
         self.app = createApp(conf_name='testing')
+
+    #test for debugging log
+    def test_debug_mode(self):
         self.assertEqual(self.app.debug, False)

@@ -24,7 +24,17 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.user = {
             'email': 'kungus@ymail.com',
             'username':'test',
-            'password':'hardpass'
+            'password':'hardpass123'
+        }
+        self.user5 = {
+            'email': 'kungus@ymail.com',
+            'username':'test1',
+            'password':'hardpass123'
+        }
+        self.user6 = {
+            'email': 'kungusamuel90@gmail.com',
+            'username':'test1',
+            'password':'hardpass123'
         }
         self.user1 = {
             'email' : 'kungus@ymail.com',
@@ -65,7 +75,6 @@ class UserActivitiesTestcase(unittest.TestCase):
 
     #register a user
     def register_users(self):
-        user_details = json.dumps(self.user)
         return self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user), content_type='application/json')
 
      #get the token from logged in user
@@ -94,6 +103,19 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_auth_register(self):
         res = self.register_users() 
         self.assertEqual(res.status_code, 201)
+
+    #test for duplicate email registration
+    def test_auth_duplicate_email_registration(self):
+        res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user), content_type='application/json')
+        res2 = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user5), content_type='application/json')
+        self.assertIn('Email already taken', str(res2.data))
+
+    #test for duplicate username
+    def test_auth_duplicate_username_registration(self):
+        res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user5), content_type='application/json')
+        res2 = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user6), content_type='application/json')
+        self.assertIn('Username already taken', str(res2.data))
+
 
     #test password length
     def test_auth_password_length_on_registration(self):        
@@ -131,11 +153,6 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_auth_register_has_email(self):
         res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user2),content_type='application/json')
         self.assertIn("email, username and password are required", str(res.data))
-
-    # #make sure password is set
-    # def test_auth_register_has_password(self):
-    #     res = self.client().post('/api/v1/auth/register', data=json.dumps(self.user3),content_type='application/json')
-    #     self.assertIn("email, username and password are required", str(res.data))
 
     #test reset password api 
     def test_auth_reset_password(self):

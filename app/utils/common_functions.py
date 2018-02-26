@@ -17,7 +17,7 @@ def token_required(f):
             return jsonify({'message' : 'Token is missing!'}), 401
 
         if check_blacklisted_token(token):
-            return jsonify({'Session expired':'Please login again'}),403
+            return jsonify({'message':'Please login again'}),403
 
         try: 
             data = jwt.decode(token, createApp(conf_name=os.getenv('APP_SETTINGS')).config['SECRET_KEY'])

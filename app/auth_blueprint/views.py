@@ -31,6 +31,11 @@ _AUTH_BASE_URL = '/api/v1/auth/'
 def not_found(error):
     return make_response(jsonify({'message': 'Not found'}), 404)
 
+#error handlers for custom errors
+@auth.errorhandler(500)
+def server_error_found(error):
+    return make_response(jsonify({'message': 'Server error. Its not you ,but us...'}), 500)
+
 #view api docs in heroku
 @auth.route('/')
 def index():
