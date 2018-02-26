@@ -131,9 +131,15 @@ def login():
 #edit and password
 @auth.route('/api/v1/auth/reset-password/<string:email>', methods=['PUT'])
 def reset_password(email):
-    user = models.User.query.filter_by(email=email).first()
-    if not user:
-        return jsonify({'Not found':'Email not found'}),404
+    
+    try
+        user = models.User.query.filter_by(email=email).first_or_404()
+    except:
+        return jsonify({'message':'Invalid Email address'})
+    if user.email_confirmed:
+        mailer_helper(email, 'reset_passwd')
+    else:
+        return jsonify({'message':'Email must be confirmed before requesting password reset'})
     password = str(request.json.get('password', ''))
     hashed_pass = generate_password_hash(password)
     user.password_hash = hashed_pass
