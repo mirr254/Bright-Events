@@ -4,7 +4,7 @@ from flask import Flask, jsonify,abort,request,session, render_template
 from flask import make_response, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from app.utils.token import generate_email_confirmation_token, confirm_email_confirmation_token,generate_password_reset_token()
+from app.utils.token import generate_email_confirmation_token, confirm_email_confirmation_token,generate_password_reset_token,confirm_password__reset_token
 from app import createApp
 from app.utils.common_functions import token_required
 from app.utils.email import send_email
@@ -68,8 +68,7 @@ def register():
         user.save()
 
         #call mailer helper function
-        mailer_helper(user.email)      
-        
+        mailer_helper(user.email, 'confirm_email')        
         return jsonify({'message': 'User registered successfully. Please check your mail to confirm email address'}),201
     return jsonify({'message':'email, username and password are required'}),403
 
@@ -80,14 +79,14 @@ def mailer_helper(email, _function):
         confirm_url = url_for( 'auth.confirm', token=token, _external=True)
         html = render_template('activate.html', confirm_url=confirm_url)
         send_email(email, 'Email confirmation', html)
-    else:
-        token = generate_password_reset_token(user_email) 
-        password_reset_url = url_for('auth.reset_password',token = token,_external=True) 
+    elif _function == 'reset_passwd':
+        token = generate_password_reset_token(email) 
+        password_reset_url = url_for('auth.reset_password_with_token',token = token,_external=True) 
         html = render_template(
-            'email_password_reset.html',
+            'password_reset_template.html',
             password_reset_url=password_reset_url)
  
-        send_email([user_email],'Password Reset Requested', html)
+        send_email(email,'Password Reset Requested', html)
     
 
 #confirm email address
@@ -123,23 +122,34 @@ def login():
     #check password
     if check_password_hash(user.password_hash, auth.password):
         token = jwt.encode({'public_id': user.public_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, 
-                       createApp( conf_name = os.getenv('APP_SETTINGS').config['SECRET_KEY']))
+                       app.config['SECRET_KEY'])
         return jsonify({'token': token.decode('UTF-8')}),200
 
     return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
    
 #edit and password
-@auth.route('/api/v1/auth/reset-password/<string:email>', methods=['PUT'])
+@auth.route(_AUTH_BASE_URL+'reset-password/<string:email>', methods=['POST', 'GET'])
 def reset_password(email):
     
-    try
+    try:
         user = models.User.query.filter_by(email=email).first_or_404()
     except:
-        return jsonify({'message':'Invalid Email address'})
+        return jsonify({'message':'Invalid Email address'}),403
     if user.email_confirmed:
         mailer_helper(email, 'reset_passwd')
+        return jsonify({'message':'Email sent with reset password link'}),200
     else:
-        return jsonify({'message':'Email must be confirmed before requesting password reset'})
+        return jsonify({'message':'Email must be confirmed before requesting password reset'}),403
+    
+
+#route to reset password with token 
+@auth.route(_AUTH_BASE_URL+'reset-password/<token>', methods=['PUT'])
+def reset_password_with_token(token):
+    try:
+        email = confirm_password__reset_token(token)
+    except:
+        return jsonify({'message': 'Token is invalid or expired'})
+    user = models.User.query.filter_by(email=email).first_or_404()
     password = str(request.json.get('password', ''))
     hashed_pass = generate_password_hash(password)
     user.password_hash = hashed_pass
@@ -153,5 +163,5 @@ def logout(logged_in_user):
     token = request.headers['x-access-token']    
     blacklisted_tok = models.TokenBlackList(token)
     blacklisted_tok.save()
-    return jsonify({"User has logged out ": logged_in_user.public_id}),200
+    return jsonify({'message': 'user '+logged_in_user.public_id+' logged out'}),200
 
