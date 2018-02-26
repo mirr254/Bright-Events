@@ -28,3 +28,13 @@ def token_required(f):
         return f(logged_in_user, *args, **kwargs)
 
     return decorated
+
+
+"""Helper function to check for blacklisted tokens"""
+
+def check_blacklisted_token(token):
+
+    token = models.TokenBlackList.query.filter_by(token=token).first()
+    if token:
+        return True
+    return False
