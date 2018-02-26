@@ -4,7 +4,7 @@ from flask import Flask, jsonify,abort,request,session, render_template
 from flask import make_response, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from app.utils.token import generate_confirmation_token, confirm_token
+from app.utils.token import generate_email_confirmation_token, confirm_email_confirmation_token,generate_password_reset_token()
 from app import createApp
 from app.utils.common_functions import token_required
 from app.utils.email import send_email
@@ -74,17 +74,27 @@ def register():
     return jsonify({'message':'email, username and password are required'}),403
 
 #mailer helper function
-def mailer_helper(email):
-    token = generate_confirmation_token(email)
-    confirm_url = url_for( 'auth.confirm', token=token, _external=True)
-    html = render_template('activate.html', confirm_url=confirm_url)
-    send_email(email, 'Email confirmation', html)
+def mailer_helper(email, _function):
+    if (_function == 'confirm_email'):
+        token = generate_email_confirmation_token(email)
+        confirm_url = url_for( 'auth.confirm', token=token, _external=True)
+        html = render_template('activate.html', confirm_url=confirm_url)
+        send_email(email, 'Email confirmation', html)
+    else:
+        token = generate_password_reset_token(user_email) 
+        password_reset_url = url_for('auth.reset_password',token = token,_external=True) 
+        html = render_template(
+            'email_password_reset.html',
+            password_reset_url=password_reset_url)
+ 
+        send_email([user_email],'Password Reset Requested', html)
+    
 
 #confirm email address
 @auth.route(_AUTH_BASE_URL+'confirm/<token>')
 def confirm(token):
     try:
-        email = confirm_token(token)
+        email = confirm_email_confirmation_token(token)
     except:
         return jsonify({'message':'invalid token. Email not confirmed'}),403
     user = models.User.query.filter_by(email=email).first_or_404()

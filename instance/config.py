@@ -8,6 +8,7 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
     SECRET_KEY = os.getenv('SECRET_KEY')
     SECURITY_PASSWORD_SALT = os.getenv('SECURITY_PASSWORD_SALT')
+    SECURITY_PASSWORD_RESET_SALT = os.getenv('SECURITY_PASSWORD_RESET_SALT')
 
     # mail settings
     MAIL_SERVER = 'smtp.gmail.com'

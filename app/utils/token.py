@@ -4,11 +4,15 @@ import os
 
 app = createApp(conf_name = os.getenv('APP_SETTINGS'))
 
-def generate_confirmation_token(email):
+def generate_email_confirmation_token(email):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_SALT'])
 
-def confirm_token(token, expiration=3600):
+def generate_password_reset_token(email):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt=app.config['SECURITY_PASSWORD_RESET_SALT'])
+
+def confirm_email_confirmation_token(token, expiration=3600):
     serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
     try:
         email = serializer.loads(
