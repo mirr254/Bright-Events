@@ -108,7 +108,7 @@ def return_event_results(events):
 @token_required
 def delete_event(logged_in_user, eventid):
     # retrieve a event using its ID
-    event = models.Events.query.filter_by(eventid=eventid).first()
+    event = models.Events.query.filter_by(eventid=eventid).first_or_404()
     if not event:
         return jsonify({'Not found':'Event with that id is not available'}),404
 
@@ -122,9 +122,7 @@ def delete_event(logged_in_user, eventid):
 @events.route('/api/v1/events/<int:eventid>', methods=['PUT'])
 @token_required
 def edit_event(logged_in_user,eventid):
-    event = models.Events.query.filter_by(eventid=eventid).first()
-    if not event:
-        return jsonify({'Not found':'Event with that id is not available'}),404
+    event = models.Events.query.filter_by(eventid=eventid).first_or_404()    
    
     if event.user_public_id != logged_in_user.public_id:
         return jsonify({'Authorization error':'You can only update your own event'}), 401
@@ -197,7 +195,7 @@ def rsvp_to_an_event(logged_in_user, eventid):
     rsvp = request.json['rsvp']
     if rsvp == 'attending' or rsvp =='not attending' or rsvp == 'maybe':
         #return jsonify({'Error':'Rsvp with attending, not attending or maybe'}),403
-        event = models.Events.query.filter_by(eventid=eventid).first()
+        event = models.Events.query.filter_by(eventid=eventid).first_or_404()
         if event:
             rsvp = models.Rsvp(
                 event = event,
