@@ -12,6 +12,17 @@ from . import events
 #script global variables
 app = createApp(os.getenv('APP_SETTINGS'))
 
+
+#error handlers for custom errors
+@auth.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'message': 'Not found'}), 404)
+
+#error handlers for custom errors
+@auth.errorhandler(500)
+def server_error_found(error):
+    return make_response(jsonify({'message': 'Server error. Its not you ,but us...'}), 500)
+
 """Helper function to check for blacklisted tokens"""
 
 def check_blacklisted_token(token):
