@@ -216,7 +216,7 @@ def rsvp_to_an_event(logged_in_user, eventid):
 def list_event_guests(token_required,eventid):
 
     #check if event exists
-    event = models.Events.query.filter_by(eventid=eventid).first()
+    event = models.Events.query.filter_by(eventid=eventid).first_or_404()
     if event:
         dic_of_users_rsvp = {}
         rsvps = models.Rsvp.query.filter_by(eventid = eventid)

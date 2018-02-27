@@ -1,8 +1,7 @@
 import unittest
 from app import createApp
 from app.auth_blueprint.views import generate_email_confirmation_token, confirm_email_confirmation_token,generate_password_reset_token, confirm_password__reset_token
-#from app.utils.token import generate_email_confirmation_token,generate_password_reset_token,confirm_email_confirmation_token,confirm_password__reset_token
- 
+
 
 class AppConfigTestCases(unittest.TestCase):
 
