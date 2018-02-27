@@ -4,7 +4,7 @@ from . import test_user_auth
 
 class AppConfigTestCases(unittest.TestCase):
 
-    def setup(self):
+    def setUp(self):
         self.app = createApp(conf_name='testing')
 
     #test for debugging log
