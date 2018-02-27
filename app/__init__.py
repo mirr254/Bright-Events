@@ -6,10 +6,12 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from instance.config import app_config
 from flask_mail import Mail
+from flask_heroku import Heroku
 
 
 db = SQLAlchemy()
 mail = Mail()
+heroku = Heroku()
 
 def createApp(conf_name):
 
@@ -19,6 +21,7 @@ def createApp(conf_name):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
     mail.init_app(app)
+    heroku.init_app(app)
 
 
       #register the blueprints 
