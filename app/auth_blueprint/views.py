@@ -31,10 +31,15 @@ _AUTH_BASE_URL = '/api/v1/auth/'
 def not_found(error):
     return make_response(jsonify({'message': 'Not found'}), 404)
 
+#handle 403 not allowed error
+@auth.errorhandler(403)
+def not_allowed(error):
+    return make_response(jsonify({'message': 'You are not allowed to perfom that request'}), 403)
+
 #error handlers for custom errors
 @auth.errorhandler(500)
 def server_error_found(error):
-    return make_response(jsonify({'message': 'Server error. Its not you ,but us...'}), 500)
+    return make_response(jsonify({'message': 'Server error. An error occured while processing your request. Please try again later'}), 500)
 
 #view api docs in heroku
 @auth.route('/')
@@ -150,16 +155,18 @@ def reset_password(email):
 #route to reset password with token 
 @auth.route(_AUTH_BASE_URL+'reset-password/<token>', methods=['PUT'])
 def reset_password_with_token(token):
-    try:
-        email = confirm_password__reset_token(token)
-    except:
-        return jsonify({'message': 'Token is invalid or expired'})
-    user = models.User.query.filter_by(email=email).first_or_404()
-    password = str(request.json.get('password', ''))
-    hashed_pass = generate_password_hash(password)
-    user.password_hash = hashed_pass
-    user.save()
-    return jsonify({'message':'Password reset success'}),201
+    email = confirm_password__reset_token(token)
+    
+    if email != False:
+        import pdb; pdb.set_trace()
+        user = models.User.query.filter_by(email=email).first_or_404()
+        password = str(request.json.get('password', ''))
+        hashed_pass = generate_password_hash(password)
+        user.password_hash = hashed_pass
+        user.save()
+        return jsonify({'message':'Password reset success'}),200
+    else:
+        return jsonify({'message': 'Token is invalid or expired'}),403
 
 #logout
 @auth.route('/api/v1/auth/logout')

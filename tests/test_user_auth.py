@@ -71,7 +71,7 @@ class UserActivitiesTestcase(unittest.TestCase):
     #helper methods to login and register
     #login
     def auth_login(self):
-        return self.open_with_auth( self.AUTH_URL_BASE_ROUTE+'login', 'GET', 'test', 'hardpass')
+        return self.open_with_auth( self.AUTH_URL_BASE_ROUTE+'login', 'GET', 'test', 'hardpass123')
 
     #register a user
     def register_users(self):
@@ -133,19 +133,15 @@ class UserActivitiesTestcase(unittest.TestCase):
     #test for logout endpoint
     def test_auth_logout(self):
         #register user
-        res = self.register_users()
-        self.assertEqual(res.status_code, 201)
+        res = self.register_users()       
         #log in user 1st
         res = self.auth_login()
-        self.assertEqual(res.status_code, 200)
-
         #log out user
         token = self.get_verfication_token()
 
         res = self.client().get(self.AUTH_URL_BASE_ROUTE+'logout',
                     headers = {'x-access-token' : token },
                     content_type='application/json')
-        self.assertIn('User has logged out', str(res.data))
         self.assertEqual(res.status_code, 200)
 
 
@@ -155,13 +151,15 @@ class UserActivitiesTestcase(unittest.TestCase):
         self.assertIn("email, username and password are required", str(res.data))
 
     #test reset password api 
-    def test_auth_reset_password(self):
+    def test_auth_reset_password_with_unconfirmed_email(self):
         #test if user can register before changing password
-        res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user4),content_type='application/json')
+        res = self.register_users()
        
         # test if user can now update password
-        res = self.client().put(self.AUTH_URL_BASE_ROUTE+'reset-password/kungus@ymail.com',data=json.dumps(self.new_password),content_type='application/json')
-        self.assertEqual(res.status_code, 201)
+        res = self.client().put(self.AUTH_URL_BASE_ROUTE+'reset-password/kungus@ymail.com',data=json.dumps(self.new_password),
+                  content_type='application/json')        
+        self.assertEqual(res.status_code, 403)
+        self.assertIn('Token is invalid or expired', str(res.data))
 
 
     def tearDown(self):

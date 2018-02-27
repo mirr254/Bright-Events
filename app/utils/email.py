@@ -1,8 +1,8 @@
 import os
-from flask_mail import Mail, Message
-from app import createApp
+from flask_mail import Message
+from app import createApp,mail
 
-mail = Mail( createApp(conf_name=os.getenv('APP_SETTINGS')))
+#mail = Mail( createApp(conf_name=os.getenv('APP_SETTINGS')))
 
 def send_email(to, subject, template):
     msg = Message(
