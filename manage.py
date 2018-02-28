@@ -2,7 +2,7 @@ import os
 from app import db, createApp
 from app.events_blueprint import models
 
-config_name = "development"
+config_name = os.getenv('APP_SETTINGS')
 app = createApp(conf_name=config_name) 
 
 from flask_script import Manager # class for handling a set of commands
