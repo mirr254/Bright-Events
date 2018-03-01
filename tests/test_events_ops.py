@@ -1,6 +1,7 @@
 import unittest
 import json
 from app import createApp, db
+from app.auth_blueprint.models import User
 from . import test_user_auth
 import base64
 
@@ -42,6 +43,9 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "date": "2017-10-10",
             "cost" : 2000
         }
+        self.update_data = {
+            "cost" : "456789"
+        }
         self.rsvp_ = {            
             "event" : self.event1,           
             "rsvp":"attending"
@@ -50,7 +54,8 @@ class EventsActivitiesTestCases(unittest.TestCase):
         self.user = {
             'email': 'test@kungu.com',
             'username':'test',
-            'password':'hardpass'
+            'password':'hardpass',
+            'email_confirmed':True
         }
         self.login_details = {
             'username' : 'test',
@@ -124,12 +129,45 @@ class EventsActivitiesTestCases(unittest.TestCase):
         token = self.get_verfication_token()
 
         self.test_add_event()  
+        self.test_add_event()
 
         res = self.client().get(self.BASE_EVENT_URL,
              headers = {'x-access-token' : token },
              content_type='application/json')
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 200)        
         self.assertIn('Partymad', str(res.data))
+
+    #test api can get one event
+    def test_can_get_one_event(self):
+        token = self.get_verfication_token()
+        self.test_add_event()  
+        res = self.client().get(self.BASE_EVENT_URL+'/1',
+             headers = {'x-access-token' : token },
+             content_type='application/json')
+        self.assertEqual(res.status_code, 200)        
+        self.assertIn('Partymad', str(res.data))
+
+    #test non-existent item
+    def test_event_not_exist(self):
+        token = self.get_verfication_token()
+        self.test_add_event()  
+        res = self.client().get(self.BASE_EVENT_URL+'/3',
+             headers = {'x-access-token' : token },
+             content_type='application/json')
+        self.assertEqual(res.status_code, 404)
+
+    #test for update
+    def test_update_event(self):
+        token = self.get_verfication_token()
+        self.test_add_event()
+        res = self.client().put(self.BASE_EVENT_URL+'/1',
+              headers = {'x-access-token' : token },
+              data=json.dumps(self.update_data), content_type='application/json')
+        self.assertEqual(res.status_code, 201)
+        self.assertIn('456789', str(res.data))
+
+             
+        
 
     #test filtering events by location
     def test_for_filter_events_by_location(self):
@@ -148,7 +186,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
     def test_rsvp_an_event(self):
         token = self.get_verfication_token()
         #make sure before rsvp we have an add event api working
-        self.test_add_event()        
+        self.test_add_event()       
         
         res = self.client().post(self.BASE_EVENT_URL+'/1/rsvp',
              headers = {'x-access-token' : token },

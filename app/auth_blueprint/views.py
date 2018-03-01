@@ -129,16 +129,24 @@ def login():
     if not user:
         return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
 
-    #make sure user has confirmed email address before login
-    if user.email_confirmed:
-        #check password
-        if check_password_hash(user.password_hash, auth.password):
-            token = jwt.encode({'public_id': user.public_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, 
-                        app.config['SECRET_KEY'])
-            return jsonify({'token': token.decode('UTF-8')}),200
+    #check password
+    if check_password_hash(user.password_hash, auth.password):
+        token = jwt.encode({'public_id': user.public_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, 
+                    app.config['SECRET_KEY'])
+        return jsonify({'token': token.decode('UTF-8')}),200
 
-        return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
-    return jsonify({'message': 'Please confirm your email before login in'}),401
+    return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
+
+    #make sure user has confirmed email address before login
+    # if user.email_confirmed:
+    #     #check password
+    #     if check_password_hash(user.password_hash, auth.password):
+    #         token = jwt.encode({'public_id': user.public_id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60)}, 
+    #                     app.config['SECRET_KEY'])
+    #         return jsonify({'token': token.decode('UTF-8')}),200
+
+    #     return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
+    # return jsonify({'message': 'Please confirm your email before login in'}),401
    
 #edit and password
 @auth.route(_AUTH_BASE_URL+'reset-password/<string:email>', methods=['POST', 'GET'])
