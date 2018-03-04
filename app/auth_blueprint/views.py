@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from app.utils.token import generate_email_confirmation_token, confirm_email_confirmation_token,generate_password_reset_token,confirm_password__reset_token
 from app import createApp
-from app.utils.common_functions import token_required
+from app.utils.common_functions import token_required, UserRegistrationValidations
 from app.utils.email import send_email
 from . import models
 from . import auth
@@ -50,28 +50,28 @@ def index():
 # register user
 @auth.route(_AUTH_BASE_URL+'register', methods=['POST'])
 def register():
-    username = request.json.get('username')
+    username = request.json.get('username').strip()
     password =str(request.json.get('password')).strip()
-    email = request.json.get('email')
+    email = request.json.get('email')    
 
     #validation
-    if email != None and username != None and password != '':
+    if email != None and username != None and password != '':        
 
         if len(password) < 8:
-            return jsonify({'message': 'Password lenth must be more than 8 characters'}),403
+            return jsonify({'message': 'Password lenth must be more than 8 characters'}),400
         #check correct emai
         
         bad_email = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', email)    
         if bad_email == None:
-            return jsonify({"message":"Please provide a valid email"}),403
+            return jsonify({"message":"Please provide a valid email"}),400
 
         #check if email already exists
         if models.User.query.filter_by(email = email).first() is not None:
-            return jsonify({"message": "Email already taken"}),403
+            return jsonify({"message": "Email already taken"}),400
 
         #test username
         if models.User.query.filter_by(username = username).first() is not None:
-            return jsonify({"message": "Username already taken"}),403
+            return jsonify({"message": "Username already taken"}),400
 
         hashed_pass = generate_password_hash(password, method='pbkdf2:sha256')
         user = models.User(username = username, email=email, public_id=str(uuid.uuid4()), password_hash = hashed_pass)   
@@ -80,7 +80,7 @@ def register():
         #call mailer helper function
         mailer_helper(user.email, 'confirm_email')        
         return jsonify({'message': 'User registered successfully. Please check your mail to confirm email address'}),201
-    return jsonify({'message':'email, username and password are required'}),403
+    return jsonify({'message':'email, username and password are required'}),400
 
 #mailer helper function
 def mailer_helper(email, _function):
@@ -155,12 +155,12 @@ def reset_password(email):
     try:
         user = models.User.query.filter_by(email=email).first_or_404()
     except:
-        return jsonify({'message':'Invalid Email address'}),403
+        return jsonify({'message':'Invalid Email address'}),400
     if user.email_confirmed:
         mailer_helper(email, 'reset_passwd')
         return jsonify({'message':'Email sent with reset password link'}),200
     else:
-        return jsonify({'message':'Email must be confirmed before requesting password reset'}),403
+        return jsonify({'message':'Email must be confirmed before requesting password reset'}),401
     
 
 #route to reset password with token 
@@ -177,7 +177,7 @@ def reset_password_with_token(token):
         user.save()
         return jsonify({'message':'Password reset success'}),200
     else:
-        return jsonify({'message': 'Token is invalid or expired'}),403
+        return jsonify({'message': 'Token is invalid or expired'}),401
 
 #logout
 @auth.route('/api/v1/auth/logout')

@@ -25,6 +25,7 @@ def server_error_found(error):
     return make_response(jsonify({'message': 'Server error. Its not you ,but us...'}), 500)
 
 
+
 """ HANDLE EVENTS ACTIVITIES """
 #create a new event
 @events.route('/api/v1/events', methods=['POST'])
@@ -32,16 +33,16 @@ def server_error_found(error):
 def add_event(logged_in_user): 
 
     if not request.json or not 'name' in request.json or (request.json.get('name').strip() == ''): #name must be included
-        return jsonify({"message":"Name must be included"}),403    
+        return jsonify({"message":"Name must be included"}),400    
     if not request.json or not 'location' in request.json or (request.json.get('location').strip() == ''):
-        return jsonify({"message":"Location must be included"}),403
+        return jsonify({"message":"Location must be included"}),400
     if not request.json or not 'category' in request.json or (request.json.get('category').strip() == ''):
-        return jsonify({"message":"Category must be included"}),403
+        return jsonify({"message":"Category must be included"}),400
    
     #check if cost is int
     if request.json.get('cost'):
         if isinstance(request.json.get('cost'), (int, float)) != True:
-            return jsonify({"message":"Cost must be numbers only"}),403
+            return jsonify({"message":"Cost must be numbers only"}),400
     #check for another event with same event name
 
     check_same_event_name(request.json.get('name'), request.json.get('date'))
@@ -129,7 +130,7 @@ def delete_event(logged_in_user, eventid):
         return jsonify({'Not found':'Event with that id is not available'}),404
 
     if event.user_public_id != logged_in_user.public_id:
-        return jsonify({'Authorization error':'You can only delete your own event'}),401
+        return jsonify({'Authorization error':'You can only delete your own event'}),403
 
     event.delete()
     return jsonify({"message": "Event {} deleted successfully".format(event.eventid)}), 200
@@ -141,7 +142,7 @@ def edit_event(logged_in_user,eventid):
     event = models.Events.query.filter_by(eventid=eventid).first_or_404()    
    
     if event.user_public_id != logged_in_user.public_id:
-        return jsonify({'Authorization error':'You can only update your own event'}), 401
+        return jsonify({'Authorization error':'You can only update your own event'}), 403
 
     event.name = request.json.get('name', event.name) #if no changes made let the initial remain
     event.description = request.json.get('description', event.description)
@@ -224,7 +225,7 @@ def rsvp_to_an_event(logged_in_user, eventid):
             })
             return response,201
         return jsonify({'message':'No event with that id'}),404
-    return jsonify({'message':'rsvp must be either attending/maybe/not attending'}),403
+    return jsonify({'message':'rsvp must be either attending/maybe/not attending'}),400
 
 @events.route('/api/v1/events/<int:eventid>/guests', methods=['GET'])
 @token_required

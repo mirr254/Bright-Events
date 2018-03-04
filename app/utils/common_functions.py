@@ -17,7 +17,7 @@ def token_required(f):
             return jsonify({'message' : 'Token is missing!'}), 401
 
         if check_blacklisted_token(token):
-            return jsonify({'message':'Please login again'}),403
+            return jsonify({'message':'Please login again'}),401
 
         try: 
             data = jwt.decode(token, createApp(conf_name=os.getenv('APP_SETTINGS')).config['SECRET_KEY'])
@@ -29,12 +29,11 @@ def token_required(f):
 
     return decorated
 
-
-"""Helper function to check for blacklisted tokens"""
-
 def check_blacklisted_token(token):
-
+    """
+       Helper function to check for blacklisted tokens
+    """
     token = models.TokenBlackList.query.filter_by(token=token).first()
     if token:
         return True
-    return False
+    return False   
