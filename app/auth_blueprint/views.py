@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from app.utils.token import generate_email_confirmation_token, confirm_email_confirmation_token,generate_password_reset_token,confirm_password__reset_token
 from app import createApp
-from app.utils.common_functions import token_required, UserRegistrationValidations
+from app.utils.common_functions import token_required
 from app.utils.email import send_email
 from . import models
 from . import auth
