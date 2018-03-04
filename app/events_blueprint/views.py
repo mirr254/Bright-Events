@@ -1,5 +1,6 @@
 #!flask/bin/python
 import os
+from datetime import date
 from flask import Flask, jsonify,abort,request,session
 from flask import make_response
 from app import createApp
@@ -16,7 +17,7 @@ app = createApp(os.getenv('APP_SETTINGS'))
 #error handlers for custom errors
 @events.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify({'message': 'Not found'}), 404)
+    return make_response(jsonify({'message': 'Page not found'}), 404)
 
 #error handlers for custom errors
 @events.errorhandler(500)
@@ -30,17 +31,20 @@ def server_error_found(error):
 @token_required
 def add_event(logged_in_user): 
 
-    if not request.json or not 'name' in request.json: #name must be included
+    if not request.json or not 'name' in request.json or (request.json.get('name').strip() == ''): #name must be included
         return jsonify({"message":"Name must be included"}),403    
-    if not request.json or not 'location' in request.json:
+    if not request.json or not 'location' in request.json or (request.json.get('location').strip() == ''):
         return jsonify({"message":"Location must be included"}),403
-    if not request.json or not 'category' in request.json:
+    if not request.json or not 'category' in request.json or (request.json.get('category').strip() == ''):
         return jsonify({"message":"Category must be included"}),403
    
     #check if cost is int
     if request.json.get('cost'):
         if isinstance(request.json.get('cost'), (int, float)) != True:
             return jsonify({"message":"Cost must be numbers only"}),403
+    #check for another event with same event name
+
+    check_same_event_name(request.json.get('name'), request.json.get('date'))
 
     event = models.Events(
                         name= request.json.get('name'),
@@ -48,18 +52,30 @@ def add_event(logged_in_user):
                         user_public_id= logged_in_user.public_id,
                         location= request.json.get('location'),
                         description= request.json.get('description'),
-                        date = request.json.get('date'), #yyy-mm-dd
+                        date = request.json.get('date'), #yyyy-mm-dd
                         category= request.json.get('category') )
 
     event.save()
     return jsonify({'message': "Successfully created an event"}),201
+
+#this function will check for same event name and dates
+def check_same_event_name(name, input_date):
+    event = models.Events.query.filter_by(name=name).first()
+    #If date === input_d
+    if event.date == input_date:
+        return jsonify({'message': 'Events with same name should have different dates'})
+    if input_date < date.today():
+        return jsonify({'message': 'Event date cannnot be past'})
+
+
+    
 
 #get a specific event
 @events.route('/api/v1/events/<int:eventid>', methods=['GET'])
 @token_required
 def get_event(logged_in_user, eventid):
     # retrieve a event using its ID
-    event = models.Events.query.filter_by(eventid=eventid).first()
+    event = models.Events.query.filter_by(eventid=eventid).first_or_404()
     if not event:
         return jsonify({'Not found':'Event with that id is not available'}),404
     response = return_response(event)
@@ -80,7 +96,7 @@ def get_all_events(logged_in_user):
         events = models.Events.query.filter(models.Events.location.ilike('%{}%'.format(location_filter)))
         return return_event_results(events)
     
-    events = models.Events.query.paginate(page, limit, False).items
+    events = models.Events.query.paginate(page, limit, True).items
     return return_event_results(events)
   
 def return_event_results(events):
@@ -143,8 +159,7 @@ def edit_event(logged_in_user,eventid):
 @token_required
 def searc_by_location(logged_in_user):
     name = request.args.get('q')
-    event_searched = models.Events.query.filter( models.Events.name.like('%'+name+'%'))
-    import pdb; pdb.set_trace()
+    event_searched = models.Events.query.filter( models.Events.name.ilike('%'+name+'%'))    
     if event_searched:
         results = [] # a list of events
         for event in event_searched:
