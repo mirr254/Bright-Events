@@ -1,6 +1,6 @@
 #!flask/bin/python
 import os
-from datetime import date
+from datetime import datetime
 from flask import Flask, jsonify,abort,request,session
 from flask import make_response
 from app import createApp
@@ -44,8 +44,9 @@ def add_event(logged_in_user):
         if isinstance(request.json.get('cost'), (int, float)) != True:
             return jsonify({"message":"Cost must be numbers only"}),400
     #check for another event with same event name
-
-    check_same_event_name(request.json.get('name'), request.json.get('date'))
+    if check_same_event_name(request.json.get('name'), input_date=request.json.get('date')) != True:
+        msg_ = check_same_event_name(request.json.get('name'), input_date=request.json.get('date'))
+        return jsonify({'message': msg_}),400
 
     event = models.Events(
                         name= request.json.get('name'),
@@ -53,7 +54,7 @@ def add_event(logged_in_user):
                         user_public_id= logged_in_user.public_id,
                         location= request.json.get('location'),
                         description= request.json.get('description'),
-                        date = request.json.get('date'), #yyyy-mm-dd
+                        date = request.json.get('date'), #Wed, 24 Jan 2018 00:00:00 /"21/11/06 16:30"
                         category= request.json.get('category') )
 
     event.save()
@@ -61,16 +62,23 @@ def add_event(logged_in_user):
 
 #this function will check for same event name and dates
 def check_same_event_name(name, input_date):
-    event = models.Events.query.filter_by(name=name).first()
-    #If date === input_d
-    if event.date == input_date:
-        return jsonify({'message': 'Events with same name should have different dates'})
-    if input_date < date.today():
-        return jsonify({'message': 'Event date cannnot be past'})
-
-
-    
-
+    event = models.Events.query.filter( models.Events.name.ilike(name) ).first()
+    #check if that event with that name exists
+    if event:
+        user_input_date = datetime.strptime(input_date, "%d/%m/%y %H:%M") 
+        event_stored_date = datetime.strptime(event.date, "%d/%m/%y %H:%M")
+        today = datetime.now()
+        msg = ''
+        if event_stored_date.strftime("%d/%m/%y %H:%M") == user_input_date.strftime("%d/%m/%y %H:%M"):
+            msg = 'Events with same name should have different dates'                        
+            return msg
+        elif user_input_date < today:
+            msg = 'Event date cannnot be past'
+            return msg
+        else:
+            return True
+        
+            
 #get a specific event
 @events.route('/api/v1/events/<int:eventid>', methods=['GET'])
 @token_required

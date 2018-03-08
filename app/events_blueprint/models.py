@@ -14,7 +14,7 @@ class Events(db.Model):
     description = db.Column(db.String(255))
     category = db.Column(db.String(255))
     location = db.Column(db.String(255))
-    date = db.Column(db.DateTime)
+    date = db.Column(db.String(250))
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     date_modified = db.Column(
         db.DateTime, default=db.func.current_timestamp(),

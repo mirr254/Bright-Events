@@ -38,14 +38,3 @@ def check_blacklisted_token(token):
     if token:
         return True
     return False   
-
-
-def check_special_characters(string_):
-    """
-     function to check for special characters in a string
-     """
-    invalid_chars = set(string.punctuation.replace('_',''))
-    if any(char in invalid_chars for char in string_):
-        return True
-    else:
-        return False
