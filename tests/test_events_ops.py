@@ -20,7 +20,15 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "name" : "Partymad",
             "location" : "Nairobi",
             "description" : "here and 2",
-            "date": "2017-12-24",
+            "date": "21/11/18 16:30",
+            "cost" : 2000,
+            "category": "Indoors"
+        }
+        self.event1b = {
+            "name" : "Partymad",
+            "location" : "Nairobi",
+            "description" : "here and 2",
+            "date": "21/10/20 16:30",
             "cost" : 2000,
             "category": "Indoors"
         }
@@ -105,7 +113,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
         res = self.client().post(self.BASE_EVENT_URL,
                       headers = {'x-access-token' : token },
                       data=json.dumps(self.event1), content_type='application/json')
-
+        #from nose.tools import set_trace; set_trace()
         self.assertEqual(res.status_code, 201)
     
     def test_if_add_event_has_location(self):
@@ -127,9 +135,14 @@ class EventsActivitiesTestCases(unittest.TestCase):
     #test api can get all events
     def test_can_get_events(self):
         token = self.get_verfication_token()
+        res = self.client().post(self.BASE_EVENT_URL,
+                      headers = {'x-access-token' : token },
+                      data=json.dumps(self.event1), content_type='application/json')
 
-        self.test_add_event()  
-        self.test_add_event()
+        res = self.client().post(self.BASE_EVENT_URL,
+                      headers = {'x-access-token' : token },
+                      data=json.dumps(self.event1b), content_type='application/json')         
+        
 
         res = self.client().get(self.BASE_EVENT_URL,
              headers = {'x-access-token' : token },
@@ -198,11 +211,15 @@ class EventsActivitiesTestCases(unittest.TestCase):
     #test listing users who have responded (rsvp) to an event
     def test_list_rsvp_users(self):
         token = self.get_verfication_token()
-        #test create an event
-        self.test_add_event()
+        #create an event
+        self.client().post(self.BASE_EVENT_URL,
+                      headers = {'x-access-token' : token },
+                      data=json.dumps(self.event1), content_type='application/json')
         
         ### test user can rsvp to that event ###                
-        self.test_rsvp_an_event() 
+        res = self.client().post(self.BASE_EVENT_URL+'/1/rsvp',
+             headers = {'x-access-token' : token },
+             data=json.dumps(self.rsvp_) ,content_type='application/json') 
 
         #test the endpoint for retrieving the users. will retrieve users based on eventid                
         res = self.client().get(self.BASE_EVENT_URL+'/1/guests',

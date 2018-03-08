@@ -33,20 +33,30 @@ def server_error_found(error):
 def add_event(logged_in_user): 
 
     if not request.json or not 'name' in request.json or (request.json.get('name').strip() == ''): #name must be included
-        return jsonify({"message":"Name must be included"}),400    
+        return jsonify({"message":"Name must be included"}),403    
     if not request.json or not 'location' in request.json or (request.json.get('location').strip() == ''):
-        return jsonify({"message":"Location must be included"}),400
+        return jsonify({"message":"Location must be included"}),403
     if not request.json or not 'category' in request.json or (request.json.get('category').strip() == ''):
-        return jsonify({"message":"Category must be included"}),400
+        return jsonify({"message":"Category must be included"}),403
+    if not request.json or not 'date' in request.json or (request.json.get('date').strip() == ''):
+        return jsonify({"message":"Date must be included"}),403
    
     #check if cost is int
     if request.json.get('cost'):
         if isinstance(request.json.get('cost'), (int, float)) != True:
-            return jsonify({"message":"Cost must be numbers only"}),400
+            return jsonify({"message":"Cost must be numbers only"}),403
+    #check for dates
+    user_input_date = datetime.strptime( request.json.get('date'), "%d/%m/%y %H:%M")
+    if user_input_date < datetime.now():
+        return jsonify({'message': 'Event date cannnot be past'}),403
+
     #check for another event with same event name
-    if check_same_event_name(request.json.get('name'), input_date=request.json.get('date')) != True:
-        msg_ = check_same_event_name(request.json.get('name'), input_date=request.json.get('date'))
-        return jsonify({'message': msg_}),400
+    event = models.Events.query.filter( models.Events.name.ilike( request.json.get('name').strip()) ).first()   
+    if event:
+        user_input_date = datetime.strptime( request.json.get('date'), "%d/%m/%y %H:%M")
+        event_stored_date = datetime.strptime(event.date, "%d/%m/%y %H:%M")           
+        if ( event_stored_date.strftime("%d/%m/%y %H:%M") == user_input_date.strftime("%d/%m/%y %H:%M") ):                 
+            return jsonify({'message': 'Events with same name should have different dates'}),403    
 
     event = models.Events(
                         name= request.json.get('name'),
@@ -54,30 +64,11 @@ def add_event(logged_in_user):
                         user_public_id= logged_in_user.public_id,
                         location= request.json.get('location'),
                         description= request.json.get('description'),
-                        date = request.json.get('date'), #Wed, 24 Jan 2018 00:00:00 /"21/11/06 16:30"
+                        date = request.json.get('date'), #"21/11/06 16:30"
                         category= request.json.get('category') )
 
     event.save()
-    return jsonify({'message': "Successfully created an event"}),201
-
-#this function will check for same event name and dates
-def check_same_event_name(name, input_date):
-    event = models.Events.query.filter( models.Events.name.ilike(name) ).first()
-    #check if that event with that name exists
-    if event:
-        user_input_date = datetime.strptime(input_date, "%d/%m/%y %H:%M") 
-        event_stored_date = datetime.strptime(event.date, "%d/%m/%y %H:%M")
-        today = datetime.now()
-        msg = ''
-        if event_stored_date.strftime("%d/%m/%y %H:%M") == user_input_date.strftime("%d/%m/%y %H:%M"):
-            msg = 'Events with same name should have different dates'                        
-            return msg
-        elif user_input_date < today:
-            msg = 'Event date cannnot be past'
-            return msg
-        else:
-            return True
-        
+    return jsonify({'message': "Successfully created an event"}),201       
             
 #get a specific event
 @events.route('/api/v1/events/<int:eventid>', methods=['GET'])
@@ -233,7 +224,7 @@ def rsvp_to_an_event(logged_in_user, eventid):
             })
             return response,201
         return jsonify({'message':'No event with that id'}),404
-    return jsonify({'message':'rsvp must be either attending/maybe/not attending'}),400
+    return jsonify({'message':'rsvp must be either attending/maybe/not attending'}),403
 
 @events.route('/api/v1/events/<int:eventid>/guests', methods=['GET'])
 @token_required

@@ -158,7 +158,7 @@ class UserActivitiesTestcase(unittest.TestCase):
         # test if user can now update password
         res = self.client().put(self.AUTH_URL_BASE_ROUTE+'reset-password/kungus@ymail.com',data=json.dumps(self.new_password),
                   content_type='application/json')        
-        self.assertEqual(res.status_code, 403)
+        self.assertEqual(res.status_code, 401) 
         self.assertIn('Token is invalid or expired', str(res.data))
 
 
