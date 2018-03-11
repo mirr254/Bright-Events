@@ -58,6 +58,16 @@ class UserActivitiesTestcase(unittest.TestCase):
             'username':'samuel',
             'password':'easypass'          
         }
+        self.user_with_bad_chars = {
+            'email': 'kungusa@ymail.com',
+            'username':'#$5234#@!$$',
+            'password':'easypass32324'
+        }
+        self.user_with_only_numbers = {
+            'email': 'kunguas@ymail.com',
+            'username':'12345667',
+            'password':'easypass22323'
+        }
 
         self.user_login_without_email = {
             
@@ -103,6 +113,12 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_auth_register(self):
         res = self.register_users() 
         self.assertEqual(res.status_code, 201)
+
+    #test if username has only digits
+    def test_username_has_digits_only(self):
+        res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user_with_only_numbers),content_type='application/json')
+        from nose.tools import set_trace; set_trace()
+        self.assertIn('That is not a valid username', str(res.data))
 
     #test for duplicate email registration
     def test_auth_duplicate_email_registration(self):

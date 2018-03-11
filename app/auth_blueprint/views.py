@@ -58,8 +58,8 @@ def register():
     #validation
     if email != None and username != None and password != '':
 
-        if not re.match("^[a-zA-Z0-9_]*$", username):
-            return jsonify({'message':'Names cannot contain special characters'}),400
+        if not re.match("^[a-zA-Z0-9_]*$", username) or re.match("^[0-9 -]+$", username):
+            return jsonify({'message':'That is not a valid username'}),400
 
         if username == '':
             return jsonify({'message':'Username cannot be empty'}),400
