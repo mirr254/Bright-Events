@@ -117,7 +117,11 @@ class UserActivitiesTestcase(unittest.TestCase):
     #test if username has only digits
     def test_username_has_digits_only(self):
         res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user_with_only_numbers),content_type='application/json')
-        from nose.tools import set_trace; set_trace()
+        self.assertIn('That is not a valid username', str(res.data))
+
+    #test if username contains special characters
+    def test_username_contains_special_chars(self):
+        res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user_with_bad_chars),content_type='application/json')
         self.assertIn('That is not a valid username', str(res.data))
 
     #test for duplicate email registration
