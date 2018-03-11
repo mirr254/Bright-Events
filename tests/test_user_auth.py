@@ -68,6 +68,11 @@ class UserActivitiesTestcase(unittest.TestCase):
             'username':'12345667',
             'password':'easypass22323'
         }
+        self.user_with_wrong_json_type ={
+            'email': 'kunguas@ymail.com',
+            'username': 12345667,
+            'password':'easypass22323'
+        }
 
         self.user_login_without_email = {
             
@@ -123,6 +128,11 @@ class UserActivitiesTestcase(unittest.TestCase):
     def test_username_contains_special_chars(self):
         res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user_with_bad_chars),content_type='application/json')
         self.assertIn('That is not a valid username', str(res.data))
+
+    #test if username contains special characters
+    def test_username_with_wrong_json_type(self):
+        res = self.client().post(self.AUTH_URL_BASE_ROUTE+'register', data=json.dumps(self.user_with_wrong_json_type),content_type='application/json')
+        self.assertIn('wrong json type. Please try again', str(res.data))
 
     #test for duplicate email registration
     def test_auth_duplicate_email_registration(self):

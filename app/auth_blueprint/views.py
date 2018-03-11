@@ -51,7 +51,11 @@ def index():
 # register user
 @auth.route(_AUTH_BASE_URL+'register', methods=['POST'])
 def register():
-    username = request.json.get('username').strip()
+    username = request.json.get('username')
+    if type(username) is int:
+        return jsonify({'message': 'wrong json type. Please try again'})
+    username = username.strip()
+    
     password =str(request.json.get('password')).strip()
     email = request.json.get('email')    
 
