@@ -1,6 +1,5 @@
 import os
 from app import db, createApp
-from app.events_blueprint import models
 
 config_name = os.getenv('APP_SETTINGS')
 app = createApp(conf_name=config_name) 
