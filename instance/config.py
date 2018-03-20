@@ -13,7 +13,7 @@ class Config(object):
     # mail settings
     MAIL_SERVER = 'smtp.mail.yahoo.com'
     MAIL_PORT = 465
-    MAIL_USE_TLS = True
+    MAIL_USE_TLS = False
     MAIL_USE_SSL = True
 
     # gmail authentication
