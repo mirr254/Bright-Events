@@ -180,7 +180,6 @@ def reset_password_with_token(token):
     email = confirm_password__reset_token(token)
     
     if email != False:
-        import pdb; pdb.set_trace()
         user = models.User.query.filter_by(email=email).first_or_404()
         password = str(request.json.get('password', ''))
         hashed_pass = generate_password_hash(password)
