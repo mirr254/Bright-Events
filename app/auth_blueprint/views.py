@@ -138,7 +138,7 @@ def login():
     user = models.User.query.filter_by(username=auth.username).first()
     
     if not user:
-        return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
+        return make_response('Could not verify. No such user', 401, {'WWW-Authenticate' : 'Basic realm="Login required"'})
 
     #check password
     if check_password_hash(user.password_hash, auth.password):
