@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 import os
 from instance.config import app_config
+from flask_cors import CORS
 from flask_mail import Mail
 from flask_heroku import Heroku
 
@@ -21,6 +22,7 @@ def createApp(conf_name):
     db.init_app(app)
     mail.init_app(app)
     heroku.init_app(app)
+    CORS(app)
 
 
       #register the blueprints 
