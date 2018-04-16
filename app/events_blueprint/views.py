@@ -85,9 +85,8 @@ def get_event(logged_in_user, eventid):
 
 #get all events
 @events.route('/api/v1/events')
-@token_required
-def get_all_events(logged_in_user):
-
+def get_all_events():
+#retrieve all the events any user can do this
     page = request.args.get('page',1,type=int )
     limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
     location_filter = request.args.get('location', type=str)
