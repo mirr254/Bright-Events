@@ -223,8 +223,8 @@ def rsvp_to_an_event(logged_in_user, eventid):
     if rsvp == 'attending' or rsvp =='not attending' or rsvp == 'maybe':
         #return jsonify({'Error':'Rsvp with attending, not attending or maybe'}),403
         event = models.Events.query.filter_by(eventid=eventid).first_or_404()
-        if event.user_public_id == logged_in_user.public_id:
-            return jsonify({'message': 'You cant rsvp to your own event'}),403
+        # if event.user_public_id == logged_in_user.public_id:
+        #     return jsonify({'message': 'You cant rsvp to your own event'}),403
         if event:
             rsvp = models.Rsvp(
                 event = event,
