@@ -219,7 +219,6 @@ class EventsActivitiesTestCases(unittest.TestCase):
              headers = {'x-access-token' : token },
              data=json.dumps(self.rsvp_) ,
              content_type='application/json')
-        from nose.tools import set_trace; set_trace()
         self.assertEqual(res.status_code, 201)
         self.assertIn('Successfully responded to and event', str(res.data))
         self.assertIn('eventid', str(res.data))
