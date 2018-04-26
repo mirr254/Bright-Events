@@ -16,3 +16,6 @@ pip-log.txt
 .cache
 nosetests.xml
 coverage.xml
+
+#enviroment variables
+.env
