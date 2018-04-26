@@ -43,14 +43,10 @@ Running all tests via nosetests. Wil perform tests on the tests folder
 
 ## Running the app
 
-`python app.py`
+`python run.py`
 
 # Designs documentation.
 Bright events will basically have 3 classes. User, Events and SharedEvents. Shared events will track who shared an event with who. This will assist when users are viewing events and they can see the events they have been invited and make an RSVP to them with either attending,maybe, not attending.
-
-The UML class diagram would be as shown below
-
-![UML](/Designs/documentation-imags/umlClassD.PNG)
 
 The application's entry point is to be the login page. Where both login and registration have been put in the same page but separated by tabs. 
 This will help maintain user concentration and won't give users alot of work to navigate from page to page. The entry point is as shown in the image below.

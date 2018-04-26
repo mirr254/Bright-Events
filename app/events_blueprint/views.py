@@ -77,17 +77,29 @@ def get_event(logged_in_user, eventid):
     # retrieve a event using its ID
     event = models.Events.query.filter_by(eventid=eventid).first_or_404()
     if not event:
-        return jsonify({'Not found':'Event with that id is not available'}),404
+        return jsonify({'message':'Event with that id is not available'}),404
     response = return_response(event)
     response.status_code = 200
     return response
 
+#get all events from a particular user
+@events.route('/api/v1/events/user/<string:public_user_id>', methods=['GET'])
+@token_required
+def get_all_user_events(logged_in_user, public_user_id):
+    #handle pagination 
+    page = request.args.get('page',1,type=int )
+    limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
+    #retrieve all events using public_user_id
+    events = models.Events.query.filter_by(user_public_id=public_user_id).paginate(page, limit, True).items
+    if not events:
+        return jsonify({'message': 'You have not created any event. Once you do, it will appear here'})
+    return return_event_results(events)
+
 
 #get all events
 @events.route('/api/v1/events')
-@token_required
-def get_all_events(logged_in_user):
-
+def get_all_events():
+#retrieve all the events any user can do this
     page = request.args.get('page',1,type=int )
     limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
     location_filter = request.args.get('location', type=str)
@@ -96,7 +108,7 @@ def get_all_events(logged_in_user):
         events = models.Events.query.filter(models.Events.location.ilike('%{}%'.format(location_filter)))
         return return_event_results(events)
     
-    events = models.Events.query.paginate(page, limit, True).items
+    events = models.Events.query.paginate(page, limit, False).items
     return return_event_results(events)
   
 def return_event_results(events):
@@ -211,6 +223,8 @@ def rsvp_to_an_event(logged_in_user, eventid):
     if rsvp == 'attending' or rsvp =='not attending' or rsvp == 'maybe':
         #return jsonify({'Error':'Rsvp with attending, not attending or maybe'}),403
         event = models.Events.query.filter_by(eventid=eventid).first_or_404()
+        # if event.user_public_id == logged_in_user.public_id:
+        #     return jsonify({'message': 'You cant rsvp to your own event'}),403
         if event:
             rsvp = models.Rsvp(
                 event = event,
@@ -220,11 +234,30 @@ def rsvp_to_an_event(logged_in_user, eventid):
             rsvp.save()
             response = jsonify({
                 'eventid':eventid,
+                'rsvpid': rsvp.rsvp_id,
                 'message': 'Successfully responded to and event'
             })
             return response,201
         return jsonify({'message':'No event with that id'}),404
     return jsonify({'message':'rsvp must be either attending/maybe/not attending'}),403
+
+#User should be able to edit an rsvp
+@events.route('/api/v1/events/<int:eventid>/rsvp/<int:rsvpid>', methods=['PUT'])
+@token_required
+def edit_rsvp(logged_in_user, eventid, rsvpid):
+    #check if that event has rsvp 
+    event_rsvp = models.Rsvp.query.filter_by(eventid=eventid).first_or_404()
+    if not event_rsvp:
+        return jsonify({'message': 'That event doesnt have rsvp'}), 404
+    #check if the user has rsvp to that event
+    rsvp_ = models.Rsvp.query.filter_by(rsvp_id=rsvpid).first_or_404()
+    if rsvp_.user_pub_id != logged_in_user.public_id:
+        return jsonify({'message': 'Sorry! You can only edit your rsvp'})
+    rsvp_.rsvp = request.json.get('rsvp', rsvp_.rsvp)
+    rsvp_.save()
+    import pdb; pdb.set_trace()
+    return jsonify({'message': 'You have successfully changed your response'})
+
 
 @events.route('/api/v1/events/<int:eventid>/guests', methods=['GET'])
 @token_required

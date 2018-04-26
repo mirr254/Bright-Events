@@ -33,7 +33,7 @@ class ProductionCofig(Config):
 class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/test_db_brighter_events'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:postgres@localhost:5432/test_db_brighter_events' #postgresql://postgres:postgres@localhost:5432/test_db_brighter_events
     DEBUG = False
 
 #export the enviroment specified

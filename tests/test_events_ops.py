@@ -59,14 +59,24 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "rsvp":"attending"
         }
 
-        self.user = {
+        self.user1 = {
             'email': 'test@kungu.com',
             'username':'test',
             'password':'hardpass',
             'email_confirmed':True
         }
+        self.user2 = {
+            'email': 'test2@kungu.com',
+            'username':'test2',
+            'password':'hardpass',
+            'email_confirmed':True
+        }
         self.login_details = {
             'username' : 'test',
+            'password' : 'hardpass'
+        }
+        self.login_details2 = {
+            'username' : 'test2',
             'password' : 'hardpass'
         }
 
@@ -79,7 +89,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
 
     #register a user
     def register_users(self):
-        user_details = json.dumps(self.user)
+        user_details = json.dumps(self.user1)
         return self.client().post(self.BASE_AUTH_URL+'/register', data=user_details, content_type='application/json')
 
     def open_with_auth(self, url, method, username, password):
@@ -199,11 +209,16 @@ class EventsActivitiesTestCases(unittest.TestCase):
     def test_rsvp_an_event(self):
         token = self.get_verfication_token()
         #make sure before rsvp we have an add event api working
-        self.test_add_event()       
+        token = self.get_verfication_token()   
+
+        res = self.client().post(self.BASE_EVENT_URL,
+                      headers = {'x-access-token' : token },
+                      data=json.dumps(self.event1), content_type='application/json')       
         
         res = self.client().post(self.BASE_EVENT_URL+'/1/rsvp',
              headers = {'x-access-token' : token },
-             data=json.dumps(self.rsvp_) ,content_type='application/json')
+             data=json.dumps(self.rsvp_) ,
+             content_type='application/json')
         self.assertEqual(res.status_code, 201)
         self.assertIn('Successfully responded to and event', str(res.data))
         self.assertIn('eventid', str(res.data))
