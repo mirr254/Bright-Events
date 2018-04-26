@@ -43,7 +43,7 @@ Running all tests via nosetests. Wil perform tests on the tests folder
 
 ## Running the app
 
-`python app.py`
+`python run.py`
 
 # Designs documentation.
 Bright events will basically have 3 classes. User, Events and SharedEvents. Shared events will track who shared an event with who. This will assist when users are viewing events and they can see the events they have been invited and make an RSVP to them with either attending,maybe, not attending.
