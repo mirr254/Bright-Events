@@ -211,7 +211,7 @@ def return_response(event):
     return response
 
 
-#rsvp or respond to an event (attending/not attending/maybe)
+#rsvp or respond to an event (attending/not attending)
 @events.route('/api/v1/events/<int:eventid>/rsvp', methods=['POST'])
 @token_required
 def rsvp_to_an_event(logged_in_user, eventid):
@@ -220,11 +220,8 @@ def rsvp_to_an_event(logged_in_user, eventid):
         return jsonify({'message':'Please provide rsvp details'})
 
     rsvp = request.json['rsvp']
-    if rsvp == 'attending' or rsvp =='not attending' or rsvp == 'maybe':
-        #return jsonify({'Error':'Rsvp with attending, not attending or maybe'}),403
+    if rsvp == 'attending' or rsvp =='not attending':
         event = models.Events.query.filter_by(eventid=eventid).first_or_404()
-        # if event.user_public_id == logged_in_user.public_id:
-        #     return jsonify({'message': 'You cant rsvp to your own event'}),403
         if event:
             rsvp = models.Rsvp(
                 event = event,
@@ -249,7 +246,7 @@ def get_events_attending(logged_in_user, public_user_id):
     page = request.args.get('page',1,type=int )
     limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
 
-    events_attending = models.Rsvp.query.filter_by(user_pub_id=public_user_id).paginate(page, limit, False).items
+    events_attending = models.Rsvp.query.filter_by(user_pub_id=public_user_id).filter_by(rsvp ='attending').paginate(page, limit, False).items
     
     if not events_attending:
         return jsonify({'message':'You Have not rsvp to any event'})
