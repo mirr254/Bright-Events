@@ -236,7 +236,7 @@ def rsvp_to_an_event(logged_in_user, eventid):
             })
             return response,201
         return jsonify({'message':'No event with that id'}),404
-    return jsonify({'message':'rsvp must be either attending/maybe/not attending'}),403
+    return jsonify({'message':'rsvp must be either attending or not attending'}),403
 
 #get events attending
 @events.route('/api/v1/events/rsvp/<string:public_user_id>', methods=['GET'])
@@ -277,17 +277,22 @@ def return_rsvpd_events(event_id_list):
 @token_required
 def edit_rsvp(logged_in_user, eventid, rsvpid):
     #check if that event has rsvp 
-    event_rsvp = models.Rsvp.query.filter_by(eventid=eventid).first_or_404()
-    if not event_rsvp:
-        return jsonify({'message': 'That event doesnt have rsvp'}), 404
-    #check if the user has rsvp to that event
-    rsvp_ = models.Rsvp.query.filter_by(rsvp_id=rsvpid).first_or_404()
-    if rsvp_.user_pub_id != logged_in_user.public_id:
-        return jsonify({'message': 'Sorry! You can only edit your rsvp'})
-    rsvp_.rsvp = request.json.get('rsvp', rsvp_.rsvp)
-    rsvp_.save()
-    import pdb; pdb.set_trace()
-    return jsonify({'message': 'You have successfully changed your response'})
+    if not request.json or not 'rsvp' in request.json: #name must be included
+        return jsonify({'message':'Please provide rsvp details'})
+
+    rsvp = request.json['rsvp']
+    if rsvp == 'attending' or rsvp =='not attending':
+        event_rsvp = models.Rsvp.query.filter_by(eventid=eventid).first_or_404()
+        if not event_rsvp:
+            return jsonify({'message': 'That event doesnt have rsvp'}), 404
+        #check if the user has rsvp to that event
+        rsvp_ = models.Rsvp.query.filter_by(rsvp_id=rsvpid).first_or_404()
+        if rsvp_.user_pub_id != logged_in_user.public_id:
+            return jsonify({'message': 'Sorry! You can only edit your rsvp'})
+        rsvp_.rsvp = request.json.get('rsvp', rsvp_.rsvp)
+        rsvp_.save()
+        return jsonify({'message': 'You have successfully changed your response'})
+    return jsonify({'message':'rsvp must be either attending or not attending'}),403
 
 
 @events.route('/api/v1/events/<int:eventid>/guests', methods=['GET'])
