@@ -71,4 +71,4 @@ class Rsvp(db.Model):
     
 
     def __repr__(self):
-        return "<Rsvp: {}>".format(self.rsvpid) #object instance of the model whenever it is queried
+        return "<Rsvp: {}>".format(self.rsvp_id) #object instance of the model whenever it is queried

@@ -241,6 +241,40 @@ def rsvp_to_an_event(logged_in_user, eventid):
         return jsonify({'message':'No event with that id'}),404
     return jsonify({'message':'rsvp must be either attending/maybe/not attending'}),403
 
+#get events attending
+@events.route('/api/v1/events/rsvp/<string:public_user_id>', methods=['GET'])
+@token_required
+def get_events_attending(logged_in_user, public_user_id):
+    #allow pagination of events attending
+    page = request.args.get('page',1,type=int )
+    limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
+
+    events_attending = models.Rsvp.query.filter_by(user_pub_id=public_user_id).paginate(page, limit, False).items
+    
+    if not events_attending:
+        return jsonify({'message':'You Have not rsvp to any event'})
+    #events exists
+    events = return_rsvpd_events(events_attending)
+    response = jsonify(events)
+    import pdb; pdb.set_trace()
+    response.status_code = 200
+    return response
+
+
+    
+def return_rsvpd_events(event_id_list):
+    #A function to get the list of events a user has rsvp to
+    events = []
+    for event in event_id_list:
+        event_id = event.eventid
+        
+        one_event = models.Events.query.filter_by(eventid=event_id).first()
+        event_obj = return_obj(one_event)
+        events.append(event_obj)
+    return events
+
+
+
 #User should be able to edit an rsvp
 @events.route('/api/v1/events/<int:eventid>/rsvp/<int:rsvpid>', methods=['PUT'])
 @token_required
