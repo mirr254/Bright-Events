@@ -48,7 +48,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "name" : "Partymad",
             "location" : "Nairobu",
             "description" : "here and 2",
-            "date": "2019-05-18 04:20",
+            "date": "2019[-05-18 04:20",
             "cost" : 2000
         }
         self.update_data = {
