@@ -64,7 +64,7 @@ def add_event(logged_in_user):
                         user_public_id= logged_in_user.public_id,
                         location= request.json.get('location'),
                         description= request.json.get('description'),
-                        date = request.json.get('date'), #"21/11/06 16:30"
+                        date = request.json.get('date'), #"2018/11/06 16:30"
                         category= request.json.get('category') )
 
     event.save()
