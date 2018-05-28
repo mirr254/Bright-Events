@@ -46,16 +46,16 @@ def add_event(logged_in_user):
         if isinstance(request.json.get('cost'), (int, float)) != True:
             return jsonify({"message":"Cost must be numbers only"}),403
     #check for dates
-    user_input_date = datetime.strptime( request.json.get('date'), '%Y-%m-%d %H:%M:%S')
+    user_input_date = datetime.strptime( request.json.get('date'), '%Y-%m-%d %H:%M')
     if user_input_date < datetime.now():
         return jsonify({'message': 'Event date cannnot be past'}),403
 
     #check for another event with same event name
     event = models.Events.query.filter( models.Events.name.ilike( request.json.get('name').strip()) ).first()   
     if event:
-        user_input_date = datetime.strptime( request.json.get('date'), '%Y-%m-%d %H:%M:%S')
-        event_stored_date = datetime.strptime(event.date, '%Y-%m-%d %H:%M:%S')           
-        if ( event_stored_date.strftime('%Y-%m-%d %H:%M:%S') == user_input_date.strftime('%Y-%m-%d %H:%M:%S') ):                 
+        user_input_date = datetime.strptime( request.json.get('date'), '%Y-%m-%d %H:%M')
+        event_stored_date = datetime.strptime(event.date, '%Y-%m-%d %H:%M')           
+        if ( event_stored_date.strftime('%Y-%m-%d %H:%M') == user_input_date.strftime('%Y-%m-%d %H:%M') ):                 
             return jsonify({'message': 'Events with same name should have different dates'}),403    
 
     event = models.Events(
