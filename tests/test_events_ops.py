@@ -20,7 +20,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "name" : "Partymad",
             "location" : "Nairobi",
             "description" : "here and 2",
-            "date": "2018/11/06 16:30",
+            "date": "2018-05-30 04:20",
             "cost" : 2000,
             "category": "Indoors"
         }
@@ -28,27 +28,27 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "name" : "Partymad",
             "location" : "Nairobi",
             "description" : "here and 2",
-            "date": "2019/11/06 16:30",
+            "date": "2018-05-30 04:20",
             "cost" : 2000,
             "category": "Indoors"
         }
         self.event2 = {            
             "name" : "Partymad",            
             "description" : "here and 2",
-            "date": "2018/11/06 16:30",
+            "date": "2018-07-18 04:20",
             "cost" : 2000
         }
         self.event3 = {                        
             "location" : "Nairobu",
             "description" : "here and 2",
-            "date": "2018/9/06 16:30",
+            "date": "2018-06-18 04:20",
             "cost" : 2000
         }
         self.event4 = {            
             "name" : "Partymad",
             "location" : "Nairobu",
             "description" : "here and 2",
-            "date": "2018/10/06 16:30",
+            "date": "2019-05-18 04:20",
             "cost" : 2000
         }
         self.update_data = {
