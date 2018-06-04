@@ -1,20 +1,17 @@
 language: python
 python:
  - "3.6.1"
- 
+
+services:
+  - postgresql
 addons:
   postgresql: "9.6"
-  apt:
-    packages:
-    - postgresql-10
-    - postgresql-client-10
-env:
-  global:
-  - PGPORT=5433
+  
 #dependacies and libraries to install
 install: pip install -r requirements.txt
 
 before_script:
+  - bash install-postgres-10.sh
   - psql -c "CREATE DATABASE test_db_brighter_events;" -U postgres
 
 script:
@@ -22,6 +19,4 @@ script:
 
 after_success:
  - coveralls --config_file .coveragerc
-
-
   
