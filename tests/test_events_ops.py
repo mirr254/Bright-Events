@@ -20,7 +20,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "name" : "Partymad",
             "location" : "Nairobi",
             "description" : "here and 2",
-            "date": "2018-05-30 04:20",
+            "date": "2038-07-30 04:20",
             "cost" : 2000,
             "category": "Indoors"
         }
@@ -28,7 +28,7 @@ class EventsActivitiesTestCases(unittest.TestCase):
             "name" : "Partymad",
             "location" : "Nairobi",
             "description" : "here and 2",
-            "date": "2018-05-30 04:20",
+            "date": "2030-05-30 04:20",
             "cost" : 2000,
             "category": "Indoors"
         }
