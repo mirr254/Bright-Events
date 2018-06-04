@@ -1,7 +1,16 @@
 language: python
 python:
  - "3.6.1"
-
+ 
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
+env:
+  global:
+  - PGPORT=5433
 #dependacies and libraries to install
 install: pip install -r requirements.txt
 
@@ -14,13 +23,5 @@ script:
 after_success:
  - coveralls --config_file .coveragerc
 
-addons:
-  postgresql: "10.4"
-  apt:
-    packages:
-    - postgresql-10
-    - postgresql-client-10
-env:
-  global:
-  - PGPORT=5433
+
   
