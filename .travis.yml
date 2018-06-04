@@ -16,6 +16,7 @@ install: pip install -r requirements.txt
 
 before_script:
   - sudo psql -c "CREATE DATABASE test_db_brighter_events;" -U postgres
+  - psql -c "ALTER USER travis WITH PASSWORD 'travis';"
 
 script:
 - nosetests --with-coverage --cover-package=app
