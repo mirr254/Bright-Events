@@ -13,4 +13,14 @@ script:
 
 after_success:
  - coveralls --config_file .coveragerc
+
+addons:
+  postgresql: "10.4"
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
+env:
+  global:
+  - PGPORT=5433
   
