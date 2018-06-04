@@ -256,6 +256,24 @@ def get_events_attending(logged_in_user, public_user_id):
     response.status_code = 200
     return response
 
+#check if user has rsvpd to a single event
+@events.route('/api/v1/events/rsvp/<int:event_id>/<string:public_user_id>', methods=['GET'])
+@token_required
+def check_user_rsvp_for_event(logged_in_user,event_id, public_user_id):
+    #allow pagination of events attending
+    page = request.args.get('page',1,type=int )
+    limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
+
+    rsvp = models.Rsvp.query.filter_by(user_pub_id=public_user_id).filter_by(eventid =event_id).paginate(page, limit, False).items
+    
+    if not rsvp:
+        return jsonify({'message':'not attending'})
+    #user has rsvp to an event
+    rsvp = rsvp[0].rsvp
+    response = jsonify(rsvp)
+    response.status_code = 200
+    return response
+
 
     
 def return_rsvpd_events(event_id_list):
