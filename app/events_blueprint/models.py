@@ -54,13 +54,12 @@ class Rsvp(db.Model):
     rsvp_id = db.Column(db.Integer, primary_key=True)
     user_pub_id = db.Column(db.String(50))
     eventid = db.Column(db.Integer, db.ForeignKey('events.eventid'))   
-    rsvp = db.Column(db.String(255))   
+    rsvp = db.Column(db.String(255), default='not attending')  
     date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
     date_modified = db.Column(
         db.DateTime, default=db.func.current_timestamp(),
         onupdate=db.func.current_timestamp())
     
-
     def save(self):
         db.session.add(self)
         db.session.commit()
