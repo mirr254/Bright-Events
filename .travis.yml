@@ -2,18 +2,10 @@ language: python
 python:
  - "3.6.1"
 
-services:
-  - postgresql
-addons:
-  postgresql: "9.6"
-
-sudo: required
-  
 #dependacies and libraries to install
 install: pip install -r requirements.txt
 
 before_script:
-  - bash install-postgres-10.sh
   - psql -c "CREATE DATABASE test_db_brighter_events;" -U postgres
 
 script:
