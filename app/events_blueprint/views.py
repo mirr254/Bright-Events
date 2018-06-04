@@ -253,7 +253,6 @@ def get_events_attending(logged_in_user, public_user_id):
     #events exists
     events = return_rsvpd_events(events_attending)
     response = jsonify(events)
-    import pdb; pdb.set_trace()
     response.status_code = 200
     return response
 
