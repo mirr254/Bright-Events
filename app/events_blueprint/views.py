@@ -267,7 +267,7 @@ def check_user_rsvp_for_event(logged_in_user,event_id, public_user_id):
     rsvp = models.Rsvp.query.filter_by(user_pub_id=public_user_id).filter_by(eventid =event_id).paginate(page, limit, False).items
     
     if not rsvp:
-        return jsonify({'message':'not attending'})
+        return jsonify({'message':'no rsvp to this event'})
     #user has rsvp to an event
     rsvp = rsvp[0].rsvp
     response = jsonify(rsvp)
