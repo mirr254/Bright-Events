@@ -1,7 +1,7 @@
 language: python
 python:
  - "3.6.1"
-
+ 
 addons:
   postgresql: "10"
   apt:
@@ -14,10 +14,8 @@ env:
 #dependacies and libraries to install
 install: pip install -r requirements.txt
 
-sudo: required
-
 before_script:
-  -sudo psql -c "CREATE DATABASE test_db_brighter_events;" -U postgres
+  - sudo psql -c "CREATE DATABASE test_db_brighter_events;" -U postgres
 
 script:
 - nosetests --with-coverage --cover-package=app
