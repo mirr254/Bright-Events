@@ -262,12 +262,14 @@ def get_events_attending(logged_in_user, public_user_id):
 def check_user_rsvp_for_event(logged_in_user,event_id, public_user_id):
     #allow pagination of events attending
     page = request.args.get('page',1,type=int )
-    limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
+    limit = request.args.get('limit',5,type=int) #defaults to 3 if user doesn't specify to limit
 
     rsvp = models.Rsvp.query.filter_by(user_pub_id=public_user_id).filter_by(eventid =event_id).paginate(page, limit, False).items
-    
+
     if not rsvp:
-        return jsonify({'message':'no rsvp to this event'})
+        response = jsonify({'no rsvp to this event'})
+        response.status_code = 404
+        return response
     #user has rsvp to an event
     rsvp = rsvp[0].rsvp
     response = jsonify(rsvp)
