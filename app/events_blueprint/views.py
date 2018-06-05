@@ -271,8 +271,13 @@ def check_user_rsvp_for_event(logged_in_user,event_id, public_user_id):
         response.status_code = 404
         return response
     #user has rsvp to an event
-    rsvp = rsvp_status[0]
-    response = rsvp
+    rsvp = {
+        'rsvp_id':rsvp_status[0].rsvp_id,
+        'event_id': rsvp_status[0].eventid,
+        'rsvp': rsvp_status[0].rsvp
+    }
+
+    response = jsonify(rsvp)
     response.status_code = 200
     return response
 
