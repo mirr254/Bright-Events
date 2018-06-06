@@ -206,7 +206,8 @@ def return_response(event):
                 'description': event.description,
                 'date' : event.date,
                 'category': event.category,
-                'date_created': event.date_created               
+                'date_created': event.date_created,
+                'event_id': event.eventid             
             })
     return response
 
