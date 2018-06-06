@@ -204,6 +204,7 @@ def return_response(event):
                 'cost': event.cost,                
                 'location': event.location,
                 'description': event.description,
+                'public_userid': event.user_public_id,
                 'date' : event.date,
                 'category': event.category,
                 'date_created': event.date_created,
