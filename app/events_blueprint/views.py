@@ -168,7 +168,6 @@ def edit_event(logged_in_user,eventid):
 
 #search by name
 @events.route('/api/v1/events/search/', methods=['GET'])
-@token_required
 def searc_by_location():
     name = request.args.get('q')
     event_searched = models.Events.query.filter( models.Events.name.ilike('%'+name+'%'))    
