@@ -88,7 +88,7 @@ def get_event(logged_in_user, eventid):
 def get_all_user_events(logged_in_user, public_user_id):
     #handle pagination 
     page = request.args.get('page',1,type=int )
-    limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
+    limit = request.args.get('limit',6,type=int) #defaults to 3 if user doesn't specify to limit
     #retrieve all events using public_user_id
     events = models.Events.query.filter_by(user_public_id=public_user_id).paginate(page, limit, True).items
     if not events:
@@ -101,7 +101,7 @@ def get_all_user_events(logged_in_user, public_user_id):
 def get_all_events():
 #retrieve all the events any user can do this
     page = request.args.get('page',1,type=int )
-    limit = request.args.get('limit',3,type=int) #defaults to 3 if user doesn't specify to limit
+    limit = request.args.get('limit',6,type=int) #defaults to 3 if user doesn't specify to limit
     location_filter = request.args.get('location', type=str)
     
     if location_filter:
@@ -263,7 +263,7 @@ def get_events_attending(logged_in_user, public_user_id):
 def check_user_rsvp_for_event(logged_in_user,event_id, public_user_id):
     #allow pagination of events attending
     page = request.args.get('page',1,type=int )
-    limit = request.args.get('limit',5,type=int) #defaults to 3 if user doesn't specify to limit
+    limit = request.args.get('limit',6,type=int) #defaults to 3 if user doesn't specify to limit
 
     rsvp_status = models.Rsvp.query.filter_by(user_pub_id=public_user_id).filter_by(eventid =event_id).paginate(page, limit, False).items
 
