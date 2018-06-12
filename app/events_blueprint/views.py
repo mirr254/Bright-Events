@@ -330,6 +330,7 @@ def list_event_guests(eventid):
     event = models.Events.query.filter_by(eventid=eventid).first_or_404()
     if event:
         dic_of_users_rsvp = {}
+        results = []
         rsvps = models.Rsvp.query.filter_by(eventid = eventid)
         #if no rsvps
         if not rsvps:
@@ -340,8 +341,9 @@ def list_event_guests(eventid):
             user = users_models.User.query.filter_by( public_id = resp.user_pub_id).first()
             
             dic_of_users_rsvp.update({user.username : resp.rsvp})
+            results.append(dic_of_users_rsvp)
 
-        response = jsonify(dic_of_users_rsvp)
+        response = jsonify(results)
         response.status_code = 200
 
         return response
