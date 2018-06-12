@@ -324,8 +324,7 @@ def edit_rsvp(logged_in_user, eventid, rsvpid):
 
 
 @events.route('/api/v1/events/<int:eventid>/guests', methods=['GET'])
-@token_required
-def list_event_guests(token_required,eventid):
+def list_event_guests(eventid):
 
     #check if event exists
     event = models.Events.query.filter_by(eventid=eventid).first_or_404()
