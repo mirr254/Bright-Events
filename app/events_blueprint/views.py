@@ -6,6 +6,7 @@ from flask import make_response
 from app import createApp
 from app.utils.common_functions import token_required
 from app.auth_blueprint import models as users_models
+from sqlalchemy import or_
 
 from . import models
 from . import events
@@ -170,7 +171,9 @@ def edit_event(logged_in_user,eventid):
 @events.route('/api/v1/events/search/', methods=['GET'])
 def searc_by_location():
     name = request.args.get('q')
-    event_searched = models.Events.query.filter( models.Events.name.ilike('%'+name+'%'))    
+    #search by location, name or category
+    #filter(or_(models.Events.name.ilike('%'+name+'%'), models.Events.location.ilike('%'+name+'%'), models.Events.category.ilike('%'+name+'%') ) )
+    event_searched = models.Events.query.filter(or_(models.Events.name.ilike('%'+name+'%'), models.Events.location.ilike('%'+name+'%'), models.Events.category.ilike('%'+name+'%') ) )    
     if event_searched:
         results = [] # a list of events
         for event in event_searched:
