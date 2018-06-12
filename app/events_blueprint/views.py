@@ -339,11 +339,18 @@ def list_event_guests(eventid):
             return response
         for resp in rsvps:
             user = users_models.User.query.filter_by( public_id = resp.user_pub_id).first()
+            user_obj = return_user_object(user.username, resp.rsvp)
             
-            dic_of_users_rsvp.update({user.username : resp.rsvp})
-            results.append(dic_of_users_rsvp)
+            results.append(user_obj)
 
         response = jsonify(results)
         response.status_code = 200
 
         return response
+
+def return_user_object(username, rsvp):
+    user_obj = {
+        'username': username,
+        'rsvp': rsvp
+    }
+    return user_obj
