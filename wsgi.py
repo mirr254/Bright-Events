@@ -1,7 +1,5 @@
 import os
-from app import createApp
-
-app = createApp( os.getenv('APP_SETTINGS'))
+from run import app
 
 if __name__ == "__main__":
     app.run()
