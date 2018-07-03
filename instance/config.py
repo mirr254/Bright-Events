@@ -1,9 +1,6 @@
 import os
 
 class Config(object):
-    #aws rds configuration
-    driver = 'postgresql+psycopg2://'
-
     #parent configuration class
     DEBUG = False
     CSRF_ENABLED = True
@@ -32,6 +29,8 @@ class DevelopmentConfig(Config):
 
 class ProductionCofig(Config):
     DEBUG = False
+    #aws rds configuration
+    driver = 'postgresql+psycopg2://'
     SQLALCHEMY_DATABASE_URI = driver \
                                 + os.environ['RDS_USERNAME'] + ':' + os.environ['RDS_PASSWORD'] \
                                 +'@' + os.environ['RDS_HOSTNAME']  +  ':' + os.environ['RDS_PORT'] \
