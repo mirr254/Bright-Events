@@ -30,7 +30,7 @@ class DevelopmentConfig(Config):
 class ProductionCofig(Config):
     DEBUG = False
     #aws rds configuration
-    driver = 'postgresql+psycopg2://'
+    driver = 'postgresql://'
     SQLALCHEMY_DATABASE_URI = driver \
                                 + os.environ['RDS_USERNAME'] + ':' + os.environ['RDS_PASSWORD'] \
                                 +'@' + os.environ['RDS_HOSTNAME']  +  ':' + os.environ['RDS_PORT'] \
