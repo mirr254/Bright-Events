@@ -29,12 +29,6 @@ class DevelopmentConfig(Config):
 
 class ProductionCofig(Config):
     DEBUG = False
-    #aws rds configuration
-    driver = 'postgresql+psycopg2://'
-    SQLALCHEMY_DATABASE_URI = driver \
-                                + os.environ['RDS_USERNAME'] + ':' + os.environ['RDS_PASSWORD'] \
-                                +'@' + os.environ['RDS_HOSTNAME']  +  ':' + os.environ['RDS_PORT'] \
-                                + '/' + os.environ['RDS_DB_NAME']
 
 class TestingConfig(Config):
     """Configurations for Testing, with a separate test database."""
