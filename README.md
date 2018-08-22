@@ -70,3 +70,4 @@ Within the same page a user can add and event by clicking the add event button o
 ![Add Event](/Designs/documentation-imags/newEvent.PNG)
 
 The action column on the far right is where the edit, delete and share buttons will be located.
+
