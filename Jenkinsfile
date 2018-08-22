@@ -26,9 +26,7 @@ pipeline {
         }
         steps {
           container('python') {
-            sh "apt-get update"
-            sh "apt-get -y install gcc"
-            sh "pip install -r requirements.txt"
+            sh "pip3 install -r requirements.txt"
             sh "nosetests --with-coverage --cover-package=app"
 
             sh 'export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml'
@@ -65,10 +63,8 @@ pipeline {
             }
           }
           container('python') {
-            sh "apt-get update"
-            sh "apt-get -y install gcc"
-            
-            sh "pip install -r requirements.txt"
+
+            sh "pip3 install -r requirements.txt"
             sh "python -m unittest"
 
             sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
