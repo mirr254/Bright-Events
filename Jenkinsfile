@@ -6,6 +6,13 @@ pipeline {
       ORG               = 'mirr254'
       APP_NAME          = 'bright-events'
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
+      APP_MAIL_PASSWORD = credentials('APP_MAIL_PASSWORD') 
+      APP_MAIL_USERNAME = credentials('APP_MAIL_USERNAME') 
+      APP_SETTINGS = 'production'
+      SECRET_KEY = credentials('SECRET_KEY')
+      SECURITY_PASSWORD_RESET_SALT = credentials('SECURITY_PASSWORD_RESET_SALT')
+      SECURITY_PASSWORD_SALT = credentials('SECURITY_PASSWORD_SALT')
+      DATABASE_URL = 'postgresql://postgres:postgres@localhost:5433/bright-events'
     }
     stages {
       stage('CI Build and push snapshot') {
