@@ -26,6 +26,8 @@ pipeline {
         }
         steps {
           container('python') {
+            sh "apt-get update"
+            sh "apt-get -y install gcc"
             sh "pip install -r requirements.txt"
             sh "nosetests --with-coverage --cover-package=app"
 
@@ -63,6 +65,9 @@ pipeline {
             }
           }
           container('python') {
+            sh "apt-get update"
+            sh "apt-get -y install gcc"
+            
             sh "pip install -r requirements.txt"
             sh "python -m unittest"
 
