@@ -8,7 +8,7 @@ pipeline {
       CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
       APP_MAIL_PASSWORD = credentials('APP_MAIL_PASSWORD') 
       APP_MAIL_USERNAME = credentials('APP_MAIL_USERNAME') 
-      APP_SETTINGS = 'production'
+      APP_SETTINGS = 'development'
       SECRET_KEY = credentials('SECRET_KEY')
       SECURITY_PASSWORD_RESET_SALT = credentials('SECURITY_PASSWORD_RESET_SALT')
       SECURITY_PASSWORD_SALT = credentials('SECURITY_PASSWORD_SALT')
@@ -26,7 +26,7 @@ pipeline {
         }
         steps {
           container('python') {
-            sh "python -m unittest"
+            sh "nosetests --with-coverage --cover-package=app"
 
             sh 'export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml'
 
