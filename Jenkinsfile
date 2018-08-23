@@ -33,7 +33,7 @@ pipeline {
           container('python') {
             withEnv(["HOME=${env.WORKSPACE}"]) {
                     sh 'pip install --user -r requirements.txt'
-                    
+
                     sh "nosetests --with-coverage --cover-package=app"
                 }
             
@@ -72,8 +72,11 @@ pipeline {
           }
           container('python') {
 
-            sh "pip3 install -r requirements.txt"
-            sh "python -m unittest"
+            withEnv(["HOME=${env.WORKSPACE}"]) {
+                    sh 'pip install --user -r requirements.txt'
+                    
+                    sh "nosetests --with-coverage --cover-package=app"
+                }
 
             sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
 
