@@ -19,6 +19,11 @@ pipeline {
         when {
           branch 'PR-*'
         }
+        agent {
+                docker {
+                    image 'python:3-alpine'
+                }
+            }
         environment {
           PREVIEW_VERSION = "0.0.0-SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER"
           PREVIEW_NAMESPACE = "$APP_NAME-$BRANCH_NAME".toLowerCase()
@@ -26,8 +31,12 @@ pipeline {
         }
         steps {
           container('python') {
-            sh "nosetests --with-coverage --cover-package=app"
+            withEnv(["HOME=${env.WORKSPACE}"]) {
+                    sh 'pip install --user -r requirements.txt'
 
+                    sh "nosetests --with-coverage --cover-package=app"
+                }
+            
             sh 'export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml'
 
 
@@ -62,7 +71,12 @@ pipeline {
             }
           }
           container('python') {
-            sh "python -m unittest"
+
+            withEnv(["HOME=${env.WORKSPACE}"]) {
+                    sh 'pip install --user -r requirements.txt'
+                    
+                    sh "nosetests --with-coverage --cover-package=app"
+                }
 
             sh 'export VERSION=`cat VERSION` && skaffold build -f skaffold.yaml'
 
