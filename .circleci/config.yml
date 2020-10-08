@@ -17,31 +17,52 @@ jobs:
           POSTGRES_PASSWORD: password
     steps:
       - checkout
+      
+      - setup_remote_docker:
+          docker_layer_caching: yes
+
+      - add_ssh_keys:
+          fingerprints:
+            - 8a:26:b1:10:53:d6:93:8b:47:ad:09:8e:9d:af:77:cf
+      
+      # install app dendencies
       - run:
           name: install dependencies.
           command: sudo pip install -Ur requirements.txt
-      # lint
+
+      # install deployment dependencies
       - run:
-          name: Run linter
-          working_directory: ~/workspace/app
-          command: | 
-              mkdir -p test-reports/flake8
-              flake8 . --output-file=test-reports/flake8/flake8.txt
-      # tests
-      - run:
-          name: Run tests
-          command: coverage run manage.py test
-      - run:
-          name: Create Test Reports.
-          working_directory: ~/workspace/app
+          name: install deployment dependencies
           command: |
-              flake8_junit test-reports/flake8/flake8.txt test-resports/flake8/flake8_junit.xml
-              coverage html -d test-reports/coverage
-          when: always
-      # upload and store the reports
-      - store_test_results:
-          path: myapp/test-reports
-      - store_artifacts:
-          path: myapp/test-reports
-          destination: tr1
+            if [ "${CIRCLE_BRANCH}" == "circleci-project-setup" ]; then
+                sudo bash resources/dependencies.sh 
+                sudo pip install ansible docker 
+            fi 
+
+
+
+      # # lint
+      # - run:
+      #     name: Run linter
+      #     working_directory: ~/workspace/app
+      #     command: | 
+      #         mkdir -p test-reports/flake8
+      #         flake8 . --output-file=test-reports/flake8/flake8.txt
+      # # tests
+      # - run:
+      #     name: Run tests
+      #     command: coverage run manage.py test
+      # - run:
+      #     name: Create Test Reports.
+      #     working_directory: ~/workspace/app
+      #     command: |
+      #         flake8_junit test-reports/flake8/flake8.txt test-resports/flake8/flake8_junit.xml
+      #         coverage html -d test-reports/coverage
+      #     when: always
+      # # upload and store the reports
+      # - store_test_results:
+      #     path: app/test-reports
+      # - store_artifacts:
+      #     path: app/test-reports
+      #     destination: tr1
         
