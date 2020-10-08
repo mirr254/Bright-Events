@@ -1,0 +1,46 @@
+jobs:
+  build:
+  # set up environment required to run our pipeline
+    working_directory: ~/workspace
+    docker:
+      - image: circleci/python:2.7
+        environment:
+          RDS_DB_NAME: circleci
+          RDS_HOST: localhost
+          RDS_PORT: 5432
+          RDS_USERNAME: root
+          RDS_PASSWORD: 
+      - image: circleci/postgres:9.6
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: circleci
+    steps:
+      - checkout
+      - run:
+          name: install dependencies.
+          command: sudo pip install -Ur requirements.txt
+      # lint
+      - run:
+          name: Run linter
+          working_directory: ~/workspace/app
+          command: | 
+              mkdir -p test-reports/flake8
+              flake8 . --output-file=test-reports/flake8/flake8.txt
+      # tests
+      - run:
+          name: Run tests
+          command: coverage run manage.py test
+      - run:
+          name: Create Test Reports.
+          working_directory: ~/workspace/app
+          command: |
+              flake8_junit test-reports/flake8/flake8.txt test-resports/flake8/flake8_junit.xml
+              coverage html -d test-reports/coverage
+          when: always
+      # upload and store the reports
+      - store_test_results:
+          path: myapp/test-reports
+      - store_artifacts:
+          path: myapp/test-reports
+          destination: tr1
+        
