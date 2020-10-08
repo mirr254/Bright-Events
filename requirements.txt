@@ -5,6 +5,7 @@ certifi==2017.11.5
 chardet==3.0.4
 click==6.7
 coverage==4.4.2
+unittest-xml-reporting==2.5.2
 coveralls==1.2.0
 docopt==0.6.2
 flake8==3.5.0
