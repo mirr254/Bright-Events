@@ -1,0 +1,176 @@
+FORMAT: 1A
+HOST: https://brighter-event.herokuapp.com/
+
+# BrightEvents
+
+Bright events provides a platform for event organizers to create and manage different types of events while making them easily accessible to target markets.
+ 
+## User Authentication Collection [/api/v1/auth/register]
+
+### Register a new user [POST]
+
+A user may create an event using this action. It takes a JSON
+object containing event details.
+
++ Request (application/json)
+
+        {
+            "username":"kungu",
+            "email":"user2@gmail.com",
+            "password":"1234"
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /api/v1/auth/register
+
+    + Body
+            
+                [
+                    {
+                        "Successful": "User registered successfully"
+                    },
+                    {
+                        "email": "user2@gmail.com",
+                        "id": 6094835,
+                        "password": "1234",
+                        "username": "kungu"
+                    }
+                    
+                ]
+                
+### Reset password [PUT]
+
+Password reset can be done by providing an email as json object 
+
++ Request (application/json)
+
+        {
+            "password":"123UpdatedPass"
+        }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /api/v1/auth/reset-password/user1@gmail.com
+
+    + Body
+            
+                {
+                    "Success": "Password reset success"
+                }
+                
+
+## Events Collection [/api/v1/events]
+
+### List All events [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "category": "indoors",
+                "cost": 2000,
+                "date": "10/10/2017",
+                "description": "here and 2",
+                "eventid": 112,
+                "location": "Nairobu",
+                "name": "Partymad",
+                "userid": 11
+            }
+        ]
+
+### Create a New event [POST]
+
+A user may create an event using this action. It takes a JSON
+object containing event details.
+
++ Request (application/json)
+
+        {
+            "category": "Learn",
+            "cost": 456,
+            "date": "10/10/2017",
+            "description": "Learn to the end ",
+            "location": "America",
+            "name": "Learners hub",
+            "userid": 34566
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location: /events/1873813
+
+    + Body
+            
+                {
+                    "event": {
+                        "cost": 456,
+                        "date": "10/10/2017",
+                        "description": "Learn to the end ",
+                        "eventid": 1873813,
+                        "location": "America",
+                        "name": "Learners hub",
+                        "userid": 34566
+                    }
+                }
+                
+### Update an event [PUT]
+
+Events are updated using eventid
+
++ Request (application/json)
+
+        {
+            "cost": 456,
+            "date": "10/10/2017",
+            "description": "Forgot to add this",
+            "eventid": 1873813,
+            "location": "America",
+            "name": "Updated Name",
+            "userid": 34566
+        }
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /events/1873813
+
+    + Body
+            
+                {
+                    "event": {
+                        "cost": 456,
+                        "date": "10/10/2017",
+                        "description": "Forgot to add this",
+                        "eventid": 1873813,
+                        "location": "America",
+                        "name": "Updated Name",
+                        "userid": 34566
+                    }
+                }
+                
+### Delete an event [DELETE]
+
+Events are deleted using eventid
+
++ Request (application/json)
+
++ Response 200 (application/json)
+
+    + Headers
+
+            Location: /events/1873813
+
+    + Body
+            
+                {
+                    "event": "Event deletion successful"
+                }
+                

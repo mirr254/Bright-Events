@@ -1,14 +1,16 @@
 language: python
+python:
  - "3.6.1"
 
 #dependacies and libraries to install
-install: 
- - pip install -r requirements.txt
- - pip install nose --upgrade
+install: pip install -r requirements.txt
+
+before_script:
+  - psql -c "CREATE DATABASE test_db_brighter_events;" -U postgres
 
 script:
- - nosetests tests/
+- nosetests --with-coverage --cover-package=app
 
 after_success:
- - coveralls
+ - coveralls --config_file .coveragerc
   
