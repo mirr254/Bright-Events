@@ -35,6 +35,8 @@ The app skeleton to be integrated with API can be accessed through github pages 
 
   `pip install -r requirements.txt`
 
+- upgrade `pip install --upgrade sqlalchemy ` if running the app results into an error
+
 ## Tests
 
 Running all tests via nosetests. Wil perform tests on the tests folder
@@ -43,7 +45,15 @@ Running all tests via nosetests. Wil perform tests on the tests folder
 
 ## Running the app
 
-`python run.py`
+`python run.py` 
+
+or 
+
+```
+ sudo chmod +x boot.sh
+
+ ./boot.sh
+```
 
 # Designs documentation.
 Bright events will basically have 3 classes. User, Events and SharedEvents. Shared events will track who shared an event with who. This will assist when users are viewing events and they can see the events they have been invited and make an RSVP to them with either attending,maybe, not attending.

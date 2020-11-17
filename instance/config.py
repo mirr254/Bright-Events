@@ -11,17 +11,17 @@ class Config(object):
     SECURITY_PASSWORD_RESET_SALT = os.getenv('SECURITY_PASSWORD_RESET_SALT')
 
     # mail settings
-    MAIL_SERVER = 'smtp.gmail.com'
-    MAIL_PORT = 465
-    MAIL_USE_TLS = False
-    MAIL_USE_SSL = True
+    MAIL_SERVER = os.environ['MAIL_SERVER'] #'smtp.gmail.com'
+    MAIL_PORT = os.environ['MAIL_PORT'] #465
+    MAIL_USE_TLS = os.environ['MAIL_USE_TLS'] #False
+    MAIL_USE_SSL = os.environ['MAIL_USE_SSL'] #True
 
     # gmail authentication
     MAIL_USERNAME = os.environ['APP_MAIL_USERNAME']
     MAIL_PASSWORD = os.environ['APP_MAIL_PASSWORD']
 
     # mail accounts
-    MAIL_DEFAULT_SENDER = 'sammysteppa90@gmail.com'
+    MAIL_DEFAULT_SENDER = os.environ['MAIL_DEFAULT_SENDER'] #'sammysteppa90@gmail.com'
 
 class DevelopmentConfig(Config):
     #configuration for development

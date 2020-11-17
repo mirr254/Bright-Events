@@ -1,0 +1,13 @@
+export DATABASE_URL='postgresql://postgres:postgres@localhost:5432/test_db_brighter_events'
+export SECRET_KEY='change-this'
+export SECURITY_PASSWORD_SALT='change-this' 
+export SECURITY_PASSWORD_RESET_SALT='change-salt'
+
+export APP_MAIL_USERNAME='mail-username'
+export APP_MAIL_PASSWORD='mail-passwrd'
+export MAIL_DEFAULT_SENDER='sammysteppa90@gmail.com'
+
+export MAIL_SERVER='smtp.gmail.com' 
+export MAIL_PORT=465 
+export MAIL_USE_TLS=False 
+export MAIL_USE_SSL=True
