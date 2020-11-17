@@ -39,6 +39,14 @@ jobs:
                 sudo pip install ansible docker 
             fi 
 
+      # build tag and push using ansible
+      - deploy:
+          name: Building, Tagging and Pushing docker images
+          command: |
+              if [ "${CIRCLE_BRANCH}" == "circleci-project-setup" ]; then
+                 ansible-playbook resources/packer/ansible.build.yaml
+              fi 
+
 
 
       # # lint

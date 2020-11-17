@@ -1,0 +1,5 @@
+- name: Build, Tag and Push Docker Image from local folder
+    hosts: 127.0.0.1
+    connection: local
+    roles:
+      - app-build
