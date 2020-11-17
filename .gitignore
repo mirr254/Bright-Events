@@ -12,10 +12,12 @@ dist/
 pip-log.txt
 
 # Unit test / coverage reports
-.coverage
+.coveragerc
 .cache
 nosetests.xml
 coverage.xml
 
 #enviroment variables
 .env
+
+.vscode/
