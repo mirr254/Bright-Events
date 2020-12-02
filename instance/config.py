@@ -5,7 +5,7 @@ class Config(object):
     DEBUG = False
     CSRF_ENABLED = True
     POSTS_PER_PAGE = 4
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = postgresql://os.getenv('DB_USER'):os.getenv('DB_PASS')@os.getenv('DB_HOST'):os.getenv('DB_PORT')/os.getenv('DB_NAME')
     SECRET_KEY = os.getenv('SECRET_KEY')
     SECURITY_PASSWORD_SALT = os.getenv('SECURITY_PASSWORD_SALT')
     SECURITY_PASSWORD_RESET_SALT = os.getenv('SECURITY_PASSWORD_RESET_SALT')
