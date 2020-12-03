@@ -5,7 +5,7 @@ class Config(object):
     DEBUG = False
     CSRF_ENABLED = True
     POSTS_PER_PAGE = 4
-    DB_URL = 'postgresql+psychopg2://{user}:{pw}@{host}:{port}/{db}'.format(user=os.getenv('DB_USER'), pw=os.getenv('DB_PASS'), host=os.getenv('DB_HOST'), port=os.getenv('DB_PORT'), db=os.getenv('DB_NAME') )
+    DB_URL = 'postgresql://{user}:{pw}@{host}:{port}/{db}'.format(user=os.getenv('DB_USER'), pw=os.getenv('DB_PASS'), host=os.getenv('DB_HOST'), port=os.getenv('DB_PORT'), db=os.getenv('DB_NAME') )
     SQLALCHEMY_DATABASE_URI = DB_URL
     SECRET_KEY = os.getenv('SECRET_KEY')
     SECURITY_PASSWORD_SALT = os.getenv('SECURITY_PASSWORD_SALT')

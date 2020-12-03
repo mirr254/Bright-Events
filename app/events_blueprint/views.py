@@ -132,6 +132,11 @@ def return_event_results(events):
     return response 
 
 
+#add healthcheck
+@events.route('/api/')
+def healthcheck():
+    return jsonify({'okay': 'working'}),200
+    
 #deleting an event
 @events.route('/api/v1/events/<int:eventid>', methods=['DELETE'])
 @token_required
